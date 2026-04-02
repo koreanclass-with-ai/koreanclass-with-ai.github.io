@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프롬프트 작성 가이드 — AI한테 제대로 시키는 법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}.nav a:hover{color:#1a1a1a;}.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;}
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}.prose b{color:#1a1a1a;font-weight:500;}.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:6px;}.layer-desc{font-size:13px;color:#555;line-height:1.7;}
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;border-bottom:1px solid #30363d;}.prompt-bar-left{display:flex;align-items:center;gap:5px;}.prompt-dot{width:8px;height:8px;border-radius:50%;}.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.compare{display:flex;flex-direction:column;gap:10px;margin:1rem 0;}.compare-item{padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.7;}.compare-bad{background:#FCEBEB;color:#791F1F;}.compare-good{background:#EAF3DE;color:#3B6D11;}
+@media(max-width:640px){.wrap{padding:1rem .75rem 3rem;}.hero,.section{padding:1.25rem;border-radius:12px;}.hero-title{font-size:20px;}.nav{gap:6px;}.nav a{padding:7px 10px;font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="tag">📐 가이드</div>
+  <h1 class="hero-title">프롬프트 작성 가이드</h1>
+  <p class="hero-desc">같은 도구를 써도 프롬프트에 따라 결과가 완전히 달라져요. 역할/과제/조건/출력 네 가지 구조만 잡으면 돼요.</p>
+  <div class="meta">
+    <span class="chip">역할 · 과제 · 조건 · 출력</span>
+    <span class="chip">모든 활동에 공통 적용</span>
+  </div>
+</div>
+
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#structure" data-section="structure">기본 구조</a>
+    <a href="#detail" data-section="detail">파트별 상세</a>
+    <a href="#mistakes" data-section="mistakes">자주 하는 실수</a>
+    <a href="#adapt" data-section="adapt">응용하는 법</a>
+  </div>
+</div>
+
+<div class="section" id="structure">
+  <div class="section-tag">STRUCTURE</div>
+  <div class="section-title">프롬프트의 기본 구조</div>
+  <p class="prose">모든 활동 페이지의 프롬프트는 같은 네 파트로 돼 있어요. 이 구조를 알면 어떤 활동이든 프롬프트를 직접 쓸 수 있어요.</p>
+
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">역할 (Role)</div><div class="layer-desc">AI에게 전문가 역할을 부여해요. "한국어 교육 전문가"로 고정하면 대부분의 활동에 통해요.</div></div>
+    <div class="layer-item"><div class="layer-tag">과제 (Task)</div><div class="layer-desc">뭘 만들어야 하는지 한 줄로 명시해요. "장소 조사 '에'와 '에서'를 구분하는 빈칸 채우기 문항 생성"처럼요.</div></div>
+    <div class="layer-item"><div class="layer-tag">조건 (Constraints)</div><div class="layer-desc">대상 레벨, 문항 수, 어휘 범위, 정답 분포, 제외할 항목 등 구체적인 제약을 거세요. 조건이 많을수록 결과가 좋아요.</div></div>
+    <div class="layer-item"><div class="layer-tag">출력 (Output)</div><div class="layer-desc">결과물의 형식을 지정해요. 웹앱에 넣을 거면 JSON, 인쇄용이면 "표 형식으로 정리해줘".</div></div>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">기본 틀</span></div></div>
+    <div class="prompt-body">역할: 한국어 교육 전문가
+과제: [만들 것을 한 줄로]
+조건:
+- 대상: [TOPIK 몇 급]
+- 문항 수: [몇 개]
+- [추가 제약 조건들]
+출력: [JSON / 표 / 대화문 형식 등]</div>
+  </div>
+</div>
+
+<div class="section" id="detail">
+  <div class="section-tag">DETAIL</div>
+  <div class="section-title">파트별 상세 가이드</div>
+
+  <div class="sub-title">역할 — 보통 바꿀 필요 없어요</div>
+  <p class="prose">"한국어 교육 전문가"로 고정하면 문법 문항, 대화문, 읽기 텍스트, 역할극 카드 등 대부분의 활동에 적용돼요.</p>
+
+  <div class="sub-title">과제 — 핵심은 구체적으로</div>
+  <div class="compare">
+    <div class="compare-item compare-bad">❌ "문법 문제 만들어 줘" — 너무 모호해요</div>
+    <div class="compare-item compare-good">✅ "장소 조사 '에'와 '에서'를 구분하는 빈칸 채우기 문항 생성" — 정확해요</div>
+  </div>
+
+  <div class="sub-title">조건 — 많을수록 좋아요</div>
+  <p class="prose">빠지기 쉬운 조건들을 정리했어요:</p>
+  <p class="prose"><b>정답 분포</b> — "'에' 5개, '에서' 5개 균형 배치"가 없으면 한쪽으로 쏠려요.</p>
+  <p class="prose"><b>제외 항목</b> — "이동의 '에'(가다/오다)는 제외"처럼, AI가 섞어 넣기 쉬운 걸 명시적으로 빼세요.</p>
+  <p class="prose"><b>어휘 범위</b> — "초급 기본 동사만 사용"이 없으면 중급 어휘가 슬쩍 들어와요.</p>
+  <p class="prose"><b>해설 포함 여부</b> — "각 문항에 정답 해설, 오답 해설 포함"을 안 쓰면 해설이 빠져요.</p>
+
+  <div class="sub-title">출력 — 용도에 따라 바꾸세요</div>
+  <p class="prose"><b>웹앱에 넣을 거면</b> → "JSON 형식으로" — 코드 생성 도구에 바로 붙여넣을 수 있어요.</p>
+  <p class="prose"><b>인쇄용이면</b> → "A4 워크시트 형태로 정리해줘" — 바로 프린트 가능.</p>
+  <p class="prose"><b>교사용 참고자료면</b> → "표로 정리해줘" — 한눈에 보기 좋아요.</p>
+</div>
+
+<div class="section" id="mistakes">
+  <div class="section-tag">MISTAKES</div>
+  <div class="section-title">자주 하는 실수</div>
+
+  <div class="compare">
+    <div class="compare-item compare-bad">❌ "문제 좀 만들어 줘" — 수준도 들쭉날쭉, 같은 유형만 반복, 해설도 빠져요</div>
+    <div class="compare-item compare-bad">❌ 조건 없이 과제만 던지기 — AI가 알아서 잘 하겠지? 안 돼요</div>
+    <div class="compare-item compare-bad">❌ 출력 형식 안 쓰기 — 결과가 문단으로 나와서 정리하느라 시간 더 걸려요</div>
+    <div class="compare-item compare-bad">❌ 해설 기준이 문항마다 달라지게 두기 — "이건 장소니까", "이건 행동이니까" 식으로 기준이 바뀌면 학습자가 규칙을 귀납할 수 없어요</div>
+  </div>
+
+  <div class="tip">오답 해설은 모든 문항이 <b>동일한 판단 기준</b>을 따라야 해요. 문항마다 기준이 바뀌면 학습자가 혼란스러워요.</div>
+</div>
+
+<div class="section" id="adapt">
+  <div class="section-tag">ADAPT</div>
+  <div class="section-title">다른 활동에 응용하는 법</div>
+  <p class="section-lead">역할은 그대로 두고, 과제와 조건만 바꾸면 어떤 활동이든 만들 수 있어요.</p>
+
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">역할</div><div class="layer-desc">그대로 두세요. "한국어 교육 전문가"는 모든 활동에 통해요.</div></div>
+    <div class="layer-item"><div class="layer-tag">과제</div><div class="layer-desc">목표만 바꾸세요. "이/가 vs 은/는 구분 문항 생성", "카페 주문 상황 역할극 카드 생성", "찬반 의견 카드 세트 생성"</div></div>
+    <div class="layer-item"><div class="layer-tag">조건</div><div class="layer-desc">활동 특성에 맞게 조정하세요. 말하기면 "대화 6턴 이내", 읽기면 "200자 내외", 과제형이면 "조건 카드 3장 + 결정 시트 1장"</div></div>
+    <div class="layer-item"><div class="layer-tag">출력</div><div class="layer-desc">앱이면 JSON, 인쇄면 표, 카드형이면 "카드 1장당 하나의 JSON 객체로"</div></div>
+  </div>
+
+  <div class="warn">각 활동 페이지에 해당 활동에 맞는 프롬프트가 이미 들어있어요. 처음에는 그걸 그대로 복사해서 쓰고, 익숙해지면 여기 원칙을 참고해서 직접 수정하세요.</div>
+</div>
+
+</div>
+<script>
+const navLinks=document.querySelectorAll('#main-nav a[data-section]');const sections=document.querySelectorAll('.section[id]');const observer=new IntersectionObserver(e=>{e.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>a.classList.remove('active'));const active=document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);if(active)active.classList.add('active');}});},{rootMargin:'-40% 0px -55% 0px'});sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

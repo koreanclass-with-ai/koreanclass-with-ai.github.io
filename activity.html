@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>활동 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --green:#2E8B57;--green-light:#F0FFF4;
+  --amber:#B8860B;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FFF0F0;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── 네비 ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+.nav-cta{background:var(--text);color:#fff;padding:8px 20px;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+
+/* ── 헤더 ── */
+.page-header{padding:120px 0 40px;text-align:center;}
+.page-header h1{font-size:clamp(32px,5vw,52px);font-weight:900;line-height:1.15;letter-spacing:-0.03em;margin-bottom:12px;}
+.page-header p{font-size:17px;color:var(--text-sub);max-width:500px;margin:0 auto;}
+
+/* ── 필터 ── */
+.filter-bar{position:sticky;top:60px;z-index:100;background:rgba(249,249,247,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:16px 0;margin-bottom:48px;}
+.filter-inner{display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;}
+.filter-inner::-webkit-scrollbar{display:none;}
+.filter-btn{padding:8px 16px;border-radius:0;font-size:13px;font-weight:500;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--text-sub);cursor:pointer;white-space:nowrap;transition:all .2s;}
+.filter-btn:hover{color:var(--text);}
+.filter-btn.active{color:var(--text);font-weight:700;border-bottom-color:var(--text);}
+.filter-btn small{font-weight:400;opacity:0.5;margin-left:2px;}
+.filter-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.filter-count{font-size:12px;color:var(--text-light);white-space:nowrap;}
+
+/* ── 범주 ── */
+.cat-sec{margin-bottom:64px;}
+.cat-head{display:flex;align-items:flex-end;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:0.5px solid var(--border);flex-wrap:wrap;}
+.cat-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;font-size:13px;font-weight:700;flex-shrink:0;}
+.cb-형태{background:var(--blue-light);color:var(--blue);}
+.cb-의미{background:var(--green-light);color:var(--green);}
+.cb-기능{background:var(--amber-light);color:var(--amber);}
+.cb-과제{background:var(--red-light);color:var(--red);}
+.cat-head h2{font-size:22px;font-weight:800;letter-spacing:-0.01em;}
+.cat-desc{font-size:13px;color:var(--text-sub);margin-left:auto;max-width:380px;text-align:right;}
+
+/* ── 카드 그리드 ── */
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.ac{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;}
+.ac:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.06);}
+
+/* 썸네일 */
+.ct{height:140px;display:flex;align-items:center;justify-content:center;padding:12px;position:relative;}
+.ct-형태{background:var(--blue-light);}
+.ct-의미{background:var(--green-light);}
+.ct-기능{background:var(--amber-light);}
+.ct-과제{background:var(--red-light);}
+
+/* 풀버전 뱃지 */
+.full-badge{position:absolute;top:8px;right:8px;background:var(--text);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;letter-spacing:0.05em;}
+
+/* 미니 목업 공통 */
+.m{background:var(--card);border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.07);padding:10px;transition:transform .3s;max-width:170px;width:100%;}
+.ac:hover .m{transform:scale(1.03);}
+
+/* 미니 빈칸형 */
+.m-q{font-size:10px;text-align:center;margin-bottom:6px;line-height:1.4;}
+.m-blank{display:inline-block;border-bottom:1.5px solid var(--blue);width:22px;margin:0 1px;vertical-align:bottom;}
+.m-btns{display:flex;gap:3px;justify-content:center;}
+.m-btn{padding:3px 10px;border-radius:5px;font-size:9px;font-weight:600;border:1px solid var(--border);background:var(--bg);}
+
+/* 미니 매칭형 */
+.m-row{display:flex;align-items:center;gap:4px;margin-bottom:3px;}
+.m-w{padding:3px 7px;border-radius:4px;font-size:9px;font-weight:600;background:var(--bg);border:1px solid var(--border);flex:1;text-align:center;}
+.m-w.done{border-color:var(--green);background:var(--green-light);color:var(--green);}
+.m-w.done-b{border-color:var(--blue);background:var(--blue-light);color:var(--blue);}
+.m-w.done-a{border-color:var(--amber);background:var(--amber-light);color:var(--amber);}
+.m-d{color:var(--text-light);font-size:8px;}
+
+/* 미니 드래그형 */
+.m-slots{display:flex;gap:3px;margin-bottom:6px;}
+.m-slot{flex:1;height:22px;border:1.5px dashed var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--text-light);}
+.m-slot.f{border-style:solid;border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:600;}
+.m-chips{display:flex;gap:3px;justify-content:center;}
+.m-chip{padding:3px 7px;border-radius:4px;font-size:8px;font-weight:600;background:var(--bg);border:1px solid var(--border);}
+
+/* 미니 챗형 */
+.m-bub{padding:5px 9px;border-radius:9px;font-size:9px;margin-bottom:3px;max-width:82%;line-height:1.3;}
+.m-bot{background:var(--bg-alt);border-bottom-left-radius:2px;}
+.m-usr{background:var(--blue);color:#fff;border-bottom-right-radius:2px;margin-left:auto;}
+.m-opts{display:flex;gap:3px;}
+.m-opt{flex:1;text-align:center;padding:3px;border-radius:4px;font-size:8px;background:var(--bg);border:1px solid var(--border);}
+
+/* 미니 이미지형 */
+.m-frame{width:100%;aspect-ratio:3/2;background:var(--bg-alt);border-radius:6px;margin-bottom:5px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.m-cap{font-size:8px;color:var(--text-sub);text-align:center;}
+
+/* 미니 역할형 */
+.m-roles{display:flex;gap:4px;}
+.m-role{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px;text-align:center;}
+.m-role .emoji{font-size:16px;}
+.m-role .name{font-size:8px;font-weight:600;margin-top:2px;}
+
+/* 미니 스텝형 */
+.m-steps{display:flex;gap:3px;align-items:center;}
+.m-step{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:4px 2px;text-align:center;font-size:7px;line-height:1.3;}
+.m-step.done{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.m-arr{color:var(--text-light);font-size:8px;}
+
+/* 미니 그리드형 (크로스워드/보드) */
+.m-grid{display:grid;gap:2px;}
+.m-cell{background:var(--bg);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;aspect-ratio:1;}
+.m-cell.filled{background:var(--blue-light);border-color:var(--blue);color:var(--blue);}
+.m-cell.empty{background:transparent;border-color:transparent;}
+
+/* 카드 정보 */
+.ci{padding:14px 18px;flex:1;display:flex;flex-direction:column;}
+.c-tags{display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap;}
+.c-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:0.02em;}
+.t-형태{background:var(--blue-light);color:var(--blue);}
+.t-의미{background:var(--green-light);color:var(--green);}
+.t-기능{background:var(--amber-light);color:var(--amber);}
+.t-과제{background:var(--red-light);color:var(--red);}
+.t-type{background:var(--bg-alt);color:var(--text-sub);}
+.ci h3{font-size:14px;font-weight:800;margin-bottom:2px;letter-spacing:-0.01em;}
+.c-gram{font-size:11px;color:var(--blue);font-weight:600;margin-bottom:4px;}
+.c-desc{font-size:11px;color:var(--text-sub);line-height:1.4;flex:1;}
+.c-meta{display:flex;gap:10px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border);font-size:10px;color:var(--text-light);}
+.c-meta span{display:flex;align-items:center;gap:3px;}
+
+/* 애니메이션 */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+/* 모바일 */
+@media(max-width:900px){.ag{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.ag{grid-template-columns:1fr;}.cat-head{flex-direction:column;align-items:flex-start;}.cat-desc{margin-left:0;text-align:left;}}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="act-task-3-2.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html" class="active">활동</a><a href="demo.html">데모</a><a href="column.html">칼럼</a><a href="faq.html">FAQ</a></div></div></nav>
+
+<header class="page-header"><div class="container"><div class="section-tag">Activities</div><h1>인터랙티브 활동</h1><p>유형별로 인터랙티브 활동 만드는 법을 단계별로 안내합니다.</p></div></header>
+
+<div class="filter-bar"><div class="container"><div class="filter-inner">
+  <button class="filter-btn active" data-f="all">전체 <small>40</small></button>
+  <button class="filter-btn" data-f="형태">형태 <small>12</small></button>
+  <button class="filter-btn" data-f="의미">의미 <small>11</small></button>
+  <button class="filter-btn" data-f="기능">기능 <small>10</small></button>
+  <button class="filter-btn" data-f="과제">과제 <small>7</small></button>
+  <div class="filter-right"><span class="filter-count" id="fc">40개 활동</span></div>
+</div></div></div>
+
+<main class="container">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 1장 형태 중심 (12) -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-sec reveal" data-cat="형태">
+<div class="cat-head">
+  <span class="cat-badge cb-형태">형태 중심</span>
+  <h2>형태 학습 중심 활동</h2>
+  <span class="cat-desc">문법 형태와 규칙에 집중. 정확성을 기르는 단계.</span>
+</div>
+<div class="ag">
+
+<!-- 1-1 에/에서 빈칸 ★ -->
+<a class="ac reveal" href="act-form-1-1.html"><div class="ct ct-형태"><div class="m"><div class="m-q">저는 도서관<span class="m-blank"></span>공부해요.</div><div class="m-btns"><span class="m-btn">에</span><span class="m-btn">에서</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">빈칸채우기</span></div><h3>에/에서 빈칸 채우기</h3><div class="c-gram">장소 조사 에 vs 에서</div><p class="c-desc">장소 조사를 골라 넣고 즉각 피드백을 받는 퀴즈형 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-2 듣기 빈칸 -->
+<a class="ac reveal" href="act-form-1-2.html"><div class="ct ct-형태"><div class="m"><div style="font-size:18px;text-align:center;margin-bottom:4px;">🔊</div><div class="m-q">"저는 매일 아침 <span class="m-blank"></span>해요."</div><div class="m-btns"><span class="m-btn">운동</span><span class="m-btn">영화</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">듣기+빈칸</span></div><h3>듣기 빈칸 채우기</h3><div class="c-gram">일상 표현 + TTS 음성</div><p class="c-desc">AI 음성을 듣고 핵심 어휘를 받아쓰는 듣기 연습</p><div class="c-meta"><span>📊 초급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-3 문장 완성 -->
+<a class="ac reveal" href="act-form-1-3.html"><div class="ct ct-형태"><div class="m"><div class="m-q">어제 친구를 만나<span class="m-blank"></span></div><div class="m-btns"><span class="m-btn">-았어요</span><span class="m-btn">-겠어요</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">빈칸채우기</span></div><h3>문장 완성 (어미 활용)</h3><div class="c-gram">시제·양태 어미</div><p class="c-desc">문장 끝에 알맞은 어미를 선택하여 문장을 완성하는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-4 단어 카드 대입 -->
+<a class="ac reveal" href="act-form-2-1.html"><div class="ct ct-형태"><div class="m"><div class="m-row"><span class="m-w done-b">👨‍🍳</span><span class="m-d">→</span><span class="m-w done-b">요리사</span></div><div class="m-row"><span class="m-w">👩‍⚕️</span><span class="m-d">→</span><span class="m-w">?</span></div><div class="m-row"><span class="m-w">👨‍🏫</span><span class="m-d">→</span><span class="m-w">?</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">대입</span></div><h3>단어 카드 대입</h3><div class="c-gram">직업 어휘 + 문형 연습</div><p class="c-desc">카드의 단어를 문형에 대입하여 문장을 만드는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-5 문장 변환 -->
+<a class="ac reveal" href="act-form-2-2.html"><div class="ct ct-형태"><div class="m"><div class="m-q" style="font-size:9px;margin-bottom:4px;">현재 → 과거로 바꾸세요</div><div style="font-size:9px;text-align:center;padding:4px;background:var(--bg);border-radius:4px;margin-bottom:3px;">먹어요</div><div style="display:flex;align-items:center;justify-content:center;gap:4px;"><span style="font-size:10px;">↓</span></div><div style="font-size:9px;text-align:center;padding:4px;background:var(--blue-light);border:1px solid var(--blue);border-radius:4px;color:var(--blue);font-weight:600;">먹었어요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">변환</span></div><h3>문장 변환 (시제 전환)</h3><div class="c-gram">현재↔과거↔미래 시제</div><p class="c-desc">주어진 문장의 시제를 바꿔 쓰는 변환 연습</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-6 불규칙 활용 -->
+<a class="ac reveal" href="act-form-2-3.html"><div class="ct ct-형태"><div class="m"><div class="m-row"><span class="m-w">듣다</span><span class="m-d">→</span><span class="m-w done-b">들어요</span></div><div class="m-row"><span class="m-w">걷다</span><span class="m-d">→</span><span class="m-w">?</span></div><div class="m-row"><span class="m-w">묻다</span><span class="m-d">→</span><span class="m-w">?</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">변환</span></div><h3>불규칙 활용 연습</h3><div class="c-gram">ㄷ·ㅂ·ㅅ·르 불규칙</div><p class="c-desc">불규칙 동사의 올바른 활용형을 연습하는 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-7 문법-상황 매칭 -->
+<a class="ac reveal" href="act-form-3-1.html"><div class="ct ct-형태"><div class="m"><div class="m-row"><span class="m-w done-b">-고 싶다</span><span class="m-d">—</span><span class="m-w done-b">희망</span></div><div class="m-row"><span class="m-w">-아야 하다</span><span class="m-d">—</span><span class="m-w">의무</span></div><div class="m-row"><span class="m-w">-ㄹ 수 있다</span><span class="m-d">—</span><span class="m-w">능력</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">매칭</span></div><h3>문법–상황 매칭</h3><div class="c-gram">양태 표현과 의미 연결</div><p class="c-desc">문법 표현과 알맞은 상황/의미를 연결하는 매칭 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-8 어휘-이미지 매칭 -->
+<a class="ac reveal" href="act-form-3-2.html"><div class="ct ct-형태"><div class="m"><div class="m-row"><span class="m-w" style="font-size:14px;">🍎</span><span class="m-d">—</span><span class="m-w done-b">사과</span></div><div class="m-row"><span class="m-w" style="font-size:14px;">🍌</span><span class="m-d">—</span><span class="m-w">?</span></div><div class="m-row"><span class="m-w" style="font-size:14px;">🍇</span><span class="m-d">—</span><span class="m-w">?</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">매칭</span></div><h3>어휘–이미지 매칭</h3><div class="c-gram">주제별 명사 어휘</div><p class="c-desc">그림과 단어를 연결하는 시각적 어휘 매칭 게임</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-9 대화 순서 배열 -->
+<a class="ac reveal" href="act-form-3-3.html"><div class="ct ct-형태"><div class="m"><div class="m-slots"><div class="m-slot f">안녕하세요</div><div class="m-slot f">이름이 뭐예요?</div><div class="m-slot">?</div></div><div class="m-chips"><span class="m-chip">저는 미나예요</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">드래그앤드롭</span></div><h3>대화 순서 배열</h3><div class="c-gram">인사·소개 대화 구조</div><p class="c-desc">흩어진 대화문을 올바른 순서로 배열하는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-10 어휘 퀴즈 -->
+<a class="ac reveal" href="act-form-4-1.html"><div class="ct ct-형태"><div class="m"><div class="m-q">'고맙다'의 반대말은?</div><div class="m-btns"><span class="m-btn">미안하다</span><span class="m-btn">섭섭하다</span></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">퀴즈</span></div><h3>어휘 퀴즈</h3><div class="c-gram">유의어·반의어·관련 어휘</div><p class="c-desc">다양한 어휘 관계를 묻는 객관식 퀴즈</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<!-- 1-11 보드게임 -->
+<a class="ac reveal" href="act-form-4-2.html"><div class="ct ct-형태"><div class="m"><div class="m-grid" style="grid-template-columns:repeat(4,1fr);gap:2px;"><div class="m-cell filled">출발</div><div class="m-cell">먹다</div><div class="m-cell">가다</div><div class="m-cell filled">🎯</div><div class="m-cell empty"></div><div class="m-cell empty"></div><div class="m-cell">자다</div><div class="m-cell empty"></div><div class="m-cell">보다</div><div class="m-cell empty"></div><div class="m-cell filled">🎲</div><div class="m-cell">읽다</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">게임</span></div><h3>보드게임 (말판)</h3><div class="c-gram">동사 활용 종합</div><p class="c-desc">주사위를 굴려 칸에 적힌 동사를 활용하는 보드게임</p><div class="c-meta"><span>📊 초급</span><span>⏱ 20분</span><span>🖨 인쇄</span></div></div></a>
+
+<!-- 1-12 크로스워드 -->
+<a class="ac reveal" href="act-form-4-3.html"><div class="ct ct-형태"><div class="m"><div class="m-grid" style="grid-template-columns:repeat(5,1fr);gap:1px;"><div class="m-cell filled">학</div><div class="m-cell filled">교</div><div class="m-cell empty"></div><div class="m-cell">?</div><div class="m-cell">?</div><div class="m-cell empty"></div><div class="m-cell filled">실</div><div class="m-cell empty"></div><div class="m-cell empty"></div><div class="m-cell">?</div><div class="m-cell">?</div><div class="m-cell filled">습</div><div class="m-cell filled">실</div><div class="m-cell empty"></div><div class="m-cell empty"></div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-형태">형태</span><span class="c-tag t-type">퍼즐</span></div><h3>크로스워드 퍼즐</h3><div class="c-gram">주제별 어휘 종합</div><p class="c-desc">힌트를 보고 가로·세로 단어를 채우는 퍼즐</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+</div></section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 2장 의미 중심 (11) -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-sec reveal" data-cat="의미">
+<div class="cat-head"><span class="cat-badge cb-의미">의미 중심</span><h2>의미 구성 중심 활동</h2><span class="cat-desc">맥락 속에서 의미를 파악하고 연결. 이해력을 기르는 단계.</span></div>
+<div class="ag">
+
+<a class="ac reveal" href="act-mean-1-1.html"><div class="ct ct-의미"><div class="m"><div class="m-frame">🏪</div><div class="m-cap">이 장소에서 할 수 있는 일은?</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">시각자료</span></div><h3>상황 묘사 카드</h3><div class="c-gram">장소 어휘 + 동사 연결</div><p class="c-desc">그림을 보고 상황에 맞는 표현을 선택하는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-1-2.html"><div class="ct ct-의미"><div class="m"><div class="m-frame">📊</div><div class="m-cap">그래프를 보고 답하세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">시각자료</span></div><h3>그래프·차트 읽기</h3><div class="c-gram">비교·수량 표현</div><p class="c-desc">그래프를 보고 정보를 읽어내는 읽기 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-1-3.html"><div class="ct ct-의미"><div class="m"><div style="display:flex;gap:4px;"><div class="m-frame" style="flex:1;font-size:16px;">🏠</div><div class="m-frame" style="flex:1;font-size:16px;">🏠<span style="font-size:10px;">❌</span></div></div><div class="m-cap">다른 점을 찾으세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">시각자료</span></div><h3>틀린 그림 찾기</h3><div class="c-gram">묘사·비교 표현</div><p class="c-desc">두 그림의 차이를 찾아 설명하는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 15분</span><span>🖨 인쇄</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-2-1.html"><div class="ct ct-의미"><div class="m"><div style="font-size:9px;line-height:1.4;padding:4px;background:var(--bg);border-radius:4px;"><span style="color:var(--green);font-weight:700;">A2</span> 오늘 날씨가 좋아서 공원에 갔어요. 나무 아래에서...</div><div class="m-cap" style="margin-top:4px;">레벨에 맞는 읽기</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">읽기</span></div><h3>레벨별 읽기 텍스트</h3><div class="c-gram">일상·문화 주제</div><p class="c-desc">학습자 레벨에 맞춰 AI가 생성한 읽기 자료</p><div class="c-meta"><span>📊 초~고급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-2-2.html"><div class="ct ct-의미"><div class="m"><div style="font-size:18px;text-align:center;margin-bottom:4px;">🔊🤖</div><div class="m-q">AI 음성으로 듣고<br>스크립트 확인</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">듣기</span></div><h3>듣기 스크립트 (AI 음성)</h3><div class="c-gram">일상 대화·안내문</div><p class="c-desc">TTS로 생성한 음성 + 스크립트 기반 듣기 활동</p><div class="c-meta"><span>📊 초~중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-2-3.html"><div class="ct ct-의미"><div class="m"><div style="font-size:9px;line-height:1.4;padding:4px;background:var(--bg);border-radius:4px;"><span style="font-weight:700;">📰</span> 서울시, 외국인 관광객 무료 와이파이 확대...</div><div class="m-cap" style="margin-top:4px;">기사 읽고 핵심 파악</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">읽기</span></div><h3>뉴스·기사 기반 활동</h3><div class="c-gram">시사 어휘·요약 표현</div><p class="c-desc">뉴스 기사를 읽고 핵심 정보를 파악하는 활동</p><div class="c-meta"><span>📊 고급</span><span>⏱ 20분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-3-1.html"><div class="ct ct-의미"><div class="m"><div class="m-frame">😰→🏥</div><div class="m-cap">상황에 맞는 표현은?</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">카드</span></div><h3>상황 카드</h3><div class="c-gram">상황별 표현 연결</div><p class="c-desc">주어진 상황에 적절한 표현을 선택하는 카드 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>🖨 인쇄</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-3-2.html"><div class="ct ct-의미"><div class="m"><div class="m-bub m-bot">오늘 시간 있어?</div><div class="m-opts"><div class="m-opt">응, 왜?</div><div class="m-opt">미안, 바빠</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">카드</span></div><h3>조건부 응답 카드</h3><div class="c-gram">상황 맥락에 따른 응답</div><p class="c-desc">조건에 따라 다른 응답을 선택하는 분기형 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-4-1.html"><div class="ct ct-의미"><div class="m"><div style="display:flex;gap:4px;"><div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px;text-align:center;font-size:8px;"><b>A</b><br>🕐 ✓<br>📍 ?</div><div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px;text-align:center;font-size:8px;"><b>B</b><br>🕐 ?<br>📍 ✓</div></div><div class="m-cap" style="margin-top:4px;">서로 다른 정보 교환</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">상호작용</span></div><h3>정보 차 카드 세트</h3><div class="c-gram">질문·응답 표현</div><p class="c-desc">서로 다른 정보를 가지고 질문하며 빈칸을 채우는 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 20분</span><span>🖨 인쇄</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-4-2.html"><div class="ct ct-의미"><div class="m"><div style="display:flex;gap:3px;"><div style="flex:1;background:var(--green-light);border:1px solid var(--green);border-radius:4px;padding:4px;text-align:center;font-size:8px;color:var(--green);font-weight:600;">텍스트A</div><div style="flex:1;background:var(--bg);border:1px dashed var(--border);border-radius:4px;padding:4px;text-align:center;font-size:8px;">텍스트B</div><div style="flex:1;background:var(--bg);border:1px dashed var(--border);border-radius:4px;padding:4px;text-align:center;font-size:8px;">텍스트C</div></div><div class="m-cap" style="margin-top:4px;">조각을 맞춰 전체 이해</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">읽기</span></div><h3>직소 읽기 자료</h3><div class="c-gram">텍스트 구조 이해</div><p class="c-desc">각자 다른 텍스트를 읽고 정보를 합쳐 전체를 이해하는 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 25분</span><span>🖨 인쇄</span></div></div></a>
+
+<a class="ac reveal" href="act-mean-4-3.html"><div class="ct ct-의미"><div class="m"><div style="font-size:9px;padding:4px;background:var(--bg);border-radius:4px;line-height:1.4;"><b>이름:</b> ______<br><b>좋아하는 음식:</b> ______<br><b>취미:</b> ______</div><div class="m-cap" style="margin-top:4px;">인터뷰하고 발표하기</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-의미">의미</span><span class="c-tag t-type">상호작용</span></div><h3>서베이·인터뷰 활동지</h3><div class="c-gram">질문·대답 표현</div><p class="c-desc">학습자끼리 인터뷰하고 결과를 발표하는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 20분</span><span>🖨 인쇄</span></div></div></a>
+
+</div></section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 3장 기능 중심 (10) -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-sec reveal" data-cat="기능">
+<div class="cat-head"><span class="cat-badge cb-기능">기능 중심</span><h2>의사소통 기능 중심 활동</h2><span class="cat-desc">거절, 요청, 제안 등 의사소통 기능을 연습하는 단계.</span></div>
+<div class="ag">
+
+<a class="ac reveal" href="act-func-1-1.html"><div class="ct ct-기능"><div class="m"><div class="m-bub m-bot">내일 같이 영화 볼래?</div><div class="m-opts"><div class="m-opt">미안, 안 돼</div><div class="m-opt">좋아!</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">롤플레이</span></div><h3>거절하기 롤플레이</h3><div class="c-gram">거절 표현 (-ㄹ 수 없다, 미안하지만)</div><p class="c-desc">상황에 맞는 거절 표현을 선택하며 대화를 완성하는 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-1-2.html"><div class="ct ct-기능"><div class="m"><div class="m-bub m-bot">제가 실수한 것 같아요...</div><div class="m-opts"><div class="m-opt">괜찮아요</div><div class="m-opt">정말 죄송해요</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">시나리오</span></div><h3>사과하기 시나리오</h3><div class="c-gram">사과·수용 표현</div><p class="c-desc">상황별 사과 표현의 적절성을 판단하는 시나리오 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-1-3.html"><div class="ct ct-기능"><div class="m"><div class="m-bub m-bot">이거 좀 도와줄 수 있어요?</div><div class="m-opts"><div class="m-opt">네, 뭐요?</div><div class="m-opt">지금은 좀...</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">대화</span></div><h3>요청하기 대화</h3><div class="c-gram">요청·수락·거절 표현</div><p class="c-desc">요청하고 응답하는 대화 자료</p><div class="c-meta"><span>📊 중급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-1-4.html"><div class="ct ct-기능"><div class="m"><div class="m-bub m-bot">시험을 못 봤어요... 😢</div><div class="m-opts"><div class="m-opt">힘내, 다음에!</div><div class="m-opt">얼마나 속상해</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">대화</span></div><h3>위로·격려하기</h3><div class="c-gram">공감·위로 표현</div><p class="c-desc">상대를 위로하고 격려하는 표현을 연습하는 대화 자료</p><div class="c-meta"><span>📊 중급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-2-1.html"><div class="ct ct-기능"><div class="m"><div class="m-frame">🗺️</div><div class="m-cap">길을 안내해 주세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">시나리오</span></div><h3>길 안내하기</h3><div class="c-gram">방향·위치 표현</div><p class="c-desc">지도를 보고 목적지까지 길을 안내하는 활동</p><div class="c-meta"><span>📊 초급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-2-2.html"><div class="ct ct-기능"><div class="m"><div class="m-steps"><div class="m-step done">①</div><div class="m-arr">→</div><div class="m-step done">②</div><div class="m-arr">→</div><div class="m-step">③</div><div class="m-arr">→</div><div class="m-step">④</div></div><div class="m-cap" style="margin-top:6px;">순서대로 설명하세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">시나리오</span></div><h3>순서 설명하기</h3><div class="c-gram">순서 표현 (먼저, 그리고, 마지막으로)</div><p class="c-desc">레시피·절차를 순서대로 설명하는 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-2-3.html"><div class="ct ct-기능"><div class="m"><div style="display:flex;gap:4px;"><div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px;text-align:center;font-size:8px;"><b>서울</b><br>🏙️ 편리</div><div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px;text-align:center;font-size:8px;"><b>제주</b><br>🌴 자연</div></div><div class="m-cap" style="margin-top:4px;">비교해서 말하세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">대화</span></div><h3>비교·대조 설명하기</h3><div class="c-gram">비교 표현 (-보다, -만큼, -중에서)</div><p class="c-desc">두 대상을 비교하여 설명하는 활동</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-3-1.html"><div class="ct ct-기능"><div class="m"><div style="display:flex;gap:4px;"><div style="flex:1;background:#e8f5e9;border:1px solid var(--green);border-radius:4px;padding:4px;text-align:center;font-size:8px;color:var(--green);font-weight:600;">👍 찬성</div><div style="flex:1;background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:4px;text-align:center;font-size:8px;color:var(--red);font-weight:600;">👎 반대</div></div><div class="m-cap" style="margin-top:4px;">의견을 정리하세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">카드</span></div><h3>찬반 의견 카드</h3><div class="c-gram">의견 표현 (-ㄴ 것 같다, 왜냐하면)</div><p class="c-desc">찬성·반대 입장을 정리하고 근거를 제시하는 카드 활동</p><div class="c-meta"><span>📊 고급</span><span>⏱ 20분</span><span>🖨 인쇄</span></div></div></a>
+
+<a class="ac reveal" href="act-func-3-2.html"><div class="ct ct-기능"><div class="m"><div style="font-size:8px;padding:4px;background:var(--bg);border-radius:4px;line-height:1.4;"><b>주장:</b> ______<br><b>이유1:</b> ______<br><b>이유2:</b> ______<br><b>결론:</b> ______</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">구조연습</span></div><h3>논증 구조 연습</h3><div class="c-gram">논증 프레임 (주장-근거-결론)</div><p class="c-desc">논리적 글의 구조를 익히는 프레임워크 연습</p><div class="c-meta"><span>📊 고급</span><span>⏱ 20분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-func-3-3.html"><div class="ct ct-기능"><div class="m"><div class="m-bub m-bot">이 제품 별로인데요...</div><div class="m-opts"><div class="m-opt">한번만 더 써보세요!</div><div class="m-opt">어떤 점이요?</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-기능">기능</span><span class="c-tag t-type">시나리오</span></div><h3>설득하기 시나리오</h3><div class="c-gram">설득·권유 표현</div><p class="c-desc">상대를 설득하는 전략적 대화 시나리오</p><div class="c-meta"><span>📊 고급</span><span>⏱ 20분</span><span>📱 웹앱</span></div></div></a>
+
+</div></section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 4장 과제 기반 (7) -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-sec reveal" data-cat="과제">
+<div class="cat-head"><span class="cat-badge cb-과제">과제 중심</span><h2>과제 기반 활동</h2><span class="cat-desc">실제 과제를 수행하며 종합적 언어 능력을 발휘하는 단계.</span></div>
+<div class="ag">
+
+<a class="ac reveal" href="act-task-1-1.html"><div class="ct ct-과제"><div class="m"><div class="m-roles"><div class="m-role"><div class="emoji">🤒</div><div class="name">환자</div></div><div class="m-role"><div class="emoji">👨‍⚕️</div><div class="name">약사</div></div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">역할극</span></div><h3>약국 증상 설명</h3><div class="c-gram">증상 표현, 약 요청하기</div><p class="c-desc">약국에서 증상을 설명하고 약을 구매하는 역할극</p><div class="c-meta"><span>📊 중급</span><span>⏱ 20분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-task-1-2.html"><div class="ct ct-과제"><div class="m"><div class="m-bub m-bot">어서오세요! 뭘 드릴까요?</div><div class="m-opts"><div class="m-opt">아메리카노요</div><div class="m-opt">3,000원이에요</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">시뮬레이션</span></div><h3>카페 주문하기</h3><div class="c-gram">주문 표현 (-주세요, 얼마예요)</div><p class="c-desc">카페 상황에서 주문하고 응답하는 대화 시뮬레이션</p><div class="c-meta"><span>📊 초급</span><span>⏱ 10분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-task-1-3.html"><div class="ct ct-과제"><div class="m"><div class="m-bub m-bot">어떤 문제가 있으세요?</div><div class="m-opts"><div class="m-opt">교환해주세요</div><div class="m-opt">환불해주세요</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">시뮬레이션</span></div><h3>교환·환불하기</h3><div class="c-gram">불만 표현, 요청·대응</div><p class="c-desc">물건을 교환하거나 환불받는 상황 시뮬레이션</p><div class="c-meta"><span>📊 중급</span><span>⏱ 15분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-task-2-1.html"><div class="ct ct-과제"><div class="m"><div style="font-size:8px;font-weight:600;text-align:center;margin-bottom:4px;">🗓 여행 계획</div><div class="m-steps"><div class="m-step done">장소<br>선택</div><div class="m-arr">→</div><div class="m-step done">일정<br>짜기</div><div class="m-arr">→</div><div class="m-step">예약</div></div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">프로젝트</span></div><h3>여행 계획 세우기</h3><div class="c-gram">제안·비교·일정 표현</div><p class="c-desc">친구와 함께 여행 계획을 세우는 단계별 과제</p><div class="c-meta"><span>📊 중급</span><span>⏱ 30분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-task-2-2.html"><div class="ct ct-과제"><div class="m"><div style="font-size:8px;padding:4px;background:var(--bg);border-radius:4px;line-height:1.4;"><b>🏠 우리 집 규칙</b><br>1. 청소는 ______<br>2. 소음은 ______<br>3. 손님은 ______</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">프로젝트</span></div><h3>하우스메이트 규칙 정하기</h3><div class="c-gram">의무·허락·금지 표현</div><p class="c-desc">함께 사는 규칙을 협의하여 정하는 과제</p><div class="c-meta"><span>📊 중급</span><span>⏱ 25분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-task-3-1.html"><div class="ct ct-과제"><div class="m"><div class="m-frame">🎤📊</div><div class="m-cap">주제를 정해 발표하세요</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">프로젝트</span></div><h3>자유 주제 발표</h3><div class="c-gram">발표 구조, 질의응답 표현</div><p class="c-desc">관심 주제를 조사하고 발표하는 프로젝트형 과제</p><div class="c-meta"><span>📊 고급</span><span>⏱ 40분</span><span>📱 웹앱</span></div></div></a>
+
+<a class="ac reveal" href="act-task-3-2.html"><div class="ct ct-과제"><div class="m"><div style="display:flex;gap:4px;"><div style="flex:1;background:#e8f5e9;border:1px solid var(--green);border-radius:4px;padding:4px;text-align:center;font-size:8px;color:var(--green);font-weight:700;">찬성팀</div><div style="flex:1;background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:4px;text-align:center;font-size:8px;color:var(--red);font-weight:700;">반대팀</div></div><div class="m-cap" style="margin-top:4px;">토론하고 결론 내리기</div></div></div><div class="ci"><div class="c-tags"><span class="c-tag t-과제">과제</span><span class="c-tag t-type">토론</span></div><h3>찬반 토론 대회</h3><div class="c-gram">논증·반박·양보 표현</div><p class="c-desc">팀을 나눠 찬반 토론을 진행하는 종합 과제</p><div class="c-meta"><span>📊 고급</span><span>⏱ 40분</span><span>📱 웹앱</span></div></div></a>
+
+</div></section>
+
+</main>
+
+<footer><div class="container">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+const btns=document.querySelectorAll('.filter-btn');
+const secs=document.querySelectorAll('.cat-sec');
+const fc=document.getElementById('fc');
+btns.forEach(b=>{b.addEventListener('click',()=>{
+  btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  const f=b.dataset.f;let n=0;
+  secs.forEach(s=>{if(f==='all'||s.dataset.cat===f){s.style.display='';n+=s.querySelectorAll('.ac').length;}else{s.style.display='none';}});
+  fc.textContent=n+'개 활동';
+});});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

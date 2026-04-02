@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>직소 읽기 자료, AI로 텍스트 분할과 재조합 활동 만드는 법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}
+.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+
+/* ── 히어로 ── */
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}
+.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}
+.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}
+.nav a:hover{color:#1a1a1a;}
+.nav a.primary,.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}
+
+/* ── 섹션 카드 ── */
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}
+.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+
+/* ── 공통 텍스트 ── */
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}
+.prose b{color:#1a1a1a;font-weight:500;}
+.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}
+.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+
+/* ── 개요표 ── */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.overview-table tr{border-bottom:0.5px solid #e5e5e5;}
+.overview-table tr:last-child{border-bottom:none;}
+.overview-table td:first-child{background:#f5f5f3;color:#666;padding:9px 14px;width:110px;font-weight:500;}
+.overview-table td:last-child{padding:9px 14px;color:#1a1a1a;}
+
+/* ── 알림 박스 ── */
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}
+.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.caution b{font-weight:500;}
+
+/* ── 가이드 링크 ── */
+.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:1rem;}
+
+/* ── 프롬프트 카드 ── */
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}
+.prompt-bar-left{display:flex;align-items:center;gap:5px;}
+.prompt-dot{width:8px;height:8px;border-radius:50%;}
+.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}
+.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.p-section{color:#8b949e;}.p-val{color:#e6edf3;}.p-cmt{color:#e3b341;}.p-key{color:#79c0ff;}
+
+/* ── 응용 레이어 ── */
+.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}
+.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}
+.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.layer-desc{font-size:13px;color:#555;line-height:1.7;}
+
+/* ── 스티키 네비 ── */
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}
+
+/* ── JSON ── */
+.json-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#cdd6f4;white-space:pre-wrap;background:#1e1e2e;}
+.jk{color:#89b4fa;cursor:pointer;border-radius:3px;padding:1px 3px;transition:background .15s;}
+.jk:hover,.jk.active{background:rgba(137,180,250,0.2);}
+.js{color:#a6e3a1;}.jn{color:#fab387;}
+.legend{display:flex;flex-direction:column;gap:0;margin-top:14px;}
+.leg-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid #e5e5e5;}
+.leg-row:last-child{border-bottom:none;}
+.leg-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;padding:4px 11px;background:#f5f5f3;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.leg-arrow{font-size:12px;color:#aaa;flex-shrink:0;margin-top:3px;}
+.leg-desc{font-size:13px;color:#555;line-height:1.7;}
+.leg-desc b{color:#1a1a1a;font-weight:500;}
+
+/* ── 데모 탭 ── */
+.demo-box{border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.demo-tabs{display:flex;border-bottom:0.5px solid #e5e5e5;background:#f9f9f7;}
+.demo-tab{flex:1;padding:12px 14px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;color:#aaa;border-bottom:2px solid transparent;transition:all .15s;}
+.demo-tab.active{color:#1a1a1a;border-bottom-color:#185FA5;}
+.demo-content{padding:1.25rem;}
+.demo-text{font-size:13px;color:#555;line-height:1.8;margin-bottom:1rem;}
+.demo-qa{margin-top:1.5rem;}
+.demo-q{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px;cursor:pointer;padding:10px 12px;background:#f5f5f3;border-radius:8px;transition:all .15s;}
+.demo-q:hover{background:#e5e5e5;}
+.demo-q::before{content:'▶ ';color:#378ADD;margin-right:4px;}
+.demo-q.open::before{content:'▼ ';}
+.demo-a{display:none;font-size:13px;color:#555;padding:10px 12px;background:#f9f9f7;border-radius:8px;margin-top:4px;line-height:1.7;}
+.demo-a.show{display:block;}
+
+/* ── 체크리스트 ── */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}
+.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ── 변형 테이블 ── */
+.var-table{width:100%;border-collapse:collapse;font-size:13px;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.var-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:#888;letter-spacing:.05em;background:#f5f5f3;border-bottom:0.5px solid #e5e5e5;}
+.var-table td{padding:9px 12px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:top;line-height:1.6;}
+.var-table tr:last-child td{border-bottom:none;}
+
+/* ── 모바일 ── */
+@media(max-width:640px){
+  .wrap{padding:1rem .75rem 3rem;}
+  .hero,.section{padding:1.25rem;border-radius:12px;}
+  .hero-title{font-size:20px;}
+  .nav{gap:6px;}
+  .nav a{padding:7px 10px;font-size:12px;}
+  .legend .leg-row{flex-direction:column;gap:4px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══ 히어로 ══ -->
+<div class="hero">
+  <div class="tag">❷ 의미 구성 · 상호작용</div>
+  <h1 class="hero-title">직소 읽기 자료,<br>AI로 텍스트 분할과 재조합 활동 만드는 법</h1>
+  <p class="hero-desc">프롬프트로 한 주제를 여러 텍스트로 나누고, 직소 활동을 만드는 과정을 안내해요.</p>
+  <div class="meta">
+    <span class="chip">TOPIK 3~4급 · 중급</span>
+    <span class="chip">제작 시간 15분</span>
+    <span class="chip">인쇄용</span>
+  </div>
+</div>
+
+<!-- ══ 스티키 네비 ══ -->
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="javascript:void(0)" data-section="intro">설계 의도</a>
+    <a href="javascript:void(0)" data-section="build">제작 과정</a>
+    <a href="javascript:void(0)" data-section="practice">연습 자료</a>
+    <a href="javascript:void(0)" data-section="check">점검·응용</a>
+  </div>
+</div>
+
+<!-- ══ INTRO ══ -->
+<div class="section" id="intro">
+  <div class="section-tag">INTRO</div>
+  <div class="section-title">💡 왜 이 형식으로 만들었나요?</div>
+
+  <table class="overview-table">
+    <tr><td>활동 유형</td><td>상호작용 기반 (직소)</td></tr>
+    <tr><td>범주</td><td>❷ 의미 구성</td></tr>
+    <tr><td>대상</td><td>중급 (TOPIK 3~4급)</td></tr>
+    <tr><td>목표</td><td>각자 다른 텍스트를 읽고 정보를 교환하여 전체 내용 파악</td></tr>
+    <tr><td>언어 기능</td><td>읽기 · 말하기</td></tr>
+    <tr><td>규모</td><td>텍스트 3편 / 20분</td></tr>
+    <tr><td>배포</td><td>인쇄용</td></tr>
+  </table>
+
+  <p class="prose">직소(jigsaw)는 전체 정보를 여러 조각으로 나누어 각 학습자에게 하나씩 배분하는 구조예요. <b>자기가 읽은 내용을 다른 학습자에게 설명해야 하니까, 읽기와 말하기가 자연스럽게 연결되거든요.</b></p>
+  <p class="prose"><b>읽기만 하면 수동적이지만, 읽은 내용을 남에게 설명해야 하면 능동적 처리가 필요해요.</b> "내가 이해한 것을 전달할 수 있는가?"가 점검 기준이 되는 거죠.</p>
+</div>
+
+<!-- ══ BUILD ══ -->
+<div class="section" id="build">
+  <div class="section-tag">BUILD</div>
+  <div class="section-title">🤖 Step 1. AI한테 재료를 만들어 달라고 하세요</div>
+  <p class="prose">Claude, ChatGPT, Gemini 아무거나 열고 아래 프롬프트를 그대로 붙여넣으세요.</p>
+  <a class="guide-link" href="javascript:void(0)">📐 프롬프트를 잘 쓰는 법이 궁금하다면 → 프롬프트 작성 가이드 보기</a>
+
+  <div class="sub-title">⚠️ 이 활동에서 특히 주의하세요</div>
+  <div class="caution">세 텍스트가 <b>겹치지 않으면서도 보완적</b>이어야 해요. 종합 질문을 풀려면 세 텍스트를 모두 읽어야 하는 구조가 되어야 거든요. 프롬프트에서 각 텍스트의 역할을 명확히 해 주세요.</div>
+
+  <div class="prompt-box">
+    <div class="prompt-bar">
+      <div class="prompt-bar-left">
+        <div class="prompt-dot" style="background:#ff5f57"></div>
+        <div class="prompt-dot" style="background:#febc2e"></div>
+        <div class="prompt-dot" style="background:#28c840"></div>
+        <span class="prompt-filename">prompt.txt</span>
+      </div>
+    </div>
+    <div class="prompt-body"><span class="p-section"># 역할 (Role)</span>
+<span class="p-val">한국어 교육 전문가</span>
+
+<span class="p-section"># 과제 (Task)</span>
+<span class="p-val">TOPIK 3~4급 직소 읽기 자료 생성</span>
+
+<span class="p-section"># 조건 (Constraints)</span>
+<span class="p-key">-</span> <span class="p-val">전체 주제: 한국의 사계절과 대표 음식</span>
+<span class="p-key">-</span> <span class="p-val">3분할 배치</span>
+<span class="p-key">-</span> <span class="p-val">  ∘ A: 봄과 여름 계절 특징과 음식</span>
+<span class="p-key">-</span> <span class="p-val">  ∘ B: 가을과 겨울 계절 특징과 음식</span>
+<span class="p-key">-</span> <span class="p-val">  ∘ C: 사계절을 통한 한국 음식 문화의 변화</span>
+<span class="p-key">-</span> <span class="p-val">각 텍스트: 150~200자, TOPIK 3급 어휘 수준</span>
+<span class="p-key">-</span> <span class="p-val">종합 질문 5개 (세 텍스트 모두에서 정보 필요)</span>
+
+<span class="p-section"># 출력 (Output)</span>
+<span class="p-val">JSON 형식</span></div>
+  </div>
+
+  <div class="tip">직소는 <b>텍스트의 역할 분담</b>이 핵심이에요. 각 텍스트가 "자신의 부분 정보만" 담기 때문에, 전체 상을 파악하려면 세 텍스트를 모두 읽어야 하거든요.</div>
+
+  <div class="sub-title">🔁 이렇게 바꿔서 응용하세요</div>
+  <p class="prose">주제만 바꾸면 어떤 내용이든 직소 활동으로 만들 수 있어요.</p>
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">역할</div><div class="layer-desc">그대로 두세요. 교육 전문가 역할은 어떤 활동에도 통해요.</div></div>
+    <div class="layer-item"><div class="layer-tag">과제</div><div class="layer-desc">주제를 바꾸세요. "서울의 지역별 특징", "한국 명절의 의미와 음식" 등.</div></div>
+    <div class="layer-item"><div class="layer-tag">조건</div><div class="layer-desc">인원을 조정하세요. 2인 활동이면 텍스트 2개, 4인이면 4개로 분할하면 돼요.</div></div>
+    <div class="layer-item"><div class="layer-tag">출력</div><div class="layer-desc">인쇄할 때는 "A4 워크시트 형식"으로 바꾸세요.</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">📤 Step 2. 결과를 확인하세요</div>
+  <p class="prose">AI가 아래처럼 JSON 형식으로 텍스트와 질문을 만들어 줘요. <b>파란색 키에 마우스를 올려보세요.</b></p>
+
+  <div class="prompt-box">
+    <div class="prompt-bar">
+      <div class="prompt-bar-left">
+        <div class="prompt-dot" style="background:#ff5f57"></div>
+        <div class="prompt-dot" style="background:#febc2e"></div>
+        <div class="prompt-dot" style="background:#28c840"></div>
+        <span class="prompt-filename">output.json</span>
+      </div>
+    </div>
+    <div class="json-body">
+{
+  <span class="jk" data-key="topic">"topic"</span>: <span class="js">"한국의 사계절과 대표 음식"</span>,
+  <span class="jk" data-key="texts">"texts"</span>: [
+    {
+      <span class="jk" data-key="role">"role"</span>: <span class="js">"A"</span>,
+      <span class="jk" data-key="subtitle">"subtitle"</span>: <span class="js">"봄과 여름"</span>,
+      <span class="jk" data-key="text">"text"</span>: <span class="js">"봄이 되면...</span>
+    },
+    { <span class="jk" data-key="role">"role"</span>: <span class="js">"B"</span>, <span class="jk">"..."</span>: <span class="js">"..."</span> }
+  ],
+  <span class="jk" data-key="synthesis_questions">"synthesis_questions"</span>: [
+    {
+      <span class="jk" data-key="q">"q"</span>: <span class="js">"계절에 따라 한국 음식이 어떻게 변하나요?"</span>,
+      <span class="jk" data-key="required_texts">"required_texts"</span>: [<span class="js">"A"</span>, <span class="js">"B"</span>, <span class="js">"C"</span>]
+    },
+    { <span class="jk" data-key="q">"q"</span>: <span class="js">"..."</span>, <span class="jk" data-key="required_texts">"required_texts"</span>: [<span class="js">"..."</span>] }
+  ]
+}
+    </div>
+  </div>
+  <div class="legend">
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#a6e3a1"></div>texts</div><span class="leg-arrow">→</span><span class="leg-desc">3개의 텍스트 조각이 들어가요. 각 조각은 역할(A/B/C)과 내용을 가져요.</span></div>
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#89b4fa"></div>synthesis_questions</div><span class="leg-arrow">→</span><span class="leg-desc">세 텍스트를 모두 읽어야 답할 수 있는 종합 질문이에요.</span></div>
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#f38ba8"></div>required_texts</div><span class="leg-arrow">→</span><span class="leg-desc">각 질문에 필요한 텍스트 목록이에요. [A, B, C] 세 개 모두 필요하면 활동이 제대로 설계된 거예요.</span></div>
+  </div>
+
+  <div class="warn">⚠️ 종합 질문이 정말 세 텍스트를 모두 필요로 하는지 꼭 확인하세요. 한 두 텍스트만으로 답할 수 있으면 직소 효과가 떨어져요.</div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">🖨 Step 3. 인쇄용 자료로 정리하세요</div>
+  <p class="prose">JSON이 준비됐으면, 아래처럼 프롬프트를 추가해서 인쇄 가능한 형식으로 변환하면 돼요.</p>
+  <p class="prose"><b>"이 데이터를 A4 워크시트로 정리해줘. 3개의 텍스트는 3개 섹션으로 나누고, 아래에 종합 질문 5개와 답쓰는 칸을 추가해줘."</b></p>
+</div>
+
+<!-- ══ PRACTICE ══ -->
+<div class="section" id="practice">
+  <div class="section-tag">PRACTICE</div>
+  <div class="section-title">🎯 완성된 자료의 모습</div>
+  <p class="section-lead">이 활동은 웹앱 데모 대신 완성된 자료의 모습을 보여줍니다.</p>
+
+  <div class="demo-box">
+    <div class="demo-tabs">
+      <div class="demo-tab active" onclick="switchTab(event, 'tabA')">역할 A</div>
+      <div class="demo-tab" onclick="switchTab(event, 'tabB')">역할 B</div>
+      <div class="demo-tab" onclick="switchTab(event, 'tabC')">역할 C</div>
+    </div>
+    <div class="demo-content">
+      <div id="tabA" class="demo-pane" style="display:block;">
+        <p class="demo-text"><b>봄과 여름의 한국 음식</b></p>
+        <p class="demo-text">봄이 되면 새로운 채소와 산나물이 나와요. 이때 사람들은 쑥개떡이나 봄나물 무침을 많이 먹어요. 여름이 오면 더운 날씨 때문에 시원한 음식이 인기가 있어요. 냉면, 콩국수, 빙수 같은 음식들이 여름의 대표 음식이에요.</p>
+        <div class="demo-qa">
+          <div class="demo-q" onclick="toggleAnswer(event)">1. 계절에 따라 한국 음식이 어떻게 변하나요?</div>
+          <div class="demo-a"></div>
+          <div class="demo-q" onclick="toggleAnswer(event)">2. 봄과 여름의 차이는 뭐가 있나요?</div>
+          <div class="demo-a"></div>
+        </div>
+      </div>
+      <div id="tabB" class="demo-pane" style="display:none;">
+        <p class="demo-text"><b>가을과 겨울의 한국 음식</b></p>
+        <p class="demo-text">가을이 오면 수확의 계절이 돼요. 밤, 대추, 곡식들이 많이 나오고, 송편이나 대추차 같은 음식들이 만들어져요. 겨울은 가장 추운 계절이라 따뜻한 음식이 필요해요. 떡국, 팥죽, 김장 김치 같은 음식들이 겨울을 보내는 데 도움이 돼요.</p>
+        <div class="demo-qa">
+          <div class="demo-q" onclick="toggleAnswer(event)">1. 가을과 겨울의 음식 차이는 무엇인가요?</div>
+          <div class="demo-a"></div>
+          <div class="demo-q" onclick="toggleAnswer(event)">2. 왜 겨울에는 따뜻한 음식을 먹을까요?</div>
+          <div class="demo-a"></div>
+        </div>
+      </div>
+      <div id="tabC" class="demo-pane" style="display:none;">
+        <p class="demo-text"><b>계절을 통한 한국 음식 문화</b></p>
+        <p class="demo-text">한국 음식은 사계절의 변화를 중심으로 발전해 왔어요. 각 계절에 나는 재료들을 최대한 활용하고, 그 계절의 기후에 맞는 음식을 만들어 왔거든요. 이런 방식은 건강하고 자연스러운 식생활을 가능하게 했어요.</p>
+        <div class="demo-qa">
+          <div class="demo-q" onclick="toggleAnswer(event)">1. 한국 음식 문화의 기초는 무엇인가요?</div>
+          <div class="demo-a"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">학습자가 각자 다른 텍스트를 읽게 하고, 아래 종합 질문을 함께 풀면서 정보를 나누도록 하세요.</div>
+</div>
+
+<!-- ══ CHECK ══ -->
+<div class="section" id="check">
+  <div class="section-tag">CHECK</div>
+  <div class="section-title">✅ 이것만 확인하세요</div>
+  <ul class="check-list">
+    <li>세 텍스트가 겹치지 않으면서도 보완적인가요?</li>
+    <li>종합 질문이 정말 여러 텍스트의 정보를 필요로 하나요?</li>
+    <li>각 텍스트의 길이와 난이도가 비슷한가요? (150~200자, TOPIK 3급 수준)</li>
+  </ul>
+
+  <div class="section-title">🔄 이렇게 바꿔 쓸 수도 있어요</div>
+  <table class="var-table">
+    <thead><tr><th>바꾸고 싶은 것</th><th>방법</th></tr></thead>
+    <tbody>
+      <tr><td>다른 주제로</td><td>프롬프트에서 전체 주제와 3분할 내용만 변경 (예: 서울 지역별 특성, 명절)</td></tr>
+      <tr><td>인원 조정</td><td>2인 활동: 텍스트 2개, 4인: 텍스트 4개로 분할</td></tr>
+      <tr><td>난이도 올리기</td><td>텍스트 길이를 300자로 늘리고 TOPIK 4급 어휘 사용</td></tr>
+      <tr><td>활동 확장</td><td>종합 후 그룹별 발표 단계 추가</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- .wrap -->
+
+<div class="tooltip" id="tt"><div class="tt-title" id="tt-title"></div><div id="tt-role"></div><div id="tt-badge"></div></div>
+
+<script>
+// JSON 툴팁
+const info = {
+  topic: {title:'"topic" — 주제', role:'전체 활동의 주제예요.', edit:false},
+  texts: {title:'"texts" — 텍스트 배열', role:'3개의 텍스트 조각이 들어가요.', edit:false},
+  role: {title:'"role" — 역할 (A/B/C)', role:'각 텍스트의 역할을 구분해요.', edit:false},
+  subtitle: {title:'"subtitle" — 부제', role:'각 텍스트가 다루는 내용을 한 줄로 설명해요.', edit:true},
+  text: {title:'"text" — 본문', role:'150~200자의 TOPIK 3급 수준 텍스트예요.', edit:true},
+  synthesis_questions: {title:'"synthesis_questions" — 종합 질문', role:'세 텍스트를 모두 읽어야 답할 수 있는 질문들이에요.', edit:false},
+  q: {title:'"q" — 질문', role:'학습자가 답해야 할 질문이에요.', edit:true},
+  required_texts: {title:'"required_texts" — 필요한 텍스트', role:'이 질문을 답하려면 어떤 역할(A/B/C)의 정보가 필요한지 보여줘요.', edit:false}
+};
+const tt = document.getElementById('tt');
+function showTip(key, e) {
+  const d = info[key]; if (!d) return;
+  document.getElementById('tt-title').textContent = d.title;
+  document.getElementById('tt-role').textContent = d.role;
+  document.getElementById('tt-badge').innerHTML = d.edit ? '<span class="tt-badge badge-yes" style="background:#EAF3DE;color:#3B6D11;">✏️ 수정 가능</span>' : '<span class="tt-badge badge-no" style="background:#f5f5f3;color:#888;">수정 불필요</span>';
+  posTip(e); tt.classList.add('show');
+  document.querySelectorAll('.jk').forEach(el => el.classList.toggle('active', el.dataset.key === key));
+}
+function hideTip() { tt.classList.remove('show'); document.querySelectorAll('.jk').forEach(el => el.classList.remove('active')); }
+function posTip(e) {
+  const x = e.clientX + 16, y = e.clientY - 10, w = 220, vw = window.innerWidth, vh = window.innerHeight;
+  tt.style.left = (x + w > vw ? x - w - 32 : x) + 'px';
+  tt.style.top = (y + 160 > vh ? y - 160 : y) + 'px';
+}
+document.querySelectorAll('.jk[data-key]').forEach(el => {
+  el.addEventListener('mouseenter', e => showTip(el.dataset.key, e));
+  el.addEventListener('mousemove', e => posTip(e));
+  el.addEventListener('mouseleave', hideTip);
+});
+
+// 데모 탭
+function switchTab(e, tabName) {
+  const tabs = document.querySelectorAll('.demo-tab');
+  const panes = document.querySelectorAll('.demo-pane');
+  tabs.forEach(t => t.classList.remove('active'));
+  panes.forEach(p => p.style.display = 'none');
+  e.target.classList.add('active');
+  document.getElementById(tabName).style.display = 'block';
+}
+
+// 데모 토글
+function toggleAnswer(e) {
+  e.currentTarget.classList.toggle('open');
+  const a = e.currentTarget.nextElementSibling;
+  a.classList.toggle('show');
+}
+
+// 스크롤 스파이
+const navLinks = document.querySelectorAll('#main-nav a[data-section]');
+const sections = document.querySelectorAll('.section[id]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// 부드러운 스크롤
+navLinks.forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.getElementById(a.dataset.section);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>

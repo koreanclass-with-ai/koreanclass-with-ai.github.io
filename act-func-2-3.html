@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비교·대조 설명하기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            border-bottom: 0.5px solid #e0e0e0;
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-logo {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        .nav-menu a:hover {
+            color: #333;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-menu {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .nav-menu a {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f9f9f7 0%, #fafaf8 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 0.5px solid #e0e0e0;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: #e8f4f8;
+            color: #0066cc;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .hero-chips {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: white;
+            border: 0.5px solid #ddd;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 2.5rem 1rem;
+            }
+
+            .hero-title {
+                font-size: 1.6rem;
+            }
+
+            .hero-desc {
+                font-size: 0.95rem;
+            }
+
+            .hero-chips {
+                gap: 0.5rem;
+            }
+
+            .chip {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        /* Intro Section - Table */
+        .intro-table {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .intro-table tr {
+            border-bottom: 0.5px solid #e0e0e0;
+        }
+
+        .intro-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .intro-table td {
+            padding: 1rem;
+        }
+
+        .intro-table td:first-child {
+            font-weight: 500;
+            background: #f5f5f5;
+            width: 140px;
+            color: #333;
+        }
+
+        .intro-table td:last-child {
+            color: #555;
+        }
+
+        .design-rationale {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .design-rationale h4 {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .design-rationale p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .design-rationale p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Build Section - Prompt & JSON */
+        .build-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .prompt-box,
+        .json-box {
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .prompt-box {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 0.5px solid #444;
+            position: relative;
+        }
+
+        .prompt-box::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .prompt-text {
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .prompt-text strong {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .json-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: 0.5px solid #444;
+        }
+
+        .json-key {
+            color: #9cdcfe;
+        }
+
+        .json-string {
+            color: #ce9178;
+        }
+
+        .json-number {
+            color: #b5cea8;
+        }
+
+        @media (max-width: 640px) {
+            .build-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .prompt-box,
+            .json-box {
+                padding: 1rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Legend */
+        .legend {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .legend h4 {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .legend-item {
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-term {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Practice Section - Quiz */
+        .act-box {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .act-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .act-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .act-subtitle {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .quiz-item {
+            margin-bottom: 2rem;
+        }
+
+        .quiz-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .quiz-question {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border-left: 3px solid #0066cc;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .quiz-option {
+            padding: 0.8rem 1rem;
+            border: 0.5px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .quiz-option:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .quiz-option.correct {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .quiz-option.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 0.8rem;
+        }
+
+        .feedback {
+            margin-top: 0.8rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        @media (max-width: 640px) {
+            .act-box {
+                padding: 1.5rem;
+            }
+
+            .act-title {
+                font-size: 1.1rem;
+            }
+
+            .quiz-question {
+                font-size: 0.95rem;
+                padding: 0.8rem;
+            }
+
+            .quiz-option {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+        }
+
+        /* Check Section */
+        .check-group {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .check-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-top: 0.3rem;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Variation Table */
+        .variation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .variation-table th,
+        .variation-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 0.5px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .variation-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .variation-table td {
+            color: #666;
+        }
+
+        .variation-table tr:nth-child(even) {
+            background: #fafaf9;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: #999;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            border-top: 0.5px solid #444;
+        }
+
+        footer a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .variation-table th,
+            .variation-table td {
+                padding: 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-logo">교육 활동 설계</div>
+            <ul class="nav-menu">
+                <li><a href="javascript:void(0)" onclick="scrollTo_('intro')">개요</a></li>
+                <li><a href="javascript:void(0)" onclick="scrollTo_('build')">프롬프트</a></li>
+                <li><a href="javascript:void(0)" onclick="scrollTo_('practice')">활동</a></li>
+                <li><a href="javascript:void(0)" onclick="scrollTo_('check')">검증</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">❸ 기능 중심 · 정보 전달</div>
+            <h1 class="hero-title">비교·대조 설명하기<br>AI로 비교 자료 만드는 법</h1>
+            <p class="hero-desc">프롬프트로 두 대상의 공통점과 차이점을 비교하는 활동 자료를 만드는 과정을 안내해요.</p>
+            <div class="hero-chips">
+                <div class="chip">TOPIK 3~4급 · 중급</div>
+                <div class="chip">제작 시간 15분</div>
+                <div class="chip">3개 주제</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Intro Section -->
+        <section id="intro" class="section">
+            <h2 class="section-title">활동 개요</h2>
+
+            <table class="intro-table">
+                <tr>
+                    <td>활동 유형</td>
+                    <td>정보 전달 (비교·대조)</td>
+                </tr>
+                <tr>
+                    <td>범주</td>
+                    <td>❸ 기능 중심</td>
+                </tr>
+                <tr>
+                    <td>대상</td>
+                    <td>중급 (TOPIK 3~4급)</td>
+                </tr>
+                <tr>
+                    <td>목표</td>
+                    <td>비교 표현(-보다, -만큼, 반면에, -는 데 비해)을 사용하여 두 대상 비교</td>
+                </tr>
+                <tr>
+                    <td>언어 기능</td>
+                    <td>말하기 · 쓰기</td>
+                </tr>
+                <tr>
+                    <td>규모</td>
+                    <td>3개 주제 / 15분</td>
+                </tr>
+                <tr>
+                    <td>배포</td>
+                    <td>웹 기반 또는 인쇄용</td>
+                </tr>
+            </table>
+
+            <div class="design-rationale">
+                <h4>설계 근거</h4>
+                <p>비교 표현은 비교 대상이 있어야 사용할 동기가 생기잖아요. "서울은 부산보다 크다"라는 문장을 만들려면 서울과 부산 두 대상의 정보가 필요하거든요. 비교 자료(표, 그래프, 정보 카드)를 제공하면 학습자가 자연스럽게 비교 표현을 사용하게 돼요.</p>
+                <p>비교·대조는 정보를 조직하는 가장 기본적인 방식 중 하나예요. "A와 B의 공통점은 무엇이고, 차이점은 무엇인가"를 설명하는 과정에서 학습자는 정보를 구조화하는 능력과 그것을 언어로 표현하는 능력을 동시에 연습하게 되죠.</p>
+            </div>
+        </section>
+
+        <!-- Build Section -->
+        <section id="build" class="section">
+            <h2 class="section-title">프롬프트로 자료 생성하기</h2>
+
+            <div class="build-grid">
+                <div class="prompt-box">
+                    <div class="code-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="prompt-text">
+                        <strong># 역할 (Role)</strong><br>
+                        한국어 교육 전문가<br><br>
+
+                        <strong># 과제 (Task)</strong><br>
+                        TOPIK 3~4급 학습자를 위한 비교·대조 설명 활동 생성<br><br>
+
+                        <strong># 조건 (Constraints)</strong><br>
+                        - 주제 3개: 서울 vs 부산, 한국 학교 vs 학습자 나라 학교, 한국 음식 vs 서양 음식<br>
+                        - 각 주제: 비교 정보 표, 공통점 2개, 차이점 3개<br>
+                        - 목표 표현: -보다, -만큼, 반면에, -는 데 비해, 공통점/차이점, 비슷하다/다르다<br>
+                        - 모범 비교문 3~4문장<br><br>
+
+                        <strong># 출력 (Output)</strong><br>
+                        JSON 형식
+                    </div>
+                </div>
+
+                <div class="json-box">
+<pre>{
+  <span class="json-key">"topics"</span>: [
+    {
+      <span class="json-key">"id"</span>: <span class="json-number">1</span>,
+      <span class="json-key">"subject_A"</span>: <span class="json-string">"서울"</span>,
+      <span class="json-key">"subject_B"</span>: <span class="json-string">"부산"</span>,
+      <span class="json-key">"comparison_data"</span>: {
+        <span class="json-key">"인구"</span>: {
+          <span class="json-key">"A"</span>: <span class="json-string">"약 950만 명"</span>,
+          <span class="json-key">"B"</span>: <span class="json-string">"약 340만 명"</span>
+        },
+        <span class="json-key">"특징"</span>: {
+          <span class="json-key">"A"</span>: <span class="json-string">"수도, 정치·경제 중심"</span>,
+          <span class="json-key">"B"</span>: <span class="json-string">"항구도시, 관광 중심"</span>
+        }
+      },
+      <span class="json-key">"similarities"</span>: [
+        <span class="json-string">"한국의 대도시"</span>,
+        <span class="json-string">"지하철이 있다"</span>
+      ],
+      <span class="json-key">"differences"</span>: [
+        <span class="json-string">"인구 차이"</span>,
+        <span class="json-string">"기후 차이"</span>
+      ],
+      <span class="json-key">"model_paragraph"</span>: <span class="json-string">"서울은 부산보다 인구가 많다..."</span>
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="legend">
+                <h4>출력 요소 설명</h4>
+                <div class="legend-item">
+                    <span class="legend-term">topics</span> → 비교 주제 목록이에요.
+                </div>
+                <div class="legend-item">
+                    <span class="legend-term">subject_A / subject_B</span> → 비교 대상 A와 B예요.
+                </div>
+                <div class="legend-item">
+                    <span class="legend-term">comparison_data</span> → 비교 정보 표예요. 항목별 데이터가 들어가요.
+                </div>
+                <div class="legend-item">
+                    <span class="legend-term">similarities</span> → 공통점이에요.
+                </div>
+                <div class="legend-item">
+                    <span class="legend-term">differences</span> → 차이점이에요.
+                </div>
+                <div class="legend-item">
+                    <span class="legend-term">model_paragraph</span> → 모범 비교문이에요. 목표 표현이 사용돼요.
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice" class="section">
+            <h2 class="section-title">비교 표현 선택 활동</h2>
+
+            <div class="act-box">
+                <div class="act-header">
+                    <h3 class="act-title">비교 표현 선택 활동</h3>
+                    <p class="act-subtitle">TOPIK 3~4급 · 정보 전달 · 3문항</p>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="quiz-item">
+                    <div class="quiz-question">Q1. 서울은 부산___ 인구가 많다.</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="correct" onchange="checkAnswer(this, 'q1-feedback')">
+                            -보다
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="incorrect" onchange="checkAnswer(this, 'q1-feedback')">
+                            -만큼
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="incorrect" onchange="checkAnswer(this, 'q1-feedback')">
+                            -는 데 비해
+                        </label>
+                    </div>
+                    <div id="q1-feedback" class="feedback"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="quiz-item">
+                    <div class="quiz-question">Q2. 서울과 부산은 ___ 한국의 대도시이다.</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="incorrect" onchange="checkAnswer(this, 'q2-feedback')">
+                            반면에
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="correct" onchange="checkAnswer(this, 'q2-feedback')">
+                            모두 (둘 다)
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="incorrect" onchange="checkAnswer(this, 'q2-feedback')">
+                            -보다
+                        </label>
+                    </div>
+                    <div id="q2-feedback" class="feedback"></div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="quiz-item">
+                    <div class="quiz-question">Q3. 서울은 겨울이 추운 ___ 부산은 겨울이 따뜻하다.</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="incorrect" onchange="checkAnswer(this, 'q3-feedback')">
+                            -만큼
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="incorrect" onchange="checkAnswer(this, 'q3-feedback')">
+                            그래서
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="correct" onchange="checkAnswer(this, 'q3-feedback')">
+                            반면에
+                        </label>
+                    </div>
+                    <div id="q3-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Check Section -->
+        <section id="check" class="section">
+            <h2 class="section-title">활동 검증 및 확장</h2>
+
+            <!-- Checklist -->
+            <div class="check-group">
+                <h3 class="check-title">설계 검증 체크리스트</h3>
+                <div class="checklist">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check1">
+                        <label for="check1">비교 데이터가 사실에 가까운가요?</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check2">
+                        <label for="check2">모범 비교문에 목표 표현이 다양하게 사용되었나요?</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check3">
+                        <label for="check3">공통점과 차이점이 명확하게 구분되나요?</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variation Table -->
+            <div class="check-group">
+                <h3 class="check-title">활동 변형 및 확장</h3>
+                <table class="variation-table">
+                    <thead>
+                        <tr>
+                            <th>변형 유형</th>
+                            <th>내용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>주제 교체</strong></td>
+                            <td>도시 → 다른 비교 대상 / 과거 vs 현재, TV vs 유튜브</td>
+                        </tr>
+                        <tr>
+                            <td><strong>난이도 ↑</strong></td>
+                            <td>정보 표 제공 → 학습자가 직접 조사 / 인터넷 검색 후 비교 자료 작성</td>
+                        </tr>
+                        <tr>
+                            <td><strong>언어 기능</strong></td>
+                            <td>말하기 → 쓰기 / 비교 에세이 작성 (150~200자)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>확장</strong></td>
+                            <td>비교 → 의견 추가 / "나는 서울/부산 중 어디가 더 살기 좋다고 생각한다"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>한국어 교육 활동 설계 플랫폼 | 2026</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">이 자료는 TOPIK 중급 학습자를 위해 제작되었습니다.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll function
+        function scrollTo_(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Quiz answer checking function
+        function checkAnswer(input, feedbackId) {
+            const feedback = document.getElementById(feedbackId);
+            const isCorrect = input.value === 'correct';
+
+            feedback.classList.add('show');
+            feedback.classList.remove(isCorrect ? 'incorrect' : 'correct');
+            feedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+            if (isCorrect) {
+                feedback.textContent = '정답입니다! 👍';
+            } else {
+                feedback.textContent = '다시 생각해보세요. 다른 보기를 선택해주세요.';
+            }
+
+            // Update option styling
+            const options = input.parentElement.parentElement.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                const radio = opt.querySelector('input');
+                if (radio.checked) {
+                    opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

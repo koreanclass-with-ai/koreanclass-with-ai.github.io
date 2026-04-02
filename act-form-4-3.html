@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>크로스워드 퍼즐 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#f9f9f7;--bg-alt:#f0efed;--text:#1a1a1a;--text-sub:#888;--text-light:#bbb;--blue:#185FA5;--blue-light:#EBF5FF;--green:#2E8B57;--green-light:#F0FFF4;--border:#e0e0de;--card:#fff;--radius:16px;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+
+/* 네비 */
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,0.85);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:10px 0;}
+.top-nav .wrap{display:flex;align-items:center;gap:20px;overflow-x:auto;scrollbar-width:none;}
+.top-nav .wrap::-webkit-scrollbar{display:none;}
+.top-nav .logo{font-weight:900;font-size:15px;white-space:nowrap;color:var(--text);flex-shrink:0;text-decoration:none;}
+.top-nav a{font-size:13px;font-weight:500;color:#aaa;text-decoration:none;white-space:nowrap;padding:6px 0;border-bottom:2px solid transparent;transition:all .15s;flex-shrink:0;}
+.top-nav a:hover{color:var(--text);}
+.top-nav a.active{color:var(--text);font-weight:700;border-bottom-color:var(--text);}
+
+/* 히어로 */
+.hero{padding:48px 0 32px;border-bottom:0.5px solid var(--border);}
+.hero .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--blue);background:var(--blue-light);padding:3px 10px;border-radius:6px;margin-bottom:12px;}
+.hero h1{font-size:28px;font-weight:900;line-height:1.3;margin-bottom:8px;}
+.hero .sub{font-size:14px;color:var(--text-sub);}
+
+/* 개요표 */
+.overview{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0;}
+.overview table{width:100%;font-size:13px;border-collapse:collapse;}
+.overview th{text-align:left;padding:6px 10px;color:var(--text-sub);font-weight:600;width:30%;background:var(--bg-alt);border:0.5px solid var(--border);}
+.overview td{padding:6px 10px;border:0.5px solid var(--border);}
+
+/* 스티키 섹션 네비 */
+.sec-nav{position:sticky;top:52px;z-index:90;background:rgba(249,249,247,0.9);backdrop-filter:blur(8px);padding:10px 0;border-bottom:0.5px solid var(--border);margin-bottom:24px;}
+.sec-nav .wrap{display:flex;gap:16px;}
+.sec-nav a{font-size:13px;font-weight:500;color:#aaa;text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;transition:all .15s;}
+.sec-nav a:hover{color:var(--text);}
+.sec-nav a.active{color:var(--text);font-weight:700;border-bottom-color:var(--text);}
+
+/* 섹션 카드 */
+.section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:28px 24px;margin-bottom:20px;}
+.section .sec-label{font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--blue);margin-bottom:12px;}
+.section h2{font-size:18px;font-weight:800;margin-bottom:12px;}
+.section p{font-size:14px;color:#333;margin-bottom:12px;line-height:1.8;}
+.section b{font-weight:500;}
+
+/* 프롬프트 다크박스 */
+.prompt-box{background:#1e1e1e;border-radius:12px;padding:16px 20px;margin:16px 0;position:relative;}
+.prompt-box::before{content:'';display:flex;gap:5px;margin-bottom:10px;}
+.prompt-dots{display:flex;gap:5px;margin-bottom:10px;}
+.prompt-dots span{width:8px;height:8px;border-radius:50%;}
+.prompt-dots span:nth-child(1){background:#ff5f57;}
+.prompt-dots span:nth-child(2){background:#febc2e;}
+.prompt-dots span:nth-child(3){background:#28c840;}
+.prompt-text{font-family:'Noto Sans KR',monospace;font-size:13px;color:#e0e0e0;line-height:1.7;white-space:pre-wrap;}
+.prompt-text .tag{color:#7ec8e3;font-weight:600;}
+
+/* 점검 리스트 */
+.check-list{margin:12px 0;}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.04);font-size:14px;}
+.check-item:last-child{border-bottom:none;}
+.check-icon{color:var(--green);flex-shrink:0;font-size:14px;margin-top:2px;}
+
+/* 변형 표 */
+.var-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+.var-table th,.var-table td{padding:8px 12px;border:0.5px solid var(--border);text-align:left;}
+.var-table th{background:var(--bg-alt);font-weight:700;width:30%;}
+
+/* 가이드 링크 */
+.guide-link{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:13px;font-weight:600;text-decoration:none;margin-top:8px;}
+
+/* 푸터 */
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);margin-top:40px;}
+
+@media(max-width:640px){.hero h1{font-size:22px;}.section{padding:20px 16px;}}
+</style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="wrap">
+  <a class="logo" href="index.html">AI 한국어 수업</a>
+  <a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html" class="active">활동</a><a href="demo.html">데모</a><a href="column.html">칼럼</a><a href="faq.html">FAQ</a>
+</div></nav>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">형태 중심</span>
+    <h1>크로스워드 퍼즐</h1>
+    <p class="sub">힌트로 채우는 어휘 격자</p>
+  </div>
+
+  <div class="overview"><table>
+    <tr><th>범주</th><td>형태 중심</td></tr>
+    <tr><th>활동 유형</th><td>퍼즐</td></tr>
+    <tr><th>대상 문법/어휘</th><td>주제별 어휘 종합 (학교생활 등)</td></tr>
+    <tr><th>난이도</th><td>중급</td></tr>
+    <tr><th>소요 시간</th><td>15분</td></tr>
+    <tr><th>산출물 형태</th><td>웹앱 / 인쇄용</td></tr>
+  </table></div>
+</div>
+
+<nav class="sec-nav"><div class="wrap">
+  <a href="#intro" class="active">설계 의도</a>
+  <a href="#build">제작 과정</a>
+  <a href="#check">점검·응용</a>
+</div></nav>
+
+<div class="wrap">
+
+  <div class="section" id="intro">
+    <div class="sec-label">INTRO — 설계 의도</div>
+    <h2>💡 설계 근거</h2>
+    <p><b>왜 크로스워드인가.</b> "힌트(뜻풀이)를 읽고 → 단어를 떠올리고 → 글자 수에 맞게 채우는" 과정이다. 의미에서 형태로 가는 방향(production)의 연습이다. 어휘 퀴즈가 형태→의미(recognition)였다면, 크로스워드는 그 반대 방향이다.</p><p><b>왜 격자형인가.</b> 가로와 세로 단어가 교차하므로 하나를 맞추면 다른 단어의 힌트가 자동으로 채워진다. 부분 정보에서 전체를 추론하는 경험을 제공하며, 퍼즐을 풀어가는 성취감이 동기를 유지시킨다.</p>
+  </div>
+
+  <div class="section" id="build">
+    <div class="sec-label">BUILD — 제작 과정</div>
+    <h2>완성된 자료의 모습</h2>
+    <p style="color:var(--text-sub);font-size:13px;">[그림 1-16] 크로스워드 퍼즐 — 8×8 격자, 가로 5개 + 세로 5개 단어</p>
+    <p>8×8 격자에 총 10개의 한국어 단어가 교차 배치되어 있다. 격자 옆에 가로 힌트와 세로 힌트가 표시되고, 학습자가 한 글자씩 입력한다.</p>
+
+    <h2 style="margin-top:24px;">프롬프트</h2>
+    <div class="prompt-box">
+      <div class="prompt-dots"><span></span><span></span><span></span></div>
+      <div class="prompt-text"><span class='tag'>[역할]</span> 한국어 교육 전문가
+<span class='tag'>[과제]</span> TOPIK 2급 학습자를 위한 크로스워드 퍼즐 생성
+
+<span class='tag'>[조건]</span>
+- 주제: 학교생활 어휘
+- 단어 수: 가로 5개, 세로 5개 (총 10개)
+- 단어 길이: 2~4글자
+- 힌트: 한국어 뜻풀이
+- 최소 3쌍의 교차점 존재
+- 격자 크기: 8×8 이내
+
+<span class='tag'>[출력]</span> JSON 형식</div>
+    </div>
+    <p style="font-size:13px;color:var(--text-sub);font-style:italic;">✏️ Tip. 크로스워드에서 가장 어려운 것은 교차점 설계이다. AI가 교차가 안 되는 배치를 내놓는 경우가 많으니, 출력된 격자를 직접 그려 보고 교차점이 성립하는지 확인해야 한다.</p>
+
+    <a class="guide-link" href="guide-prompt.html">📐 프롬프트 작성 가이드 보기 →</a>
+  </div>
+
+  <div class="section" id="check">
+    <div class="sec-label">CHECK — 점검·응용</div>
+    <h2>점검 포인트</h2>
+    <div class="check-list">
+      <div class="check-item"><span class="check-icon">✓</span>모든 단어가 격자 안에서 겹치지 않는가</div><div class="check-item"><span class="check-icon">✓</span>교차점 글자가 양쪽 단어 모두에서 정확한가</div><div class="check-item"><span class="check-icon">✓</span>힌트가 TOPIK 2급 수준에 맞는가</div><div class="check-item"><span class="check-icon">✓</span>10개 단어가 주제 안에서 고르게 선정되었는가</div>
+    </div>
+
+    <h2 style="margin-top:24px;">변형 가이드</h2>
+    <table class="var-table">
+      <tr><th>변형 축</th><th>방법</th></tr>
+      <tr><td>주제 교체</td><td>학교생활 → 음식, 여행, 직업, 취미</td></tr><tr><td>힌트 유형</td><td>뜻풀이 → 영어 번역, 예문 빈칸, 그림 힌트</td></tr><tr><td>난이도 조절</td><td>단어 수(6→10→15), 격자 크기(6×6→10×10)</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<footer><div class="wrap">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+const navLinks=document.querySelectorAll('.sec-nav a');
+const sections=document.querySelectorAll('.section[id]');
+const obs=new IntersectionObserver(e=>{e.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));const link=document.querySelector('.sec-nav a[href="#'+entry.target.id+'"]');if(link)link.classList.add('active');}})},{rootMargin:'-80px 0px -60% 0px'});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지·음성 도구 가이드 — 그림과 소리도 AI로</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}.nav a:hover{color:#1a1a1a;}.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;}
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}.prose b{color:#1a1a1a;font-weight:500;}.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.tool-list{display:flex;flex-direction:column;gap:10px;margin:1rem 0;}.tool-card{padding:14px;background:#f9f9f7;border-radius:10px;display:flex;gap:12px;align-items:flex-start;}.tool-icon{font-size:20px;flex-shrink:0;margin-top:2px;}.tool-info{flex:1;}.tool-name{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:2px;}.tool-desc{font-size:13px;color:#888;line-height:1.6;}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;border-bottom:1px solid #30363d;}.prompt-bar-left{display:flex;align-items:center;gap:5px;}.prompt-dot{width:8px;height:8px;border-radius:50%;}.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+@media(max-width:640px){.wrap{padding:1rem .75rem 3rem;}.hero,.section{padding:1.25rem;border-radius:12px;}.hero-title{font-size:20px;}.nav{gap:6px;}.nav a{padding:7px 10px;font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="tag">🎨 가이드</div>
+  <h1 class="hero-title">이미지·음성 도구 가이드</h1>
+  <p class="hero-desc">상황 카드에 넣을 그림, 듣기 연습용 음성, 활동지 디자인까지. 그림을 못 그려도, 원어민 녹음을 구할 수 없어도 괜찮아요.</p>
+  <div class="meta">
+    <span class="chip">이미지 생성</span>
+    <span class="chip">TTS 음성</span>
+    <span class="chip">디자인 도구</span>
+  </div>
+</div>
+
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#image" data-section="image">이미지 생성</a>
+    <a href="#voice" data-section="voice">음성 생성</a>
+    <a href="#design" data-section="design">디자인 도구</a>
+    <a href="#check" data-section="check">점검 사항</a>
+  </div>
+</div>
+
+<div class="section" id="image">
+  <div class="section-tag">IMAGE</div>
+  <div class="section-title">이미지 생성 도구</div>
+  <p class="prose">상황 카드, 어휘 플래시카드, 틀린 그림 찾기 등에 쓸 이미지를 AI로 만들 수 있어요. 직접 그릴 필요 없어요.</p>
+
+  <div class="tool-list">
+    <div class="tool-card">
+      <div class="tool-icon">🖼</div>
+      <div class="tool-info">
+        <div class="tool-name">DALL-E (ChatGPT 내장)</div>
+        <div class="tool-desc">ChatGPT에서 바로 이미지를 생성할 수 있어요. "한국 카페에서 커피를 주문하는 장면을 그려줘" 이런 식으로요.</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-info">
+        <div class="tool-name">Midjourney</div>
+        <div class="tool-desc">더 세밀한 스타일 조절이 가능해요. 수채화풍, 만화풍 등 원하는 분위기를 지정할 수 있어요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-title">수업 자료에 쓸 때 프롬프트 팁</div>
+  <div class="prompt-box">
+    <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">예시: 상황 카드 이미지</span></div></div>
+    <div class="prompt-body">한국 약국 내부. 손님이 약사에게 증상을 설명하고 있는 장면.
+심플한 일러스트 스타일, 밝은 색감.
+텍스트나 글자는 포함하지 마.
+교육 자료용이라 깔끔하고 명확하게.</div>
+  </div>
+  <div class="tip">"텍스트나 글자는 포함하지 마"를 꼭 넣으세요. 안 그러면 AI가 의미 없는 한글/영어를 이미지에 넣어요.</div>
+</div>
+
+<div class="section" id="voice">
+  <div class="section-tag">VOICE</div>
+  <div class="section-title">음성 생성 (TTS)</div>
+  <p class="prose">듣기 활동에 쓸 음성을 TTS(Text-to-Speech)로 만들 수 있어요. 원어민 녹음을 섭외할 필요 없이, 텍스트만 넣으면 자연스러운 한국어 음성이 나와요.</p>
+
+  <div class="tool-list">
+    <div class="tool-card">
+      <div class="tool-icon">🔊</div>
+      <div class="tool-info">
+        <div class="tool-name">네이버 CLOVA Voice / Google TTS</div>
+        <div class="tool-desc">한국어 음성 품질이 높아요. 속도와 톤 조절이 가능해서 초급용(느리게)과 중급용(보통)을 구분할 수 있어요.</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🎙</div>
+      <div class="tool-info">
+        <div class="tool-name">ElevenLabs</div>
+        <div class="tool-desc">더 자연스러운 억양과 감정 표현이 가능해요. 대화문 녹음에 적합해요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">속도를 "느리게"로 설정하면 초급용, "보통"이면 중급용이에요. 같은 텍스트로 두 버전을 만들어 두면 수업 중 조절이 가능해요.</div>
+</div>
+
+<div class="section" id="design">
+  <div class="section-tag">DESIGN</div>
+  <div class="section-title">디자인 도구</div>
+  <p class="prose">AI가 만든 텍스트와 이미지를 예쁘게 레이아웃 잡을 때 쓰는 도구예요. 인쇄용 워크시트, 카드 세트 등을 만들 때 유용해요.</p>
+
+  <div class="tool-list">
+    <div class="tool-card">
+      <div class="tool-icon">✏️</div>
+      <div class="tool-info">
+        <div class="tool-name">Canva</div>
+        <div class="tool-desc">드래그 앤 드롭으로 카드, 워크시트, 포스터를 만들 수 있어요. 한국어 교육용 템플릿도 있어요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn">웹앱으로 만들 활동은 Canva가 필요 없어요. 코드 생성 도구가 디자인까지 해주거든요. Canva는 인쇄용 자료를 만들 때만 쓰세요.</div>
+</div>
+
+<div class="section" id="check">
+  <div class="section-tag">CHECK</div>
+  <div class="section-title">점검 사항</div>
+  <ul class="check-list">
+    <li><b>이미지에 의미 없는 글자가 포함돼 있지 않은지</b> — AI 이미지에 가짜 한글/영어가 들어가는 경우가 많아요</li>
+    <li><b>문화적으로 부적절한 묘사가 없는지</b> — 한국 상황인데 외국 간판, 이상한 한복 등</li>
+    <li><b>TTS 발음이 자연스러운지</b> — 특히 경음화, 비음화가 제대로 반영되는지 확인하세요</li>
+    <li><b>음성 속도가 대상 레벨에 맞는지</b> — 초급이면 느리게, 중급이면 보통으로</li>
+    <li><b>이미지 해상도가 충분한지</b> — 인쇄용은 높은 해상도, 웹용은 보통이면 돼요</li>
+  </ul>
+</div>
+
+</div>
+<script>
+const navLinks=document.querySelectorAll('#main-nav a[data-section]');const sections=document.querySelectorAll('.section[id]');const observer=new IntersectionObserver(e=>{e.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>a.classList.remove('active'));const active=document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);if(active)active.classList.add('active');}});},{rootMargin:'-40% 0px -55% 0px'});sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

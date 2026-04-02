@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교환·환불하기 - 역할극 과제 활동</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 0.5px solid #ddd;
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 2rem;
+            font-size: 0.95rem;
+            z-index: 100;
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                gap: 1rem;
+                padding: 0.8rem 1rem;
+                font-size: 0.85rem;
+                overflow-x: auto;
+            }
+        }
+
+        nav a {
+            color: #666;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #000;
+            font-weight: 500;
+        }
+
+        /* Container */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: white;
+            border: 0.5px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 0.4rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .hero-desc {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .chips {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            border: 0.5px solid #e0e0e0;
+        }
+
+        /* Card Sections */
+        .card {
+            background: white;
+            border: 0.5px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 0.5px solid #e0e0e0;
+        }
+
+        /* Intro Table */
+        .intro-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .intro-table td {
+            padding: 1rem;
+            border: 0.5px solid #e0e0e0;
+        }
+
+        .intro-table td:first-child {
+            background: #f5f5f5;
+            font-weight: 500;
+            width: 20%;
+            vertical-align: top;
+        }
+
+        @media (max-width: 640px) {
+            .intro-table td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .intro-table td:first-child {
+                width: 25%;
+            }
+        }
+
+        /* Rationale Box */
+        .rationale-section {
+            background: white;
+            border: 0.5px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .rationale-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .rationale-text {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .rationale-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Caution Box */
+        .caution-box {
+            background: #fff8e6;
+            border: 0.5px solid #ffe0a3;
+            border-left: 3px solid #ff9800;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .caution-box strong {
+            color: #ff6f00;
+            font-weight: 500;
+        }
+
+        .caution-box p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* JSON/Code Box */
+        .json-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 640px) {
+            .json-box {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+
+        .json-key {
+            color: #9cdcfe;
+        }
+
+        .json-string {
+            color: #ce9178;
+        }
+
+        .json-number {
+            color: #b5cea8;
+        }
+
+        /* Demo Cards */
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-card {
+            border: 0.5px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .demo-card-header {
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .demo-card-body {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        @media (max-width: 640px) {
+            .demo-card-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Customer Card (Blue) */
+        .customer-card .demo-card-header {
+            background: #2196F3;
+        }
+
+        /* Staff Card (Green) */
+        .staff-card .demo-card-header {
+            background: #4CAF50;
+        }
+
+        /* Receipt Card (Gray) */
+        .receipt-card .demo-card-header {
+            background: #757575;
+        }
+
+        /* Store Policy (Orange Border) */
+        .policy-card {
+            border: 1.5px solid #ff9800;
+            border-radius: 4px;
+        }
+
+        .policy-card .demo-card-header {
+            background: #fff3e0;
+            color: #e65100;
+            font-weight: 500;
+        }
+
+        /* Card Content */
+        .card-item {
+            margin-bottom: 1rem;
+        }
+
+        .card-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-label {
+            font-weight: 500;
+            color: #000;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .card-value {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .card-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .card-list li {
+            padding: 0.3rem 0;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .card-list li:before {
+            content: "· ";
+            margin-right: 0.5rem;
+            color: #999;
+        }
+
+        /* Receipt Style */
+        .receipt-content {
+            border-top: 0.5px dashed #999;
+            border-bottom: 0.5px dashed #999;
+            padding: 1rem 0;
+            margin: 1rem 0;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .receipt-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .receipt-label {
+            color: #000;
+            font-weight: 500;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            border: 0.5px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .checklist-title {
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            gap: 0.8rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-top: 0.2rem;
+            cursor: pointer;
+            accent-color: #4CAF50;
+        }
+
+        /* Variations Table */
+        .variations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .variations-table th,
+        .variations-table td {
+            padding: 1rem;
+            border: 0.5px solid #e0e0e0;
+            text-align: left;
+        }
+
+        .variations-table th {
+            background: #f5f5f5;
+            font-weight: 500;
+            color: #000;
+            font-size: 0.9rem;
+        }
+
+        .variations-table td {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 640px) {
+            .variations-table {
+                font-size: 0.85rem;
+            }
+
+            .variations-table th,
+            .variations-table td {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Tooltip */
+        .tooltip-trigger {
+            cursor: help;
+            border-bottom: 0.5px dotted #999;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .tooltip-trigger:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 0;
+            background: #333;
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 1000;
+            font-weight: normal;
+        }
+
+        /* Scroll Spy Active State */
+        .scroll-section {
+            scroll-margin-top: 80px;
+        }
+
+        /* Section Spacing */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 0.5px solid #e0e0e0;
+            margin-top: 3rem;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="javascript:void(0)" onclick="scrollTo_('intro')">소개</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('design')">설계</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('prompt')">프롬프트</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('demo')">예시</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('check')">점검</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('var')">변형</a>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-tag">❹ 과제 기반 · 역할극</div>
+            <h1 class="hero-title">교환·환불하기, AI로 문제 해결 역할극 만드는 법</h1>
+            <p class="hero-desc">프롬프트로 교환·환불 시뮬레이션 카드 세트를 만드는 과정을 안내해요.</p>
+            <div class="chips">
+                <span class="chip">TOPIK 3~4급 · 중급</span>
+                <span class="chip">제작 시간 15~20분</span>
+                <span class="chip">역할 카드 3세트</span>
+            </div>
+        </section>
+
+        <!-- Intro Section -->
+        <section id="intro" class="scroll-section card">
+            <h2 class="card-title">활동 개요</h2>
+            <table class="intro-table">
+                <tr>
+                    <td>활동 유형</td>
+                    <td>역할극 (문제 상황 시뮬레이션)</td>
+                </tr>
+                <tr>
+                    <td>범주</td>
+                    <td>❹ 과제 기반</td>
+                </tr>
+                <tr>
+                    <td>대상</td>
+                    <td>중급 (TOPIK 3~4급)</td>
+                </tr>
+                <tr>
+                    <td>목표</td>
+                    <td>물건의 교환 또는 환불을 요청하고 직원과 협상하는 과제 완수</td>
+                </tr>
+                <tr>
+                    <td>언어 기능</td>
+                    <td>말하기 · 듣기</td>
+                </tr>
+                <tr>
+                    <td>규모</td>
+                    <td>역할 카드 3세트 / 15~20분</td>
+                </tr>
+                <tr>
+                    <td>배포</td>
+                    <td>역할 카드 + 영수증 카드 + 매장 규정 카드</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Design Rationale Section -->
+        <section id="design" class="scroll-section">
+            <h2 class="card-title" style="padding: 0 0 1rem 0; border: none; margin-bottom: 1.5rem;">설계 근거</h2>
+
+            <div class="rationale-section">
+                <h3 class="rationale-title">왜 역할극인가?</h3>
+                <p class="rationale-text">교환·환불은 "상대방이 쉽게 동의하지 않는 상황에서 자신의 요구를 관철해야 하는" 과제예요. 카페 주문처럼 정해진 절차를 따르는 게 아니라, 상대의 반응에 따라 전략을 조정해야 하거든요. 이 예측 불가능성이 과제 기반 활동의 핵심이에요.</p>
+            </div>
+
+            <div class="rationale-section">
+                <h3 class="rationale-title">언어 기능의 통합</h3>
+                <p class="rationale-text">교환·환불 상황에서는 불만 표현, 이유 설명, 요청, 협상, 양보가 복합적으로 사용돼요. 이 기능들을 하나씩 따로 연습하면 각각은 할 수 있지만 통합은 안 되잖아요. 역할극은 이 모든 기능이 하나의 대화 안에서 자연스럽게 이어지는 경험을 제공해요.</p>
+            </div>
+
+            <div class="caution-box">
+                <p><strong>팁:</strong> 세트2에서 직원이 처음에 거절하는 상황이 중요해요. "안 됩니다"에서 대화가 끝나지 않고, 고객이 상황을 설명하고, 직원이 매니저 확인으로 이어지는 흐름이 실제 의사소통 경험에 가깝거든요.</p>
+            </div>
+        </section>
+
+        <!-- Prompt Section -->
+        <section id="prompt" class="scroll-section card">
+            <h2 class="card-title">AI 프롬프트</h2>
+            <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">다음 프롬프트로 ChatGPT, Claude, Gemini 등에 입력해 카드 세트를 생성하세요.</p>
+
+            <div class="json-box">
+당신은 한국어 교육 전문가예요. TOPIK 3~4급 수준의 중급 학습자를 위한 교환·환불 역할극 카드 세트를 3개 만들어 줄래? 난이도 순서로 (쉬움→중간→어려움).
+
+각 세트는:
+- 고객 카드: 문제 물건, 구체적 상황, 목표
+- 직원 카드: 매장 규정, 대응 방식, 질문 예시
+- 영수증: 날짜, 상품명, 가격, 결제 수단
+- 매장 규정: 교환/환불 조건, 예외 사항
+
+난이도:
+세트1: 사이즈 교환 (조건 모두 충족 → 성공)
+세트2: 기한 초과 (처음엔 거절 → 상황 설명 → 매니저 개입)
+세트3: 환불 + 영수증 분실 (카드 내역으로 확인)
+
+JSON 형식으로 반환해 줄래?
+            </div>
+        </section>
+
+        <!-- Demo Section -->
+        <section id="demo" class="scroll-section">
+            <h2 class="card-title" style="padding: 0 0 1rem 0; border: none; margin-bottom: 2rem;">실전 예시 (세트 1: 단순 교환)</h2>
+            <p style="color: #666; margin-bottom: 2rem; font-size: 0.95rem;">아래 카드를 읽고 역할을 나누어 대화를 진행하세요.</p>
+
+            <div class="demo-container">
+                <!-- Customer Card -->
+                <div class="demo-card customer-card">
+                    <div class="demo-card-header">고객 카드</div>
+                    <div class="demo-card-body">
+                        <div class="card-item">
+                            <div class="card-label">물건</div>
+                            <div class="card-value">흰색 티셔츠 (M사이즈)</div>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">문제</div>
+                            <div class="card-value">사이즈가 작아서 입을 수 없음</div>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">목표</div>
+                            <div class="card-value">같은 디자인의 L사이즈로 교환받기</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Staff Card -->
+                <div class="demo-card staff-card">
+                    <div class="demo-card-header">직원 카드</div>
+                    <div class="demo-card-body">
+                        <div class="card-item">
+                            <div class="card-label">매장 규정</div>
+                            <div class="card-value">7일 이내 + 영수증 + 태그 부착 → 교환 가능</div>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">당신의 대응</div>
+                            <div class="card-value">조건 확인 후 교환해 주기</div>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">확인할 질문</div>
+                            <ul class="card-list">
+                                <li>영수증을 가지고 오셨어요?</li>
+                                <li>태그가 붙어 있어요?</li>
+                                <li>언제 구입하셨어요?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Receipt Card -->
+                <div class="demo-card receipt-card">
+                    <div class="demo-card-header">영수증</div>
+                    <div class="demo-card-body">
+                        <div class="card-item">
+                            <div class="card-label">매장</div>
+                            <div class="card-value">패션하우스 강남점</div>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">날짜</div>
+                            <div class="card-value">2025년 3월 20일</div>
+                        </div>
+                        <div class="receipt-content">
+                            <div class="receipt-row">
+                                <span class="receipt-label">상품</span>
+                                <span>흰색 티셔츠 M</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">가격</span>
+                                <span>29,000원</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">결제</span>
+                                <span>신용카드</span>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">구매일로부터</div>
+                            <div class="card-value">약 3일 경과 (7일 이내)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Store Policy -->
+                <div class="demo-card policy-card">
+                    <div class="demo-card-header">매장 규정</div>
+                    <div class="demo-card-body">
+                        <div class="card-item">
+                            <div class="card-label">교환 조건</div>
+                            <ul class="card-list">
+                                <li>구매 후 7일 이내</li>
+                                <li>영수증 필수</li>
+                                <li>태그 부착 상태</li>
+                                <li>사용 흔적 없음</li>
+                            </ul>
+                        </div>
+                        <div class="card-item">
+                            <div class="card-label">불가능한 경우</div>
+                            <ul class="card-list">
+                                <li>7일 초과</li>
+                                <li>태그 제거</li>
+                                <li>세탁 또는 사용 흔적</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f0f7ff; border: 0.5px solid #b3e5fc; border-left: 3px solid #2196F3; border-radius: 4px; padding: 1.5rem; margin-top: 2rem;">
+                <p style="font-size: 0.95rem; color: #01579b; line-height: 1.6;"><strong>역할 진행 팁:</strong> 고객이 "이 티셔츠 사이즈가 작아서 L로 교환해 주세요"라고 시작하면, 직원은 "영수증을 확인해 볼까요?"라고 물어봐요. 고객이 영수증과 함께 조건을 모두 충족하면 직원이 "좋아요, L사이즈로 준비해 드릴게요"라고 마무리합니다.</p>
+            </div>
+        </section>
+
+        <!-- Checklist Section -->
+        <section id="check" class="scroll-section card">
+            <h2 class="card-title">점검 목록</h2>
+            <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">AI로 생성된 카드 세트가 좋은 활동이 되려면 다음을 확인하세요.</p>
+
+            <div class="checklist">
+                <div class="checklist-title">구성 · 난이도</div>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>3세트가 난이도 순서대로 정렬되어 있는가? (쉬움 → 중간 → 어려움)</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>각 세트가 고객 카드, 직원 카드, 영수증, 매장 규정을 포함하는가?</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>각 카드에 구체적인 정보가 충분히 담겨 있는가?</span>
+                </label>
+            </div>
+
+            <div class="checklist">
+                <div class="checklist-title">현실성</div>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>매장 규정이 실제 한국 소비자 관계법을 반영하는가?</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>영수증 정보 (날짜, 가격, 상품명)가 자연스러운가?</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>직원이 거절, 확인, 양보하는 대응이 현실적인가?</span>
+                </label>
+            </div>
+
+            <div class="checklist">
+                <div class="checklist-title">언어</div>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>모든 표현이 TOPIK 3~4급 수준인가?</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>직원의 질문이 세 개 이상, 실용적인가?</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox">
+                    <span>고객의 문제 상황이 분명하고, 목표가 구체적인가?</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Variations Section -->
+        <section id="var" class="scroll-section card">
+            <h2 class="card-title">난이도 조절 · 변형</h2>
+            <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">상황을 바꾸거나 난이도를 높여서 활동을 확장하세요.</p>
+
+            <table class="variations-table">
+                <thead>
+                    <tr>
+                        <th>변형 방식</th>
+                        <th>예시</th>
+                        <th>난이도</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>상황 교체</strong><br>(도메인 변경)</td>
+                        <td>
+                            • 전자제품 AS 요청<br>
+                            • 온라인 쇼핑몰 반품<br>
+                            • 호텔 예약 취소<br>
+                            • 통신사 요금 환불
+                        </td>
+                        <td>중상</td>
+                    </tr>
+                    <tr>
+                        <td><strong>난이도 상향</strong><br>(조건 복잡화)</td>
+                        <td>
+                            • "7일 이내"가 아닌 "절대 환불 불가"<br>
+                            • 여러 항목 일부만 불량<br>
+                            • 약관 해석에 대한 의견 대립<br>
+                            • 금액이 큰 물건 (TV, 세탁기)
+                        </td>
+                        <td>상</td>
+                    </tr>
+                    <tr>
+                        <td><strong>언어 기능 변형</strong><br>(산출물 변경)</td>
+                        <td>
+                            • 역할극 후 "환불 요청 이메일" 작성<br>
+                            • 고객 센터에 전화 대본 만들기<br>
+                            • 불만 리뷰 작성하기<br>
+                            • 직원 입장에서 매니저에게 보고
+                        </td>
+                        <td>중상</td>
+                    </tr>
+                    <tr>
+                        <td><strong>상호작용 방식</strong><br>(활동 구조 변경)</td>
+                        <td>
+                            • 카드 공개 없이 즉흥 역할극<br>
+                            • 3인 역할 (고객, 직원, 매니저)<br>
+                            • 여러 쌍이 동시에 진행, 투표로 최선의 대응 선택<br>
+                            • 녹음 후 청취 및 자기 평가
+                        </td>
+                        <td>중상~상</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="background: #f5f5f5; border: 0.5px solid #ddd; border-radius: 4px; padding: 1.5rem; margin-top: 2rem;">
+                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;"><strong>팁:</strong> 난이도를 높일 때는 "규정을 어떻게 해석할 것인가"에 초점을 맞추세요. "이건 환불 불가다"는 명확한 규정보다, "7일이 정확히 언제부터 시작되는가?" 같은 해석의 여지가 있는 상황이 학습자에게 더 도전적이고 흥미롭거든요.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>한국어 교육 과제 기반 활동 | 교환·환불하기 역할극</p>
+        <p style="margin-top: 0.5rem;">© 2025 Language Learning Resources</p>
+    </footer>
+
+    <script>
+        // Smooth scroll function
+        function scrollTo_(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                updateActiveNav(id);
+            }
+        }
+
+        // Scroll spy - update active nav link on scroll
+        function updateActiveNav(activeId) {
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            const activeLink = Array.from(navLinks).find(
+                link => link.getAttribute('onclick').includes(activeId)
+            );
+            if (activeLink) activeLink.classList.add('active');
+        }
+
+        // Detect scroll position and update nav
+        window.addEventListener('scroll', () => {
+            const sections = ['intro', 'design', 'prompt', 'demo', 'check', 'var'];
+            let current = sections[0];
+
+            for (const section of sections) {
+                const el = document.getElementById(section);
+                if (el && el.getBoundingClientRect().top <= 100) {
+                    current = section;
+                }
+            }
+
+            updateActiveNav(current);
+        });
+
+        // Tooltip functionality (already styled in CSS)
+        document.querySelectorAll('.tooltip-trigger').forEach(el => {
+            el.addEventListener('mouseover', function() {
+                // CSS handles the tooltip display
+            });
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateActiveNav('intro');
+        });
+    </script>
+</body>
+</html>

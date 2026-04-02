@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카페에서 주문하기 · 역할극 활동</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 0.5px solid #ddd;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .sticky-nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .sticky-nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .sticky-nav a:hover {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .sticky-nav a.active {
+            color: #333;
+            font-weight: 500;
+            border-bottom: 2px solid #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 60px;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #fafaf8 0%, #f5f5f2 100%);
+            border-bottom: 0.5px solid #ddd;
+        }
+
+        .hero .tag {
+            display: inline-block;
+            background: #f0f0ed;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .chips {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            display: inline-block;
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        /* Sections */
+        section {
+            margin: 3rem auto;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #333;
+            scroll-margin-top: 80px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: #333;
+        }
+
+        /* Cards & Boxes */
+        .overview-table,
+        .var-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .overview-table th,
+        .var-table th,
+        .overview-table td,
+        .var-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 0.5px solid #ddd;
+        }
+
+        .overview-table th,
+        .var-table th {
+            background: #f5f5f2;
+            font-weight: 500;
+            width: 20%;
+        }
+
+        .overview-table td,
+        .var-table td {
+            background: white;
+            width: 80%;
+        }
+
+        /* Prompt & JSON Boxes */
+        .prompt-box {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border: 0.5px solid #444;
+            overflow-x: auto;
+        }
+
+        .json-body {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 0.5px solid #444;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* Legend & Lists */
+        .legend {
+            background: #fafaf8;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .legend h4 {
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .legend ul {
+            list-style: none;
+        }
+
+        .legend li {
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .legend strong {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Action Box & Practice Demo */
+        .act-box {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .act-box h3 {
+            margin-top: 0;
+        }
+
+        /* Cafe Menu Display */
+        .cafe-menu {
+            background: #2a2419;
+            color: #f5e6d3;
+            border-radius: 4px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border: 0.5px solid #3a3429;
+        }
+
+        .cafe-menu h3 {
+            color: #f5e6d3;
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 0.5px solid #3a3429;
+            padding-bottom: 1rem;
+        }
+
+        .menu-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .menu-section-title {
+            color: #d4a574;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .menu-items {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #3a3429;
+            border-radius: 4px;
+            border: 0.5px solid #4a4939;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .item-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #d4a574;
+        }
+
+        /* Role Cards */
+        .role-cards {
+            display: grid;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .role-card {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 1.5rem;
+            border-left: 3px solid #8b7355;
+        }
+
+        .role-card.customer {
+            border-left-color: #c85a54;
+        }
+
+        .role-card.staff {
+            border-left-color: #5a8c7a;
+        }
+
+        .role-card h4 {
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .role-card .role-title {
+            display: inline-block;
+            background: #f5f5f2;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .role-card.customer .role-title {
+            background: #ffebeb;
+            color: #c85a54;
+        }
+
+        .role-card.staff .role-title {
+            background: #ebf5f1;
+            color: #5a8c7a;
+        }
+
+        .role-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .role-content p {
+            margin: 0.5rem 0;
+        }
+
+        .role-content strong {
+            font-weight: 500;
+            display: block;
+            margin-top: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Checklist */
+        .check-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .check-list li {
+            padding: 0.6rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .check-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #666;
+            font-weight: 700;
+        }
+
+        /* Callout Boxes */
+        .tip,
+        .warn,
+        .caution,
+        .guide-link {
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .tip {
+            background: #f0f7f4;
+            border-left-color: #5a8c7a;
+            color: #333;
+        }
+
+        .tip strong {
+            color: #5a8c7a;
+            font-weight: 500;
+        }
+
+        .warn {
+            background: #fff5e6;
+            border-left-color: #d4a574;
+            color: #333;
+        }
+
+        .warn strong {
+            color: #d4a574;
+            font-weight: 500;
+        }
+
+        .caution {
+            background: #ffe6e6;
+            border-left-color: #c85a54;
+            color: #333;
+        }
+
+        .caution strong {
+            color: #c85a54;
+            font-weight: 500;
+        }
+
+        .guide-link {
+            background: #f0f0ed;
+            border-left-color: #8b7355;
+            color: #333;
+        }
+
+        .guide-link strong {
+            color: #8b7355;
+            font-weight: 500;
+        }
+
+        /* Tooltips */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+            border-bottom: 0.5px dotted #999;
+            cursor: help;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 0.5rem 0.8rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .tooltip-wrapper:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Layer List */
+        .layer-list {
+            margin: 1.5rem 0;
+        }
+
+        .layer-list ol {
+            margin-left: 1.5rem;
+        }
+
+        .layer-list li {
+            margin: 0.8rem 0;
+            font-size: 0.95rem;
+        }
+
+        /* Divider */
+        .divider {
+            height: 0.5px;
+            background: #ddd;
+            margin: 2rem 0;
+        }
+
+        /* Prose */
+        .prose {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #555;
+            margin: 1rem 0;
+        }
+
+        .prose strong {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .prose em {
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Sub-title */
+        .sub-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            border-top: 0.5px solid #ddd;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        /* Mobile Breakpoint (640px) */
+        @media (max-width: 640px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .sticky-nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .sticky-nav a {
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                margin-top: 120px;
+                padding: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .chips {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .chip {
+                display: block;
+                width: 100%;
+            }
+
+            section {
+                padding: 0 1rem;
+                margin: 2rem auto;
+            }
+
+            section h2 {
+                font-size: 1.25rem;
+            }
+
+            .overview-table,
+            .var-table {
+                font-size: 0.85rem;
+            }
+
+            .overview-table th,
+            .var-table th {
+                width: 25%;
+            }
+
+            .overview-table td,
+            .var-table td {
+                width: 75%;
+            }
+
+            .prompt-box,
+            .json-body {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+
+            .cafe-menu {
+                padding: 1.5rem;
+            }
+
+            .cafe-menu h3 {
+                font-size: 1.1rem;
+            }
+
+            .menu-item {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+
+            .role-cards {
+                gap: 1rem;
+            }
+
+            .role-card {
+                padding: 1rem;
+            }
+
+            .act-box {
+                padding: 1.5rem;
+            }
+
+            .tip,
+            .warn,
+            .caution,
+            .guide-link {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">한국어 활동</div>
+        <ul class="sticky-nav">
+            <li><a href="javascript:void(0)" onclick="scrollTo_('intro')">개요</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('design')">설계근거</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('build')">프롬프트</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('practice')">실습</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('check')">체크리스트</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('expand')">확장</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="tag">❹ 과제 기반 · 역할극</div>
+        <h1>카페에서 주문하기, AI로 메뉴판 기반 역할극 만드는 법</h1>
+        <p>프롬프트로 카페 주문 시뮬레이션 자료를 만드는 과정을 안내해요.</p>
+        <div class="chips">
+            <div class="chip">TOPIK 1급 · 초급</div>
+            <div class="chip">제작 시간 10~15분</div>
+            <div class="chip">역할 카드 2세트 + 메뉴판</div>
+        </div>
+    </div>
+
+    <!-- Introduction -->
+    <section id="intro">
+        <h2>활동 개요</h2>
+        <table class="overview-table">
+            <tr>
+                <th>활동 유형</th>
+                <td>역할극 (주문 시뮬레이션)</td>
+            </tr>
+            <tr>
+                <th>범주</th>
+                <td>❹ 과제 기반</td>
+            </tr>
+            <tr>
+                <th>대상</th>
+                <td>초급 (TOPIK 1급)</td>
+            </tr>
+            <tr>
+                <th>목표</th>
+                <td>카페에서 음료와 디저트를 주문하고 계산하는 과제 완수</td>
+            </tr>
+            <tr>
+                <th>언어 기능</th>
+                <td>말하기 · 듣기</td>
+            </tr>
+            <tr>
+                <th>규모</th>
+                <td>역할 카드 2세트 + 메뉴판 / 10~15분</td>
+            </tr>
+            <tr>
+                <th>배포</th>
+                <td>메뉴판 + 역할 카드</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Design Rationale -->
+    <section id="design">
+        <h2>설계근거</h2>
+        <div class="prose">
+            <p>카페 주문은 초급 학습자가 한국에서 가장 처음 부딪히는 실제 상황 중 하나예요. 주문 표현("~주세요", "~으로 할게요"), 수량 표현("두 잔"), 확인 표현("맞아요")이 짧은 대화 안에 모두 포함되거든요.</p>
+        </div>
+
+        <h3>메뉴판의 역할</h3>
+        <div class="prose">
+            <p>메뉴판은 학습자에게 "무엇을 주문할 것인가"를 선택하게 하면서 동시에 어휘를 제공해요. 선택의 자유가 있어서 매번 다른 주문이 가능하고, 같은 활동을 여러 번 반복해도 지루하지 않잖아요.</p>
+        </div>
+
+        <div class="tip">
+            <strong>팁:</strong> 메뉴판에 이미지가 있으면 더 몰입감 있어요. AI 이미지 생성 도구를 활용하면 5분 만에 완성할 수 있어요.
+        </div>
+    </section>
+
+    <!-- Build with Prompt -->
+    <section id="build">
+        <h2>AI 프롬프트로 자료 만들기</h2>
+
+        <h3>역할과 과제</h3>
+        <div class="prompt-box">역할: 한국어 교육 전문가
+
+과제: TOPIK 1급 카페 주문 역할극 자료 생성
+
+조건:
+- 메뉴판(음료 6종+디저트 3종+사이즈/가격)
+- 역할 카드 2세트
+  * 세트1: 단순 주문
+  * 세트2: 음료2+디저트1+품절 상황
+- 각 역할 카드마다 유용 표현 포함</div>
+
+        <h3>JSON 응답 포맷</h3>
+        <div class="json-body">{
+  "menu": {
+    "drinks": [
+      {
+        "name": "아메리카노",
+        "regular": 4500,
+        "large": 5000
+      },
+      {
+        "name": "카페라떼",
+        "regular": 5000,
+        "large": 5500
+      },
+      {
+        "name": "녹차라떼",
+        "regular": 5500,
+        "large": 6000
+      },
+      {
+        "name": "오렌지주스",
+        "regular": 5000,
+        "large": null
+      },
+      {
+        "name": "딸기스무디",
+        "regular": 6000,
+        "large": null
+      },
+      {
+        "name": "초코라떼",
+        "regular": 5500,
+        "large": 6000
+      }
+    ],
+    "desserts": [
+      {
+        "name": "치즈케이크",
+        "price": 6000
+      },
+      {
+        "name": "초코쿠키",
+        "price": 3000
+      },
+      {
+        "name": "마카롱",
+        "price": 2500
+      }
+    ]
+  },
+  "sets": [
+    {
+      "id": 1,
+      "title": "세트1: 단순 주문",
+      "customer": {
+        "scenario": "아메리카노 1잔과 치즈케이크를 주문하고 싶어요.",
+        "budget": 15000,
+        "useful_phrases": [
+          "아메리카노 한 잔 주세요.",
+          "사이즈는 어떻게 할까요?",
+          "그리고 치즈케이크도 주세요.",
+          "얼마예요?"
+        ]
+      },
+      "staff": {
+        "scenarios": "손님의 주문을 받고 맞게 들었는지 확인해요.",
+        "recommendation": "오늘의 추천: 카페라떼",
+        "useful_phrases": [
+          "안녕하세요, 뭘 도와드릴까요?",
+          "사이즈는 어떻게 할까요?",
+          "그럼 아메리카노 1잔, 치즈케이크 1개 맞죠?",
+          "총 11,500원이에요."
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "title": "세트2: 복잡한 주문 + 품절",
+      "customer": {
+        "scenario": "카페라떼 라지, 딸기스무디, 마카롱 2개를 주문. 품절 상황 대응 필요.",
+        "budget": 20000,
+        "initial_order": [
+          "카페라떼(라지) 1잔",
+          "딸기스무디 1잔",
+          "마카롱 2개"
+        ],
+        "useful_phrases": [
+          "카페라떼 라지 한 잔이랑 딸기스무디 주세요.",
+          "마카롱도 2개 주세요.",
+          "어? 마카롱이 없어요?",
+          "그럼 초코쿠키로 할게요."
+        ]
+      },
+      "staff": {
+        "scenarios": "주문 중 상품이 품절된 상황에서 대체 상품 제안",
+        "sold_out": ["마카롱"],
+        "useful_phrases": [
+          "카페라떼 라지, 딸기스무디, 마카롱 2개죠?",
+          "죄송한데, 마카롱이 지금 없어요.",
+          "초코쿠키는 어떨까요?",
+          "그럼 카페라떼 라지, 딸기스무디, 초코쿠키 2개 총 17,500원이에요."
+        ]
+      }
+    }
+  ]
+}</div>
+
+        <h3>Legend</h3>
+        <div class="legend">
+            <h4>JSON 구조 설명</h4>
+            <ul>
+                <li><strong>menu</strong> → 카페 메뉴판</li>
+                <li><strong>drinks</strong> → 음료 목록 (정규, 라지 사이즈)</li>
+                <li><strong>desserts</strong> → 디저트 목록</li>
+                <li><strong>sets</strong> → 역할 카드 세트 모음</li>
+                <li><strong>customer</strong> → 손님 역할 카드 (시나리오, 예산, 표현)</li>
+                <li><strong>staff</strong> → 직원 역할 카드 (권장, 표현)</li>
+                <li><strong>sold_out</strong> → 품절 항목 (세트2에서 대처 연습)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Practice Demo -->
+    <section id="practice">
+        <h2>실습: 카페 메뉴판과 역할 카드</h2>
+
+        <h3>메뉴판</h3>
+        <div class="cafe-menu">
+            <h3>☕ 오늘의 메뉴</h3>
+
+            <div class="menu-section">
+                <div class="menu-section-title">음료</div>
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <span class="item-name">아메리카노</span>
+                        <span class="item-price">4,500 / 5,000</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">카페라떼</span>
+                        <span class="item-price">5,000 / 5,500</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">녹차라떼</span>
+                        <span class="item-price">5,500 / 6,000</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">오렌지주스</span>
+                        <span class="item-price">5,000</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">딸기스무디</span>
+                        <span class="item-price">6,000</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">초코라떼</span>
+                        <span class="item-price">5,500 / 6,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">디저트</div>
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <span class="item-name">치즈케이크</span>
+                        <span class="item-price">6,000</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">초코쿠키</span>
+                        <span class="item-price">3,000</span>
+                    </div>
+                    <div class="menu-item">
+                        <span class="item-name">마카롱</span>
+                        <span class="item-price">2,500</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>역할 카드 세트</h3>
+
+        <div class="act-box">
+            <h3>🎭 세트1: 단순 주문</h3>
+
+            <div class="role-cards">
+                <div class="role-card customer">
+                    <div class="role-title">손님</div>
+                    <h4>당신의 임무</h4>
+                    <div class="role-content">
+                        <p><strong>상황:</strong> 카페에 가서 아메리카노 1잔과 치즈케이크를 주문하고 싶어요.</p>
+                        <p><strong>예산:</strong> 15,000원</p>
+
+                        <p><strong>유용한 표현:</strong></p>
+                        <ul>
+                            <li>"안녕하세요."</li>
+                            <li>"아메리카노 한 잔 주세요."</li>
+                            <li>"사이즈는 어떻게 할까요?" (직원이 물을 때)</li>
+                            <li>"정규 사이즈로 할게요."</li>
+                            <li>"그리고 치즈케이크도 주세요."</li>
+                            <li>"얼마예요?" (가격 확인)</li>
+                            <li>"네, 감사합니다."</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="role-card staff">
+                    <div class="role-title">직원</div>
+                    <h4>당신의 임무</h4>
+                    <div class="role-content">
+                        <p><strong>상황:</strong> 손님을 환영하고, 주문을 받고, 사이즈를 확인해요.</p>
+
+                        <p><strong>오늘의 추천:</strong> 카페라떼</p>
+
+                        <p><strong>유용한 표현:</strong></p>
+                        <ul>
+                            <li>"안녕하세요, 뭘 도와드릴까요?"</li>
+                            <li>"아메리카노 한 잔이죠?"</li>
+                            <li>"사이즈는 정규사이즈? 라지사이즈?"</li>
+                            <li>"그리고 또 뭘 드릴까요?"</li>
+                            <li>"아메리카노 1잔, 치즈케이크 1개 맞죠?"</li>
+                            <li>"총 11,500원이에요."</li>
+                            <li>"감사합니다!"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="act-box">
+            <h3>🎭 세트2: 복잡한 주문 + 품절 대처</h3>
+
+            <div class="role-cards">
+                <div class="role-card customer">
+                    <div class="role-title">손님</div>
+                    <h4>당신의 임무</h4>
+                    <div class="role-content">
+                        <p><strong>상황:</strong> 카페라떼(라지) 1잔, 딸기스무디 1잔, 마카롱 2개를 주문해요. 그런데 마카롱이 품절이면 다른 것으로 바꾸세요.</p>
+                        <p><strong>예산:</strong> 20,000원</p>
+
+                        <p><strong>유용한 표현:</strong></p>
+                        <ul>
+                            <li>"카페라떼 라지 한 잔이랑 딸기스무디 주세요."</li>
+                            <li>"사이즈는 어떻게 할까요?" (딸기스무디 사이즈 확인)</li>
+                            <li>"마카롱도 2개 주세요."</li>
+                            <li>"어? 마카롱이 없어요?" (품절 상황)</li>
+                            <li>"그럼 초코쿠키로 할게요."</li>
+                            <li>"맞아요!" (확인)</li>
+                            <li>"감사합니다."</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="role-card staff">
+                    <div class="role-title">직원</div>
+                    <h4>당신의 임무</h4>
+                    <div class="role-content">
+                        <p><strong>상황:</strong> 복잡한 주문을 받고, 마카롱이 품절이라고 알리고, 대체 상품을 제안해요.</p>
+                        <p><strong>품절:</strong> 마카롱</p>
+
+                        <p><strong>유용한 표현:</strong></p>
+                        <ul>
+                            <li>"카페라떼 라지, 딸기스무디죠?"</li>
+                            <li>"딸기스무디는 사이즈가 한 가지예요."</li>
+                            <li>"그리고 또 뭘 드릴까요?"</li>
+                            <li>"죄송한데, 마카롱이 지금 없어요."</li>
+                            <li>"초코쿠키는 어떨까요?"</li>
+                            <li>"그럼 카페라떼 라지, 딸기스무디, 초코쿠키 2개 총 17,500원이에요."</li>
+                            <li>"감사합니다!"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checklist -->
+    <section id="check">
+        <h2>체크리스트: 자료 검토</h2>
+
+        <ul class="check-list">
+            <li>메뉴의 어휘가 모두 초급 수준인가?</li>
+            <li>가격이 현실적으로 설정되었는가? (한국 카페 기준)</li>
+            <li>세트2의 품절 상황이 대처 연습 기회를 제공하는가?</li>
+            <li>각 역할 카드의 표현이 5분 이내 대화량인가?</li>
+            <li>손님과 직원의 표현이 자연스러운 대화 흐름을 만드는가?</li>
+        </ul>
+
+        <h3>자료 활용 팁</h3>
+        <div class="tip">
+            <strong>팁:</strong> 먼저 한 번 직접 대화해 본 다음, 학생들에게 메뉴판과 역할 카드를 나눠주세요. 교실에서 "카페" 상황을 만들면 더 재미있어요.
+        </div>
+
+        <div class="warn">
+            <strong>주의:</strong> 세트1을 먼저 연습한 후 세트2를 하는 것이 좋아요. 난이도 순서를 지키면 학생들의 자신감을 높일 수 있어요.
+        </div>
+    </section>
+
+    <!-- Expansion & Variation -->
+    <section id="expand">
+        <h2>확장하기: 어휘와 상황 변화</h2>
+
+        <table class="var-table">
+            <tr>
+                <th>변수</th>
+                <td>
+                    <strong>변경 예시</strong>
+                </td>
+            </tr>
+            <tr>
+                <th>장소</th>
+                <td>
+                    카페 대신 <span class="tooltip-wrapper">식당<span class="tooltip">밥, 국, 반찬, 음료수 등으로 변경</span></span>, <span class="tooltip-wrapper">분식집<span class="tooltip">김밥, 떡볶이, 순대 등으로 변경</span></span>, <span class="tooltip-wrapper">편의점<span class="tooltip">도시락, 음료수, 간식 등으로 변경</span></span>으로 바꿀 수 있어요.
+                </td>
+            </tr>
+            <tr>
+                <th>난이도 ↑</th>
+                <td>
+                    초급 축약어 추가: "아아" (아메리카노), "뜨아" (뜨거운 아메리카노)
+                    <br>한자어 추가: "주문" → "오더", "사이즈" (외래어 유지 가능)
+                    <br>세트3 추가: "손님이 영수증을 잃어버렸어요" (환불 대처)
+                </td>
+            </tr>
+            <tr>
+                <th>확장</th>
+                <td>
+                    영수증 읽기 활동: "라지 아메리카노, 치즈케이크, 총 11,000원 맞나요?" → 금액과 상품 확인 표현
+                    <br>결제 상황: "카드로 할게요" vs "현금으로 할게요"
+                    <br>추가 주문: "따뜻한 물 좀 주세요" (일반 요청)
+                </td>
+            </tr>
+        </table>
+
+        <h3>다음 단계</h3>
+        <div class="guide-link">
+            <strong>다음 활동:</strong> 이 활동 이후 식당 주문 (식당에서 밥과 반찬을 주문), 결제 방법 (카드/현금/계좌이체), 배달 주문 (전화/앱 활용)으로 확장할 수 있어요.
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p>이 교육 자료는 TOPIK 1급 초급 학습자를 위해 설계되었습니다.</p>
+        <p>마지막 업데이트: 2026년 4월</p>
+    </footer>
+
+    <script>
+        // Scroll to function
+        function scrollTo_(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({
+                    top: elementPosition - navHeight - 20,
+                    behavior: 'smooth'
+                });
+                updateActiveNav();
+            }
+        }
+
+        // Update active nav
+        function updateActiveNav() {
+            const scrollPosition = window.scrollY + 100;
+            const sections = document.querySelectorAll('section[id]');
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.sticky-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    const activeLink = document.querySelector(`.sticky-nav a[onclick*="${section.id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }
+
+        // Scroll spy on page load and scroll
+        window.addEventListener('scroll', updateActiveNav);
+        window.addEventListener('load', updateActiveNav);
+
+        // Tooltip functionality (already styled in CSS)
+        // No additional JS needed - hover works via CSS
+
+        // Add smooth anchor handling
+        document.querySelectorAll('a[href*="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    scrollTo_(id);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

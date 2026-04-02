@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>활동 목록 — 언어 수업에 AI 데려오기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}.nav a:hover{color:#1a1a1a;}.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;}
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:.5rem;margin-right:.5rem;}
+.act-list{display:flex;flex-direction:column;gap:8px;margin:1rem 0;}.act-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#f9f9f7;border-radius:10px;text-decoration:none;color:#1a1a1a;transition:background .15s;}.act-item:hover{background:#eee;}.act-title{font-size:14px;font-weight:500;flex:1;}.act-chips{display:flex;gap:6px;flex-shrink:0;}.act-chip{font-size:10px;color:#888;background:#fff;border:0.5px solid #e5e5e5;border-radius:12px;padding:2px 8px;}
+.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.25rem 0 .5rem;padding-left:10px;border-left:2px solid #ccc;}
+@media(max-width:640px){.wrap{padding:1rem .75rem 3rem;}.hero,.section{padding:1.25rem;border-radius:12px;}.hero-title{font-size:20px;}.nav{gap:6px;}.nav a{padding:7px 10px;font-size:12px;}.act-chips{display:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="tag">🗂 목록</div>
+  <h1 class="hero-title">활동 목록</h1>
+  <p class="hero-desc">AI로 만들 수 있는 한국어 수업 활동을 범주별로 정리했어요. 각 활동을 클릭하면 설계 의도, 프롬프트, 완성된 앱 데모를 볼 수 있어요.</p>
+  <div class="meta">
+    <span class="chip">형태 · 의미 · 기능 · 과제</span>
+    <span class="chip">30+ 활동</span>
+  </div>
+</div>
+
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#guides" data-section="guides">가이드</a>
+    <a href="#form" data-section="form">형태 학습</a>
+    <a href="#meaning" data-section="meaning">의미 구성</a>
+    <a href="#function" data-section="function">기능 중심</a>
+    <a href="#task" data-section="task">과제 기반</a>
+  </div>
+</div>
+
+<div class="section" id="guides">
+  <div class="section-tag">GUIDES</div>
+  <div class="section-title">시작하기 전에</div>
+  <p class="prose">활동을 만들기 전에 필요한 가이드예요. 처음이라면 순서대로 읽어보세요.</p>
+  <div>
+    <a class="guide-link" href="guide-text.html">🤖 AI 텍스트 도구 가이드</a>
+    <a class="guide-link" href="guide-media.html">🎨 이미지·음성 도구 가이드</a>
+    <a class="guide-link" href="guide-code.html">🔧 코드 생성 도구 가이드</a>
+    <a class="guide-link" href="guide-prompt.html">📐 프롬프트 작성 가이드</a>
+    <a class="guide-link" href="guide-deploy.html">🚀 배포 가이드</a>
+  </div>
+</div>
+
+<div class="section" id="form">
+  <div class="section-tag">❶ 형태 학습</div>
+  <div class="section-title">형태 학습 중심 활동</div>
+  <p class="section-lead">정답이 명확하고 자동 채점에 가장 적합한 활동이에요.</p>
+
+  <div class="sub-title">1. 빈칸·완성형</div>
+  <div class="act-list">
+    <a class="act-item" href="act-form-1-1.html"><span class="act-title">문법 빈칸 채우기 — 장소의 '에'와 '에서'</span><div class="act-chips"><span class="act-chip">초급</span><span class="act-chip">10분</span></div></a>
+    <a class="act-item" href="act-form-1-2.html"><span class="act-title">듣기 빈칸 채우기 — TTS 음성 받아쓰기</span><div class="act-chips"><span class="act-chip">초급</span><span class="act-chip">10분</span></div></a>
+    <a class="act-item" href="act-form-1-3.html"><span class="act-title">문장 완성 — 어미 활용</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">15분</span></div></a>
+  </div>
+
+  <div class="sub-title">2. 변환·대입형</div>
+  <div class="act-list">
+    <a class="act-item" href="act-form-2-1.html"><span class="act-title">단어 카드 대입 — 직업 어휘</span><div class="act-chips"><span class="act-chip">초급</span><span class="act-chip">10분</span></div></a>
+    <a class="act-item" href="act-form-2-2.html"><span class="act-title">문장 변환 — 시제 전환</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">15분</span></div></a>
+    <a class="act-item" href="act-form-2-3.html"><span class="act-title">불규칙 활용 연습</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">10분</span></div></a>
+  </div>
+
+  <div class="sub-title">3. 매칭형</div>
+  <div class="act-list">
+    <a class="act-item" href="act-form-3-1.html"><span class="act-title">문법-상황 매칭 — 유사 문법 변별</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">15분</span></div></a>
+  </div>
+
+  <div class="sub-title">4. 게임·퀴즈형</div>
+  <div class="act-list">
+    <a class="act-item" href="activity.html"><span class="act-title">(준비 중)</span><div class="act-chips"><span class="act-chip">—</span></div></a>
+  </div>
+</div>
+
+<div class="section" id="meaning">
+  <div class="section-tag">❷ 의미 구성</div>
+  <div class="section-title">의미 구성 중심 활동</div>
+  <p class="section-lead">텍스트, 이미지, 상황을 기반으로 의미를 구성하는 활동이에요.</p>
+
+  <div class="sub-title">1. 시각 자료 기반</div>
+  <div class="act-list">
+    <a class="act-item" href="act-mean-1-1.html"><span class="act-title">상황 묘사 카드 — 그림 보고 문장 만들기</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-mean-1-2.html"><span class="act-title">그래프·차트 읽기 — 데이터 해석과 비교 표현</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-mean-1-3.html"><span class="act-title">틀린 그림 찾기 — 두 그림 비교 묘사</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">15분</span></div></a>
+  </div>
+
+  <div class="sub-title">2. 텍스트 기반</div>
+  <div class="act-list">
+    <a class="act-item" href="act-mean-2-1.html"><span class="act-title">레벨별 읽기 텍스트 — 같은 주제, 다른 난이도</span><div class="act-chips"><span class="act-chip">전 레벨</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-mean-2-2.html"><span class="act-title">듣기 스크립트와 AI 음성 — TTS 활용</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">15분</span></div></a>
+    <a class="act-item" href="act-mean-2-3.html"><span class="act-title">뉴스·기사 기반 활동 — 실제적 텍스트 읽기</span><div class="act-chips"><span class="act-chip">중고급</span><span class="act-chip">30분</span></div></a>
+  </div>
+
+  <div class="sub-title">3. 맥락·상황 기반</div>
+  <div class="act-list">
+    <a class="act-item" href="act-mean-3-1.html"><span class="act-title">상황 카드 — 맥락에 맞는 표현 선택</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">15분</span></div></a>
+    <a class="act-item" href="act-mean-3-2.html"><span class="act-title">조건부 응답 카드 — "만약 ~면" 상황 대처</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">20분</span></div></a>
+  </div>
+
+  <div class="sub-title">4. 상호작용 기반</div>
+  <div class="act-list">
+    <a class="act-item" href="act-mean-4-1.html"><span class="act-title">정보 차 카드 — 짝 활동으로 빈 표 채우기</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-mean-4-2.html"><span class="act-title">직소 읽기 — 텍스트 분할과 재조합</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">30분</span></div></a>
+    <a class="act-item" href="act-mean-4-3.html"><span class="act-title">서베이·인터뷰 활동지 — 반 친구 조사하기</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">25분</span></div></a>
+  </div>
+</div>
+
+<div class="section" id="function">
+  <div class="section-tag">❸ 기능 중심</div>
+  <div class="section-title">의사소통 기능 중심 활동</div>
+  <p class="section-lead">거절, 사과, 요청 같은 의사소통 기능을 연습하는 활동이에요.</p>
+
+  <div class="sub-title">1. 대인 관계 기능</div>
+  <div class="act-list">
+    <a class="act-item" href="act-func-1-1.html"><span class="act-title">거절하기 롤플레이 — 역할 카드 기반 대화</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">25분</span></div></a>
+    <a class="act-item" href="act-func-1-2.html"><span class="act-title">사과하기 시나리오 — 사과 전략 선택</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-func-1-3.html"><span class="act-title">요청하기 대화 자료 — 직접/간접 요청</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-func-1-4.html"><span class="act-title">위로·격려하기 대화 자료</span><div class="act-chips"><span class="act-chip">중고급</span><span class="act-chip">20분</span></div></a>
+  </div>
+
+  <div class="sub-title">2. 정보 전달 기능</div>
+  <div class="act-list">
+    <a class="act-item" href="act-func-2-1.html"><span class="act-title">길 안내하기 — 지도 기반 방향 설명</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-func-2-2.html"><span class="act-title">순서 설명하기 — 요리/절차 설명</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-func-2-3.html"><span class="act-title">비교·대조 설명하기</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">25분</span></div></a>
+  </div>
+
+  <div class="sub-title">3. 의견 표현 기능</div>
+  <div class="act-list">
+    <a class="act-item" href="act-func-3-1.html"><span class="act-title">찬반 의견 카드 — 입장 정하기와 근거 구성</span><div class="act-chips"><span class="act-chip">중고급</span><span class="act-chip">30분</span></div></a>
+    <a class="act-item" href="act-func-3-2.html"><span class="act-title">논증 구조 연습 — 주장-근거-예시 프레임</span><div class="act-chips"><span class="act-chip">중고급</span><span class="act-chip">25분</span></div></a>
+    <a class="act-item" href="act-func-3-3.html"><span class="act-title">설득하기 시나리오 — 상대방의 마음 바꾸기</span><div class="act-chips"><span class="act-chip">고급</span><span class="act-chip">30분</span></div></a>
+  </div>
+</div>
+
+<div class="section" id="task">
+  <div class="section-tag">❹ 과제 기반</div>
+  <div class="section-title">과제 기반 활동</div>
+  <p class="section-lead">실생활 상황에서 여러 기능을 복합적으로 사용하는 활동이에요.</p>
+
+  <div class="sub-title">1. 역할극·시뮬레이션</div>
+  <div class="act-list">
+    <a class="act-item" href="act-task-1-1.html"><span class="act-title">약국에서 증상 설명하기</span><div class="act-chips"><span class="act-chip">초중급</span><span class="act-chip">25분</span></div></a>
+    <a class="act-item" href="act-task-1-2.html"><span class="act-title">카페에서 주문하기 — 메뉴판 기반</span><div class="act-chips"><span class="act-chip">초급</span><span class="act-chip">20분</span></div></a>
+    <a class="act-item" href="act-task-1-3.html"><span class="act-title">교환·환불하기 — 문제 해결형</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">25분</span></div></a>
+  </div>
+
+  <div class="sub-title">2. 문제 해결형 과제</div>
+  <div class="act-list">
+    <a class="act-item" href="act-task-2-1.html"><span class="act-title">여행 계획 세우기 — 조건 속 의사결정</span><div class="act-chips"><span class="act-chip">중급</span><span class="act-chip">40분</span></div></a>
+    <a class="act-item" href="act-task-2-2.html"><span class="act-title">하우스 메이트 규칙 정하기 — 합의 도출</span><div class="act-chips"><span class="act-chip">중고급</span><span class="act-chip">40분</span></div></a>
+  </div>
+
+  <div class="sub-title">3. 프로젝트형 과제</div>
+  <div class="act-list">
+    <a class="act-item" href="act-task-3-1.html"><span class="act-title">자유 주제 발표 — 조사에서 발표까지</span><div class="act-chips"><span class="act-chip">중고급</span><span class="act-chip">60분+</span></div></a>
+  </div>
+</div>
+
+</div>
+<script>
+const navLinks=document.querySelectorAll('#main-nav a[data-section]');const sections=document.querySelectorAll('.section[id]');const observer=new IntersectionObserver(e=>{e.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>a.classList.remove('active'));const active=document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);if(active)active.classList.add('active');}});},{rootMargin:'-40% 0px -55% 0px'});sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4장. 활동의 설계 원리 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* ── 네비 ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+
+/* ── 글 헤더 ── */
+.article-header{
+  padding:120px 0 40px;
+  text-align:center;
+  border-bottom:0.5px solid var(--border);
+}
+.article-header .part-label{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  color:var(--blue);margin-bottom:8px;
+}
+.article-header h1{
+  font-size:clamp(28px,4.5vw,42px);
+  font-weight:900;line-height:1.25;
+  letter-spacing:-0.02em;
+  max-width:640px;margin:0 auto 12px;
+}
+.article-header .ch-question{
+  font-size:16px;color:var(--text-sub);
+  font-style:italic;
+}
+
+/* ── 목차 사이드바 (스티키) ── */
+.layout{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:48px;
+  max-width:1000px;
+  margin:0 auto;
+  padding:40px 32px 80px;
+}
+.toc{
+  position:sticky;top:80px;
+  align-self:start;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+  padding-right:16px;
+}
+.toc-label{font-size:11px;font-weight:700;color:var(--text-light);letter-spacing:0.06em;margin-bottom:12px;}
+.toc a{
+  display:block;
+  font-size:12px;font-weight:500;
+  color:var(--text-sub);
+  text-decoration:none;
+  padding:6px 0;
+  border-left:2px solid transparent;
+  padding-left:12px;
+  transition:all .15s;
+  line-height:1.4;
+}
+.toc a:hover{color:var(--text);}
+.toc a.active{color:var(--text);font-weight:700;border-left-color:var(--blue);}
+
+/* ── 본문 ── */
+.article{max-width:680px;}
+.article h2{
+  font-size:22px;font-weight:800;
+  letter-spacing:-0.01em;
+  margin:48px 0 16px;
+  padding-top:24px;
+}
+.article h3{
+  font-size:17px;font-weight:700;
+  margin:32px 0 12px;
+  color:var(--text);
+}
+.article p{
+  font-size:15px;
+  margin-bottom:16px;
+  line-height:1.85;
+  color:#333;
+}
+.article ul,.article ol{
+  margin:12px 0 20px 20px;
+  font-size:15px;line-height:1.85;
+  color:#333;
+}
+.article li{margin-bottom:6px;}
+.article table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;
+  font-size:14px;
+}
+.article th,.article td{
+  padding:10px 14px;
+  border:0.5px solid var(--border);
+  text-align:left;
+}
+.article th{background:var(--bg-alt);font-weight:700;font-size:13px;}
+.article blockquote{
+  border-left:3px solid var(--blue);
+  padding:12px 20px;
+  margin:20px 0;
+  background:var(--blue-light);
+  border-radius:0 8px 8px 0;
+  font-size:14px;
+  color:#444;
+}
+
+/* 더 읽을거리 박스 */
+.further-reading{
+  background:var(--card);
+  border:0.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  margin:40px 0;
+}
+.further-reading h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.further-reading ul{margin:0;padding-left:18px;font-size:13px;color:var(--text-sub);}
+.further-reading li{margin-bottom:4px;}
+
+/* 이전/다음 네비 */
+.ch-nav{
+  display:flex;justify-content:space-between;
+  padding:32px 0;
+  border-top:0.5px solid var(--border);
+  margin-top:48px;
+}
+.ch-nav a{
+  text-decoration:none;color:var(--text-sub);
+  font-size:13px;font-weight:600;
+  transition:color .2s;
+}
+.ch-nav a:hover{color:var(--blue);}
+.ch-nav .next{margin-left:auto;}
+
+/* ── 모바일 ── */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;gap:0;}
+  .toc{display:none;}
+  .article-header h1{font-size:28px;}
+}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html">활동</a><a href="demo.html">데모</a><a href="column.html" class="active">칼럼</a><a href="faq.html">FAQ</a></div></div></nav>
+
+<header class="article-header">
+  <div class="part-label">II부 — 활동의 분류와 설계</div>
+  <h1>4장. 활동의 설계 원리</h1>
+  <div class="ch-question">좋은 활동은 어떤 원리로 설계되는가?</div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-label">목차</div>
+    <!-- 절 목차 자동 생성: 본문의 h2 id를 참조 -->
+        <a href="#sec-4-1">4.1 형태 학습 활동의 설계</a>
+    <a href="#sec-4-2">4.2 의미 구성 활동의 설계</a>
+    <a href="#sec-4-3">4.3 의사소통 기능 활동의 설계</a>
+    <a href="#sec-4-4">4.4 과제 기반 활동의 설계</a>
+  </aside>
+
+  <article class="article">
+    <!-- 본문: docx 내용을 여기에 변환하여 삽입 -->
+    <p>3장에서는 활동을 네 범주로 분류하고 각 범주의 특성을 기술하였다. 분류는 "이 활동이 무엇인가"를 알려 주지만, "이 활동을 어떻게 만들어야 하는가"에는 답하지 않는다. 빈칸 채우기가 형태 학습 활동이라는 것을 안다고 해서, 그 빈칸 채우기를 선택형으로 만들어야 하는지 입력형으로 만들어야 하는지는 알 수 없다. 역할극이 과제 기반 활동이라는 것을 안다고 해서, 역할극의 상황을 어떤 변인으로 설정해야 하는지는 알 수 없다.</p>
+<p>이 장에서는 각 범주의 활동을 실제로 설계할 때 부딪히는 구체적인 판단의 문제를 다룬다. 빈칸 채우기를 선택형으로 할 것인가 입력형으로 할 것인가, 오답 피드백을 어떤 수준으로 제공할 것인가, 롤플레이에서 화자의 관계를 어떻게 설정할 것인가, 과제의 복잡도를 어떻게 조절할 것인가 --- 이러한 설계 판단의 이론적 근거를 제공하는 것이 이 장의 목적이다.</p>
+<h2 id="sec-4-1">4.1 형태 학습 활동의 설계</h2>
+<h3>1.1. 빈칸 채우기의 유형과 인지 처리</h3>
+<p>빈칸 채우기는 가장 널리 사용되는 형태 학습 활동이다. 그런데 같은 빈칸 채우기라도 학습자에게 요구하는 인지적 처리는 설계 방식에 따라 크게 달라진다. 가장 기본적인 설계 판단은 <b>선택형(recognition)으로 만들 것인가, 산출형(recall)으로 만들 것인가</b>이다.</p>
+<p>선택형 빈칸 채우기에서는 정답을 포함한 선택지가 제시된다. 학습자는 주어진 보기 중에서 정답을 고르기만 하면 된다. 인지심리학의 용어로 이를 <b>재인(recognition)</b>이라 한다. 기억 속에 저장된 정보를 외부 단서와 대조하여 "이것이 맞다/틀리다"를 판단하는 과정이다.</p>
+<p>산출형(직접 입력형) 빈칸 채우기에서는 선택지가 제공되지 않는다. 학습자가 스스로 정답을 떠올려 작성해야 한다. 이를 <b>회상(recall)</b>이라 한다. 외부 단서 없이 기억 속에서 정보를 능동적으로 인출하는 과정이다.</p>
+<p>회상은 재인보다 인지적 부담이 높다. 학습자는 정답의 형태를 기억에서 꺼내야 할 뿐만 아니라, 철자까지 정확하게 산출해야 한다. 한국어 학습의 경우, 조사나 어미를 직접 타이핑하려면 한글 입력에 대한 추가적 부담이 개입한다. 따라서 동일한 문법 항목이라도 선택형과 산출형은 서로 다른 학습 단계에서 서로 다른 역할을 수행한다.</p>
+<p>일반적 원칙은 다음과 같다. <b>초급 단계에서는 선택형이, 중급 이상에서는 산출형이 적합하다.</b> 초급 학습자는 목표 형태에 대한 지식이 아직 불안정하므로, 선택지를 통해 올바른 형태를 재인하는 경험이 먼저 필요하다. 중급 이상의 학습자는 이미 목표 형태를 인식할 수 있으므로, 그것을 능동적으로 산출하는 연습이 자동화에 더 효과적이다.</p>
+<p>다만, 선택형에는 <b>우연 정답률</b>의 문제가 있다. 선택지가 2개이면 우연히 맞출 확률이 50%이고, 3개이면 33%, 4개이면 25%이다. 이 문제를 완화하기 위해 선택지 수를 늘리거나, 오답 선택지(교란항, distractor)를 학습자가 실제로 혼동하는 형태로 설계하는 것이 필요하다. 예를 들어, '에/에서' 구분 문항에서 선택지를 단순히 '에'와 '에서' 두 개로 제시하는 것보다, '에', '에서', '에게', '에게서' 네 개로 제시하면 우연 정답률이 낮아지면서 동시에 장소 조사와 대상 조사의 변별도 연습시킬 수 있다.</p>
+<p>선택형과 산출형 외에도, 드래그 앤 드롭형(선택지를 빈칸에 끌어다 놓기), 분류형(여러 문장을 정답 그룹으로 분류하기) 등의 변형이 가능하다. 각 변형은 학습자에게 서로 다른 인지적 처리를 요구하며, 수업 목표와 학습자 수준에 따라 적절한 유형을 선택하는 것이 설계의 핵심이다.</p>
+<p>덧붙여, 이러한 설계 판단은 디지털 환경에서 더욱 중요해진다. Chapelle(2001)은 컴퓨터 보조 언어 학습(CALL) 자료를 평가하는 기준으로 언어 학습 잠재력(language learning potential), 학습자 적합성(learner fit), 의미 초점(meaning focus), 진정성(authenticity), 긍정적 영향(positiveimpact), 실용성(practicality)의 여섯 가지를 제시한 바 있다. 이 기준은 종이 기반 자료에도 적용가능하지만, AI 도구로 자료를 제작하는 환경에서 특히 유용하다. AI가 빠르게 생성한 문항이 기술적으로 작동하더라도, 언어 학습 잠재력(이 문항이 목표 형태에 대한 주의를 유발하는가)과 학습자적합성(이 난이도가 대상 학습자에게 적절한가)의 관점에서 교사의 검토가 반드시 필요하다. 이 검토의 구체적 절차는 8장에서 다룬다.</p>
+<h3>1.2. 피드백 설계의 원리</h3>
+<p>형태 학습 활동에서 피드백은 학습 효과를 좌우하는 핵심 요소이다. 학습자가 문항에 응답한 뒤 어떤 피드백을 받느냐에 따라, 같은 활동이 단순한 정오 확인에 그칠 수도 있고 깊은 학습으로 이어질 수도 있다.</p>
+<p>Hattie & Timperley(2007)는 피드백을 네 가지 수준으로 구분하였다. 이 구분은 형태 학습 활동의 피드백 설계에 직접적으로 적용할 수 있다.</p>
+<p><b>과제 수준(task level) 피드백.</b> 학습자의 응답이 맞는지 틀리는지만 알려 준다. "정답입니다" 또는 "오답입니다. 정답은 '에서'입니다." 이 수준의 피드백은 정보량이 적다. 학습자는 정답을 확인할 수는 있지만, 왜 틀렸는지는 알 수 없다.</p>
+<p><b>과정 수준(process level) 피드백.</b> 정답에 도달하기 위한 판단 과정을 보여 준다. "'공부하다'는 행동 동사입니다. 행동이 일어나는 장소에는 '에서'를 씁니다." 이 수준의 피드백은 학습자가 다음 문항에서 같은 판단 기준을 적용할 수 있도록 돕는다.</p>
+<p><b>자기조절 수준(self-regulation level) 피드백.</b> 학습자 스스로 자신의 학습 과정을 점검하도록 유도한다. "이 문항에서 먼저 동사의 유형을 확인했나요? 동사가 존재/이동인지 행동인지 판단한 뒤 조사를 선택해 보세요." 이 수준의 피드백은 메타인지적 전략의 발달에 기여한다.</p>
+<p><b>자아 수준(self level) 피드백.</b> "잘했어요!", "열심히 하고 있네요!"와 같이 학습자의 인격이나 태도에 대한 피드백이다. Hattie & Timperley의 연구에 따르면, 이 수준의 피드백은 학습 효과가 가장 낮다. 칭찬이 동기 유발에 도움이 될 수는 있지만, 언어 형태의 학습에 직접 기여하지는 않는다.</p>
+<p>형태 학습 활동에서 가장 효과적인 것은 <b>과정 수준 피드백</b>이다. 학습자에게 "왜 이것이 정답인가"의 판단 과정을 반복적으로 노출시키면, 학습자는 점차 그 판단 과정을 내면화하게 된다. 다시 말해, 피드백 자체가 규칙 학습의 수단이 된다.</p>
+<p>설계 시 유의할 점은 두 가지이다. 첫째, 피드백의 일관성이다. 10개 문항에 대한 오답 해설이 모두 동일한 판단 기준(예: "동사 유형을 확인하세요")을 따라야 한다. 문항마다 다른 기준을 제시하면 학습자가 규칙을 귀납할 수 없다. 둘째, 피드백의 간결성이다. 특히 디지털 자료에서 피드백이 지나치게 길면 학습자가 읽지 않고 넘기는 경향이 있다. 핵심 판단 기준을 2\~3문장 이내로 전달하는 것이 효과적이다.</p>
+<h3>1.3. 문항 설계의 원리</h3>
+<p>형태 학습 활동의 효과는 문항의 질에 의해 크게 좌우된다. 아무리 좋은 피드백 구조를 갖추고 있어도, 문항 자체가 부실하면 학습 효과를 기대하기 어렵다. 문항 설계 시 고려해야 할 핵심 원리는 다음과 같다.</p>
+<p><b>정답 유일성.</b> 각 문항에는 하나의 명확한 정답만 존재해야 한다. 정답이 둘 이상 가능한 문항은 학습자에게 혼란을 주고, 자동 채점 환경에서는 올바른 답을 오답으로 처리하는 오류를 낳는다. 예를 들어, "친구\_\_\_ 만났어요"에서 빈칸에 '를'도 가능하고 '을'도 가능하다면(받침 유무에 따라), 이는 설계의 결함이다. "친구를 만났어요" 또는 "동생을 만났어요"처럼 정답이 유일하게 결정되도록 문장을 구성해야 한다.</p>
+<p><b>난이도 통제.</b> 10개 문항이 모두 같은 난이도이면 학습자가 지루해하고, 반대로 난이도가 무작위로 뒤섞이면 학습의 흐름이 끊긴다. 쉬운 문항에서 시작하여 점차 어려운 문항으로 이행하는 배열이 일반적으로 권장된다. 난이도를 결정하는 변인에는 어휘의 친숙도, 문장의 길이, 문맥의 복잡도, 오답 선택지의 유인력 등이 있다.</p>
+<p><b>균형 배치.</b> 이분법적 선택 문항(예: '에' vs '에서')에서 정답의 분포가 한쪽으로 치우치면, 학습자가 규칙을 학습하지 않고 패턴만으로 답을 추측할 수 있다. 10문항 중 '에서'가 8번 정답이면, 학습자는 "모르면 '에서'를 고르면 된다"는 전략을 학습하게 된다. '에' 정답 5개, '에서' 정답 5개처럼 균형 잡힌 분포를 유지해야 한다.</p>
+<p><b>오답 선택지(교란항)의 설계.</b> 선택형 문항에서 오답 선택지는 학습자가 실제로 혼동하는 형태여야 효과적이다. 아무도 고르지 않을 엉뚱한 선택지는 실질적으로 선택지 수를 줄이는 효과만 낸다. 한국어 문법의 경우, 학습자의 모국어 간섭이나 과잉 일반화에 의해 빈번하게 발생하는 오류를 교란항으로 설정하는 것이 바람직하다.</p>
+<p><b>어휘 수준의 적합성.</b> 문법 연습 문항에서 학습자가 모르는 어휘가 등장하면, 학습자의 주의가 문법이 아닌 어휘에 분산된다. 문법 빈칸 채우기에서는 학습자가 이미 아는 어휘만 사용하는 것이 원칙이다. 대상 레벨보다 한 단계 아래의 어휘를 사용하면 안전하다.</p>
+<h3>1.4. 게임화 요소의 교수적 효과</h3>
+<p>형태 학습 활동은 반복을 전제하므로, 학습자의 동기가 떨어지기 쉽다. 같은 유형의 문항을 10개, 20개씩 풀다 보면 단조로움이 학습의 가장 큰 적이 된다. 게임화(gamification) 요소는 이 문제에 대한 하나의 대응이다.</p>
+<p><b>시간 제한.</b> 문항별 또는 전체에 시간 제한을 두면, 학습자에게 적절한 긴장감을 부여하고 반응 속도의 향상을 촉진한다. 이는 DeKeyser(2007)의 기능 연습 이론에서 강조하는 '자동화'와 직결된다. 다만, 시간 압박이 과도하면 불안이 학습을 방해할 수 있으므로, 초급에서는 느슨한 시간 제한을, 중급 이상에서는 보다 엄격한 제한을 적용하는 것이 적절하다.</p>
+<p><b>점수와 즉각적 보상.</b> 문항을 맞히면 점수가 올라가고, 연속 정답(콤보)에 보너스를 부여하는 구조는 학습자의 성취감을 높인다. 점수는 학습의 목적이 아니라 동기 유발의 수단이며, 점수에 지나치게 집착하면 오히려 학습의 질이 떨어질 수 있다는 점에 유의해야 한다.</p>
+<p><b>반복 셔플.</b> 학습자가 같은 문항 세트를 반복할 때 문항의 순서를 무작위로 섞으면, 순서를 암기하여 정답을 추측하는 것을 방지할 수 있다. 셔플은 간단한 설계 요소이지만 반복 학습의 효과를 크게 높인다.</p>
+<p><b>경쟁 요소.</b> 학습자 간 점수 비교, 리더보드, 팀 대결 등의 요소는 학습의 사회적 동기를 활성화한다. 다만, 경쟁 요소가 지나치면 형태의 정확한 학습보다 빠른 응답에만 주의가 집중될 수 있으며, 낮은 성적의 학습자에게는 오히려 동기를 저하시킬 수 있다.</p>
+<p>게임화 요소는 그 자체가 교수적 목표는 아니다. 활동의 핵심 목표(형태의 정확한 사용과 자동화)를 달성하기 위한 동기 유발 장치로서, 적절한 수준에서 활용되어야 한다.</p>
+<h2 id="sec-4-2">4.2 의미 구성 활동의 설계</h2>
+<h3>2.1. 시각 자료의 역할</h3>
+<p>의미 구성 활동에서 시각 자료(그림, 사진, 차트, 그래프 등)는 단순한 삽화가 아니라, 활동의 의미적 맥락을 구성하는 핵심 요소이다. 시각 자료가 활동에서 수행하는 역할은 크게 두 가지로 나눌 수 있다.</p>
+<p><b>맥락 제공형.</b> 시각 자료가 학습자에게 언어 사용의 맥락을 제공한다. 예를 들어, 식당 그림을 보여 주고 "이 사람은 식당에서 \_\_\_을 먹어요"를 완성하게 하는 경우, 그림은 문장의 의미를 명확히 하는 보조 수단이다. 학습자는 그림을 보고 답을 떠올리지만, 그림 없이도 문장 자체로 답이 가능한 경우가 많다.</p>
+<p><b>의미 추론 유발형.</b> 시각 자료가 언어 사용의 필수적 촉발 요인이 된다. 예를 들어, 두 장의 그림을 나란히 놓고 "무엇이 달라졌는지 말하세요"라고 요구하는 경우, 학습자는 그림을 관찰하고 차이를 추론한 뒤 그것을 언어로 표현해야 한다. 그림 없이는 활동 자체가 성립하지 않는다.</p>
+<p>설계의 관점에서, 의미 추론 유발형이 언어 학습에 더 효과적이다. 학습자가 시각 정보를 해석하고 그것을 언어 형태로 전환하는 과정 자체가 형태-의미 연결을 촉진하기 때문이다. 다만, 추론의 부담이 과도하면 학습자의 주의가 내용 파악에 소진되어 정작 언어 형태에는 주의가 가지 않는 역효과가 생길 수 있다. 학습자의 레벨에 따라 시각 자료의 복잡도를 조절하는 것이 필요하다.</p>
+<h3>2.2. 텍스트 난이도 조절</h3>
+<p>텍스트 기반 활동에서 텍스트의 난이도는 활동 전체의 성패를 좌우한다. 텍스트가 너무 쉬우면 학습자에게 도전이 되지 않고, 너무 어려우면 내용 파악에 인지 자원이 소진되어 목표 학습이 일어나지 않는다.</p>
+<p>텍스트 난이도를 결정하는 주요 변인은 세 가지이다.</p>
+<p><b>어휘 통제.</b> 텍스트에 사용되는 어휘의 수준과 빈도이다. 학습자가 모르는 어휘가 전체의 5% 이내이면 독립적 읽기가 가능하고, 10%를 넘으면 내용 파악이 어려워진다(Nation, 2006). 읽기 텍스트를 설계할 때는 대상 레벨의 어휘 목록에 기반하여 사용 어휘를 통제하되, 목표 학습 항목(새 문법이나 새 어휘)만 학습자에게 낯선 요소로 남기는 것이 원칙이다.</p>
+<p><b>문장 길이와 구조.</b> 긴 문장, 복문, 내포절이 많은 텍스트는 처리 부담이 높다. 초급 텍스트에서는 짧고 단순한 문장을, 중급 이상에서는 접속문과 내포문을 점진적으로 도입한다.</p>
+<p><b>배경지식 부담.</b> 텍스트의 주제가 학습자에게 친숙한가도 난이도에 영향을 미친다. 한국 문화 특유의 배경지식(예: 한국의 대학 입시 제도, 명절 풍습)을 전제하는 텍스트는 해당 배경지식이 없는 학습자에게 추가적 부담이 된다.</p>
+<h3>2.3. 정보 차 활동의 설계</h3>
+<p>정보 차(information gap) 활동은 의미 구성 활동 중에서도 상호작용을 가장 직접적으로 촉진하는 유형이다. 두 명 이상의 학습자가 서로 다른 정보를 가지고 있으며, 과제를 완수하기 위해 서로의 정보를 교환해야 하는 구조이다.</p>
+<p>정보 차 활동을 설계할 때 핵심적인 판단은 <b>정보 차의 방향</b>이다.</p>
+<p><b>일방향 정보 차(one-way).</b> 한 학습자만 정보를 가지고 있고, 다른 학습자는 질문을 통해 그 정보를 얻어야 한다. 길 안내 활동이 대표적이다. A가 지도를 보고, B가 "우체국이 어디에 있어요?"라고 묻는 구조이다. 일방향 정보 차에서는 정보를 가진 학습자와 요청하는 학습자의 역할이 고정되므로, 언어 사용의 양이 비대칭적일 수 있다.</p>
+<p><b>양방향 정보 차(two-way).</b> 두 학습자가 각각 다른 정보를 가지고 있으며, 양쪽 모두가 상대방의 정보를 필요로 한다. 서로 다른 시간표를 가지고 공통의 약속 시간을 찾는 활동이 대표적이다. 양방향 정보 차에서는 두 학습자 모두가 질문하고 답해야 하므로, 언어 사용의 양이 대칭적이고 의미 협상의 기회가 더 많다.</p>
+<p>Long(1996)의 상호작용 가설에 따르면, 양방향 정보 차가 일방향보다 의미 협상을 더 많이 유발하며, 따라서 습득에 더 효과적이다. 다만, 양방향 정보 차는 설계가 복잡하고 학습자에게 요구하는 인지적 부담도 높으므로, 초급에서는 일방향으로 시작하여 점차 양방향으로 이행하는 것이 자연스럽다.</p>
+<p>정보 차의 크기도 중요한 설계 변인이다. 정보 차가 너무 작으면(예: 한 단어만 다른 경우) 교환할 내용이 적어 상호작용이 빈약해지고, 너무 크면(예: 완전히 다른 텍스트를 각각 읽은 경우) 처리 부담이 과도해진다. 적절한 정보 차의 크기는 학습자가 3\~5회의 질의응답을 통해 과제를 완수할 수 있는 수준이다.</p>
+<h2 id="sec-4-3">4.3 의사소통 기능 활동의 설계</h2>
+<h3>3.1. 화용적 적절성의 교수</h3>
+<p>의사소통 기능 활동의 설계에서 가장 핵심적인 개념은 <b>화용적 적절성(pragmatic appropriateness)</b>이다. 문법적으로 올바른 문장이 상황에 따라서는 부적절할 수 있다는 인식, 그리고 같은 의사소통 목적을 달성하는 데에도 다양한 표현 전략이 존재한다는 인식이 이 개념의 핵심이다.</p>
+<p>거절하기를 예로 들어 보자. "아니요"는 문법적으로 완벽한 거절이다. 그러나 상사의 저녁 식사 제안에 "아니요"만으로 거절하는 것은 한국어 화용론의 관점에서 극히 부적절하다. 한국어에서 적절한 거절은 일반적으로 다음의 요소를 포함한다. 망설임 표현("음... 그게요..."), 사과나 유감 표현("죄송한데요"), 이유 제시("내일 시험이 있어서요"), 대안 제시("다음에 제가 연락드릴게요"). 이러한 요소들의 조합은 화자 간의 관계, 상황의 공식성, 거절의 부담도에 따라 달라진다.</p>
+<p>이러한 화용적 복잡성을 교수하기 위해서는, 학습자가 <b>같은 기능을 다양한 상황에서 반복적으로 연습</b>하되, 매번 상황 변인이 달라지는 구조가 필요하다. 하나의 거절 표현을 암기하는 것이 아니라, 상황에 따라 거절의 전략을 조정하는 능력을 기르는 것이 목표이기 때문이다.</p>
+<p>Brown & Levinson(1987)의 공손 이론에 따르면, 거절, 요청, 사과와 같은 화행은 상대방의 <b>체면(face)</b>을 위협하는 행위이다. 체면 위협의 정도가 클수록 더 정교한 공손 전략이 필요하며, 이 정도는 화자 간의 사회적 거리, 상대적 권력, 행위의 부담도에 의해 결정된다. 이 세 변인이 곧 활동 설계의 핵심 조작 변인이 된다.</p>
+<h3>3.2. 상황 변인의 설계</h3>
+<p>의사소통 기능 활동에서 상황을 설정할 때 조작할 수 있는 주요 변인은 세 가지이다.</p>
+<p><b>화자 간의 관계.</b> 친밀도(친한 친구 vs 처음 만난 사람)와 상하 관계(동료 vs 상사 vs 교수)를 포함한다. 한국어에서 이 변인은 높임법 선택에 직결되므로, 다른 언어에 비해 활동 설계에서의 비중이 특히 크다. 같은 "요청하기"라도 친구에게 하는 요청과 교수에게 하는 요청은 사용되는 표현의 형식이 완전히 다르다.</p>
+<p><b>상황의 공식성.</b> 일상적 대화 상황인가, 공적 상황(회의, 면접, 발표)인가에 따라 언어의 격식성이 달라진다. 공식적 상황에서는 보다 간접적이고 정중한 표현이 요구되며, 일상적 상황에서는 보다 직접적이고 간결한 표현이 자연스럽다.</p>
+<p><b>부담도.</b> 요청이나 거절의 내용이 상대방에게 주는 부담의 크기이다. "펜 좀 빌려 주세요"(작은 부담)와 "내일 이사를 도와주실 수 있어요?"(큰 부담)는 같은 요청이지만, 후자에는 더 정교한 공손 전략이 필요하다. 부담도를 조절함으로써 같은 의사소통 기능 안에서도 난이도를 세밀하게 조절할 수 있다.</p>
+<p>이 세 변인을 조합하면 다양한 난이도의 상황을 체계적으로 생성할 수 있다. 예를 들어, 거절하기 활동에서 다음과 같은 상황 세트를 구성할 수 있다.</p>
+<p>상황                           관계         공식성   부담도   난이도</p>
+<p>친구의 영화 제안 거절          친밀, 동등   비공식   낮음     ★☆☆ 선배의 동아리 가입 권유 거절   보통, 상하   비공식   중간     ★★☆ 상사의 주말 근무 요청 거절     먼, 상하     공식     높음     ★★★</p>
+<p>이처럼 상황 변인을 체계적으로 조작하면, 학습자가 쉬운 상황에서 어려운 상황으로 단계적으로 이행하면서 화용적 능력을 발달시킬 수 있다.</p>
+<h3>3.3. 롤플레이와 시뮬레이션의 구분</h3>
+<p>의사소통 기능을 연습하는 가장 대표적인 활동 형태는 롤플레이(role play)와 시뮬레이션(simulation)이다. 이 두 형태는 흔히 혼용되지만, 설계의 관점에서는 구분이 필요하다.</p>
+<p><b>롤플레이</b>는 학습자에게 특정 역할과 상황이 부여되며, 무엇을 해야 하는지가 비교적 명확하게 제시된다. 역할 카드에 "당신은 약국에 온 손님입니다. 머리가 아프다고 말하세요"와 같은 지시가 적혀 있다. 학습자는 주어진 역할 안에서 목표 기능을 수행하되, 사용하는 구체적 표현은 자율적으로 선택한다.</p>
+<p><b>시뮬레이션</b>은 보다 개방적이다. 역할과 상황은 주어지지만, 무엇을 해야 하는지는 학습자가 스스로 판단해야 한다. "당신은 식당 매니저입니다. 손님이 음식에 불만을 표시합니다"와 같은 상황이 주어지면, 학습자는 사과할 것인가, 설명할 것인가, 대안을 제시할 것인가를 스스로 결정해야 한다.</p>
+<p>두 형태의 선택 기준은 학습자의 수준과 활동의 목표에 따라 결정된다.</p>
+<p>기준               롤플레이                시뮬레이션</p>
+<p>학습자 수준        초\~중급                중\~고급 교사 통제          높음                    낮음 언어 예측 가능성   높음                    낮음 목표               특정 표현·기능 연습     통합적 의사소통 능력 평가 초점          목표 기능의 수행 여부   전체적 의사소통 효과</p>
+<p>초급 학습자에게는 롤플레이가, 고급 학습자에게는 시뮬레이션이 일반적으로 적합하다. 그러나 같은 상황(예: 약국)을 초급에서는 롤플레이로, 고급에서는 시뮬레이션으로 변형하여 사용하는 것도 가능하다. 이러한 변형은 같은 소재를 다른 수준의 학습자에게 재활용할 수 있게 해 주며, 실제편에서 "변형 가이드"로 구체적으로 다룬다.</p>
+<h2 id="sec-4-4">4.4 과제 기반 활동의 설계</h2>
+<h3>4.1. 과제의 구성 조건</h3>
+<p>과제 기반 활동은 네 범주 중 가장 높은 수준의 학습자 자율성을 요구하며, 동시에 설계의 정밀성도 가장 높이 요구된다. 자유도가 높은 만큼, 과제가 적절히 구조화되지 않으면 학습자가 방향을 잃거나, 목표 언어가 아닌 모국어로 과제를 수행하거나, 소수의 학습자만 참여하고 나머지는 방관하는 상황이 발생할 수 있다.</p>
+<p>잘 설계된 과제에는 일반적으로 다음의 구성 조건이 포함된다.</p>
+<p><b>결과물의 명시.</b> "여행 계획을 세우세요"보다 "3박 4일 여행 계획표를 만들어서 발표하세요"가 효과적이다. 구체적인 결과물이 명시되면 학습자에게 활동의 방향이 명확해지고, 과제 완수 여부를 판단하는 기준이 마련된다.</p>
+<p><b>시간 제한.</b> 적절한 시간 제한은 학습자의 집중력을 유지하고, 과제의 긴급성을 부여한다. 시간이 무제한이면 과제가 흐지부지 되기 쉽다. 다만, 시간이 지나치게 촉박하면 학습자가 목표 언어를 사용하기보다 모국어에 의존하는 경향이 강해진다.</p>
+<p><b>역할 분배.</b> 모둠 과제에서 각 구성원의 역할이 명확해야 한다. "다 같이 의논하세요"보다 "A는 숙소를, B는 교통을, C는 일정을 담당하세요"가 모든 구성원의 참여를 보장한다.</p>
+<p><b>정보 분배.</b> 과제에 필요한 정보가 모든 학습자에게 동일하게 주어지면, 구성원 간의 의사소통 필요성이 낮아진다. 각 구성원이 서로 다른 정보(예: 서로 다른 여행지 정보)를 가지고 있어야 의미 협상이 자연스럽게 발생한다.</p>
+<h3>4.2. 과제 복잡도의 조절</h3>
+<p>같은 유형의 과제라도 복잡도에 따라 난이도가 크게 달라진다. Robinson(2001)의 <b>인지 가설(Cognition Hypothesis)</b>은 과제 복잡도를 조절하는 체계적 틀을 제공한다.</p>
+<p>Robinson에 따르면, 과제 복잡도를 높이는 변인은 크게 두 유형으로 나뉜다.</p>
+<p><b>자원 집중형 변인(resource-directing).</b> 과제가 요구하는 인지적·언어적 자원을 특정 방향으로 집중시키는 변인이다. 시제의 다양성(현재만 vs 과거+미래), 공간 관계의 복잡성(단순 위치 vs 이동 경로), 인과 관계의 유무 등이 이에 해당한다. 이 변인이 복잡해지면 학습자는 보다 정교한 언어 형태를 사용하도록 밀린다(pushed output).</p>
+<p><b>자원 분산형 변인(resource-dispersing).</b> 과제 수행에 필요한 인지 자원을 여러 방향으로 분산시키는 변인이다. 계획 시간의 유무, 사전 지식의 유무, 동시에 처리해야 할 요소의 수 등이 이에 해당한다. 이 변인이 복잡해지면 학습자의 인지 부담이 전반적으로 높아진다.</p>
+<p>설계의 관점에서, 낮은 수준의 학습자에게는 자원 분산형 변인을 줄이는 것(계획 시간 충분히 주기, 배경지식 제공하기)이 우선이며, 높은 수준의 학습자에게는 자원 집중형 변인을 높이는 것(더 복잡한 시제 사용 요구, 인과 관계 표현 요구)이 언어적 성장을 촉진한다.</p>
+<p>구체적 예를 들어 보자. "약국에서 증상 설명하기" 역할극에서 복잡도를 조절하는 방법은 다음과 같다.</p>
+<p>변인          낮은 복잡도                  높은 복잡도</p>
+<p>증상 수       1개 (머리가 아프다)          3개 (머리+배+기침) 시간 표현     현재만                       어제부터, 점점 심해진다 사전 정보     역할 카드에 핵심 표현 제시   핵심 표현 없이 상황만 제시 상대방 반응   예측 가능 (약사가 친절)      예측 불가 (약사가 추가 질문)</p>
+<h3>4.3. 과제 후 언어 초점의 배치</h3>
+<p>과제 기반 활동에서 자주 제기되는 우려는 "과제만 하면 정확성이 떨어지지 않는가"이다. 학습자가 과제를 완수하는 데만 집중하면, 문법적 오류를 무시하고 의미 전달에만 치중하는 경향이 나타날 수 있다. 이 우려에 대한 대응이 <b>과제 후 언어 초점(post-task focus on form)</b>이다.</p>
+<p>Willis & Willis(2007)는 과제 후 단계에서 다음과 같은 활동을 배치할 것을 제안하였다.</p>
+<p><b>보고 단계(report).</b> 모둠별로 과제 수행의 결과를 발표하게 한다. 발표를 준비하는 과정에서 학습자는 자신의 언어를 점검하고 수정하게 되며, 이 과정이 형태에 대한 주의를 자연스럽게 유발한다.</p>
+<p><b>언어 분석(language analysis).</b> 과제 수행 중 녹음한 학습자의 발화를 다시 들려주고, 목표 언어 형태의 사용 양상을 분석하게 한다. 또는 교사가 과제 수행 중 관찰한 공통적 오류를 전체 학생에게 제시하고, 올바른 형태를 확인시킨다.</p>
+<p><b>연습(practice).</b> 과제 수행 중 드러난 취약점을 보완하기 위한 형태 학습 활동을 배치한다. 이 시점에서의 형태 연습은 학습자가 이미 의미 있는 맥락에서 해당 형태를 사용해 본 직후이므로, 형태-의미 연결이 단순한 형태 연습보다 훨씬 강하게 형성된다.</p>
+<p>과제 후 언어 초점의 배치는 6장에서 다루는 수업 설계의 원리와도 밀접하게 연결된다. 수업 안에서 과제와 형태 연습이 어떤 순서로 배열되는가의 문제이기 때문이다.</p>
+<div class="further-reading"><h4>더 읽을거리</h4><ul>
+<ul><li>Hattie, J. & Timperley, H. (2007). The power of feedback. *Review of</li></ul>
+<blockquote>Educational Research*, 77(1), 81--112. --- 피드백 4수준 모형.</blockquote>
+<ul><li>DeKeyser, R. (2007). <em>Practice in a Second Language</em>. Cambridge</li></ul>
+<blockquote>University Press. --- 기능 연습과 자동화.</blockquote>
+<ul><li>Nation, I. S. P. (2006). How large a vocabulary is needed for</li></ul>
+<blockquote>reading and listening? <em>Canadian Modern Language Review</em>, 63(1),<br>59--82. --- 텍스트 난이도와 어휘 부담.</blockquote>
+<ul><li>Long, M. H. (1996). The role of the linguistic environment in second</li></ul>
+<blockquote>language acquisition. --- 상호작용 가설과 정보 차 활동.</blockquote>
+<ul><li>VanPatten, B. (1996). <em>Input Processing and Grammar Instruction</em>.</li></ul>
+<blockquote>Ablex. --- 형태-의미 연결.</blockquote>
+<ul><li>Brown, P. & Levinson, S. C. (1987). *Politeness: Some Universals in</li></ul>
+<blockquote>Language Usage*. Cambridge University Press. --- 공손 이론과 체면.</blockquote>
+<ul><li>Robinson, P. (2001). Task complexity, task difficulty, and task</li></ul>
+<blockquote>production. <em>Applied Linguistics</em>, 22(1), 27--57. --- 과제<br>복잡도의 인지 가설.</blockquote>
+<ul><li>Willis, D. & Willis, J. (2007). <em>Doing Task-Based Teaching</em>. Oxford</li></ul>
+<blockquote>University Press. --- 과제 전-중-후 단계.</blockquote>
+<ul><li>Kasper, G. & Rose, K. (2002). *Pragmatic Development in a Second</li></ul>
+<blockquote>Language*. Blackwell. --- 화용론적 발달.</blockquote>
+</ul></div>
+
+    <!-- 더 읽을거리 (있는 경우) -->
+    <!--
+    <div class="further-reading">
+      <h4>더 읽을거리</h4>
+      <ul>
+        <li>참고문헌 1</li>
+        <li>참고문헌 2</li>
+      </ul>
+    </div>
+    -->
+
+    <!-- 이전/다음 -->
+    <div class="ch-nav">
+      <a href="column-ch3.html" class="prev">← 3장. 활동의 분류</a>
+      <a href="column-ch5.html" class="next">5장. 언어 기능과 의사소통 기능 →</a>
+    </div>
+  </article>
+</div>
+
+<footer><div style="max-width:1100px;margin:0 auto;padding:0 32px;">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+// 스크롤 스파이 — 현재 읽는 절에 active 표시
+const headings = document.querySelectorAll('.article h2[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+
+headings.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

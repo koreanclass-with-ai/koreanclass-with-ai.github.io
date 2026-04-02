@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>논증 구조 연습</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}
+.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}
+.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}
+.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}
+.nav a:hover{color:#1a1a1a;}
+.nav a.primary,.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}
+.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}
+.prose b{color:#1a1a1a;font-weight:500;}
+.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}
+.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.overview-table tr{border-bottom:0.5px solid #e5e5e5;}
+.overview-table tr:last-child{border-bottom:none;}
+.overview-table td:first-child{background:#f5f5f3;color:#666;padding:9px 14px;width:110px;font-weight:500;}
+.overview-table td:last-child{padding:9px 14px;color:#1a1a1a;}
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}
+.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:1rem;}
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}
+.prompt-bar-left{display:flex;align-items:center;gap:5px;}
+.prompt-dot{width:8px;height:8px;border-radius:50%;}
+.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}
+.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.p-section{color:#8b949e;}.p-val{color:#e6edf3;}.p-cmt{color:#e3b341;}.p-key{color:#79c0ff;}
+.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}
+.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}
+.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.layer-desc{font-size:13px;color:#555;line-height:1.7;}
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}
+.json-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#cdd6f4;white-space:pre-wrap;background:#1e1e2e;}
+.jk{color:#89b4fa;cursor:pointer;border-radius:3px;padding:1px 3px;transition:background .15s;}
+.jk:hover,.jk.active{background:rgba(137,180,250,0.2);}
+.js{color:#a6e3a1;}.jn{color:#fab387;}
+.legend{display:flex;flex-direction:column;gap:0;margin-top:14px;}
+.leg-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid #e5e5e5;}
+.leg-row:last-child{border-bottom:none;}
+.leg-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;padding:4px 11px;background:#f5f5f3;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.leg-arrow{font-size:12px;color:#aaa;flex-shrink:0;margin-top:3px;}
+.leg-desc{font-size:13px;color:#555;line-height:1.7;}
+.leg-desc b{color:#1a1a1a;font-weight:500;}
+.tooltip{position:fixed;background:#fff;border:0.5px solid #ddd;border-radius:12px;padding:12px 14px;width:220px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;line-height:1.7;z-index:9999;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.tooltip.show{opacity:1;}
+.tt-title{font-weight:700;font-size:12px;color:#185FA5;margin-bottom:4px;}
+.tt-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:6px;font-weight:700;}
+.badge-yes{background:#EAF3DE;color:#3B6D11;}.badge-no{background:#f5f5f3;color:#888;}
+.act-box{border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.act-header{background:#185FA5;padding:1.1rem 1.25rem;color:#fff;}
+.act-header-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.act-header-sub{font-size:11px;opacity:.8;}
+.act-body{padding:1.25rem;}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}
+.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}
+.var-table{width:100%;border-collapse:collapse;font-size:13px;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.var-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:#888;letter-spacing:.05em;background:#f5f5f3;border-bottom:0.5px solid #e5e5e5;}
+.var-table td{padding:9px 12px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:top;line-height:1.6;}
+.var-table tr:last-child td{border-bottom:none;}
+
+/* Worksheet-specific styles */
+.worksheet-topic{font-size:16px;font-weight:700;color:#1a1a1a;background:#E6F1FB;padding:12px 14px;border-radius:10px;margin-bottom:1rem;text-align:center;}
+.frame-item{margin-bottom:1.25rem;padding:14px;border-radius:10px;border:0.5px solid #e5e5e5;position:relative;display:flex;align-items:flex-start;gap:12px;}
+.frame-item.claim{background:#E6F1FB;}
+.frame-item.reason{background:#EAF3DE;}
+.frame-item.example{background:#FEF3E6;}
+.frame-badge{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#fff;font-weight:700;font-size:14px;color:#1a1a1a;border:1px solid #ccc;flex-shrink:0;margin-top:2px;}
+.frame-item.claim .frame-badge{border-color:#185FA5;color:#185FA5;}
+.frame-item.reason .frame-badge{border-color:#3B6D11;color:#3B6D11;}
+.frame-item.example .frame-badge{border-color:#D97706;color:#D97706;}
+.frame-content{flex:1;}
+.frame-label{font-size:12px;font-weight:700;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.frame-text{font-size:13px;color:#1a1a1a;line-height:1.6;display:flex;align-items:center;gap:4px;}
+.frame-input{border:none;background:#fff;border-bottom:1.5px solid #ccc;padding:4px 4px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#1a1a1a;width:100%;max-width:250px;}
+.frame-input:focus{outline:none;border-bottom-color:#185FA5;}
+.model-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:8px;font-size:12px;color:#666;cursor:pointer;transition:all .15s;font-weight:500;margin-top:1rem;}
+.model-toggle:hover{background:#e5e5e5;color:#1a1a1a;}
+.model-toggle.active{background:#185FA5;color:#fff;border-color:#185FA5;}
+.model-answer{margin-top:1rem;padding:12px 14px;background:#fff;border:0.5px dashed #ccc;border-radius:8px;display:none;}
+.model-answer.show{display:block;}
+.model-label{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.model-answer-item{margin-bottom:8px;}
+.model-answer-item:last-child{margin-bottom:0;}
+.model-answer-text{font-size:13px;color:#1a1a1a;line-height:1.7;}
+
+@media(max-width:640px){
+  .wrap{padding:1rem .75rem 3rem;}
+  .hero,.section{padding:1.25rem;border-radius:12px;}
+  .hero-title{font-size:20px;}
+  .nav{gap:6px;}
+  .nav a{padding:7px 10px;font-size:12px;}
+  .legend .leg-row{flex-direction:column;gap:4px;}
+  .frame-item{flex-direction:column;}
+  .frame-input{max-width:100%;}
+}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- HERO -->
+    <div class="hero">
+      <span class="tag">❸ 기능 중심 · 의견 표현</span>
+      <h1 class="hero-title">논증 구조 연습, AI로 주장-근거-예시 프레임 만드는 법</h1>
+      <p class="hero-desc">프롬프트로 논증 구조 워크시트를 만드는 과정을 안내해요.</p>
+      <div class="meta">
+        <span class="chip">TOPIK 4~5급 · 중~고급</span>
+        <span class="chip">제작 시간 15분</span>
+        <span class="chip">3개 주제</span>
+      </div>
+      <nav class="nav">
+        <a href="javascript:void(0)" onclick="scrollTo_('intro')">개요</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('build')">설계</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('practice')">워크시트</a>
+        <a href="javascript:void(0)" onclick="scrollTo_('check')">점검</a>
+      </nav>
+    </div>
+
+    <!-- INTRO -->
+    <section class="section" id="intro">
+      <span class="section-tag">활동 개요</span>
+      <h2 class="section-title">논증 구조 연습, 왜 중요한가?</h2>
+      <p class="section-lead">학습자의 의견을 체계적으로 표현하기 위한 프레임 제공</p>
+
+      <table class="overview-table">
+        <tr><td>활동 유형</td><td>의견 표현 (논증 구조)</td></tr>
+        <tr><td>범주</td><td>❸ 기능 중심</td></tr>
+        <tr><td>대상</td><td>중~고급 (TOPIK 4~5급)</td></tr>
+        <tr><td>목표</td><td>주장-근거-예시의 3단 논증 구조를 사용하여 의견을 체계적으로 전달</td></tr>
+        <tr><td>언어 기능</td><td>쓰기 · 말하기</td></tr>
+        <tr><td>규모</td><td>3개 주제 / 15분</td></tr>
+        <tr><td>배포</td><td>웹 기반 또는 인쇄용 워크시트</td></tr>
+      </table>
+
+      <div class="sub-title">설계 근거</div>
+      <p class="prose">
+        중급 학습자가 의견을 말할 때 가장 흔한 문제는 "주장만 하고 근거가 없는 것" 또는 "근거는 있는데 주장과 연결이 안 되는 것"이에요. 주장-근거-예시의 빈칸 프레임을 제공하면, 학습자가 각 요소를 채우면서 자연스럽게 논증 구조를 익히게 돼요.
+      </p>
+      <p class="prose">
+        논증은 "내가 왜 이렇게 생각하는가"를 설명하는 거잖아요. 주장(결론)→근거(이유)→예시(증거)의 3단 구조는 가장 기본적이면서도 효과적인 논증 형식이에요. 이 구조를 시각적으로 보여주고 칸을 채우게 하면, 학습자가 "이 순서로 말하면 된다"는 인식을 갖게 되거든요.
+      </p>
+
+      <div class="tip">
+        <b>팁:</b> 한 가지 주제로 찬성과 반대 입장을 모두 작성해보면, 같은 주제라도 근거를 달리 선택할 수 있다는 것을 깨닫게 돼요.
+      </div>
+    </section>
+
+    <!-- BUILD -->
+    <section class="section" id="build">
+      <span class="section-tag">설계 과정</span>
+      <h2 class="section-title">프롬프트로 논증 워크시트 만들기</h2>
+      <p class="section-lead">AI에 어떻게 지시하는가?</p>
+
+      <p class="prose">다음 프롬프트로 TOPIK 4~5급 학습자용 논증 구조 활동을 생성해요.</p>
+
+      <div class="prompt-box">
+        <div class="prompt-bar">
+          <div class="prompt-bar-left">
+            <span class="prompt-dot" style="background:#ff5f56;"></span>
+            <span class="prompt-dot" style="background:#ffbd2e;"></span>
+            <span class="prompt-dot" style="background:#27c93f;"></span>
+            <span class="prompt-filename">prompt.txt</span>
+          </div>
+        </div>
+        <div class="prompt-body"><span class="p-section"># 역할 (Role)</span>
+한국어 교육 전문가
+
+<span class="p-section"># 과제 (Task)</span>
+TOPIK 4~5급 학습자를 위한 논증 구조 연습 활동 생성
+
+<span class="p-section"># 조건 (Constraints)</span>
+- 주제 3개: 외국어 조기 교육, 원격 근무 확대, SNS의 영향
+- 각 주제: 주장-근거-예시 프레임(빈칸) + 모범 답안(찬성/반대 각 1개)
+- 문형: -(으)ㄴ/는다고 생각하다, 왜냐하면 -기 때문이다, 예를 들어, 따라서
+
+<span class="p-section"># 출력 (Output)</span>
+JSON 형식</div>
+      </div>
+
+      <div class="sub-title">생성된 JSON 구조</div>
+      <p class="prose">프롬프트 실행 후 다음 형식의 JSON이 반환돼요.</p>
+
+      <div class="prompt-box">
+        <div class="prompt-bar">
+          <div class="prompt-bar-left">
+            <span class="prompt-dot" style="background:#ff5f56;"></span>
+            <span class="prompt-dot" style="background:#ffbd2e;"></span>
+            <span class="prompt-dot" style="background:#27c93f;"></span>
+            <span class="prompt-filename">argumentation.json</span>
+          </div>
+        </div>
+        <div class="json-body">{
+  <span class="jk">"topics"</span>: [
+    {
+      <span class="jk">"id"</span>: <span class="jn">1</span>,
+      <span class="jk">"topic"</span>: <span class="js">"외국어 조기 교육은 필요한가?"</span>,
+      <span class="jk">"frame"</span>: {
+        <span class="jk">"claim"</span>: <span class="js">"저는 ______고 생각합니다."</span>,
+        <span class="jk">"reason"</span>: <span class="js">"왜냐하면 ______기 때문입니다."</span>,
+        <span class="jk">"example"</span>: <span class="js">"예를 들어, ______"</span>
+      },
+      <span class="jk">"model_pro"</span>: {
+        <span class="jk">"claim"</span>: <span class="js">"외국어 조기 교육이 필요하다"</span>,
+        <span class="jk">"reason"</span>: <span class="js">"어릴 때 언어 습득 능력이 가장 높기 때문이다"</span>,
+        <span class="jk">"example"</span>: <span class="js">"영어를 일찍 시작한 아이들이 발음이 더 자연스럽다는 연구가 있다"</span>
+      },
+      <span class="jk">"model_con"</span>: {
+        <span class="jk">"claim"</span>: <span class="js">"외국어 조기 교육은 필요하지 않다"</span>,
+        <span class="jk">"reason"</span>: <span class="js">"모국어 기초가 먼저 확립되어야 하기 때문이다"</span>,
+        <span class="jk">"example"</span>: <span class="js">"모국어가 완성되지 않은 상태에서 외국어를 배우면 둘 다 중간 수준에 머무는 경우가 있다"</span>
+      }
+    }
+  ]
+}</div>
+      </div>
+
+      <div class="sub-title">JSON 필드 설명</div>
+      <div class="legend">
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#185FA5;"></span>topics</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc">논증 주제 목록이에요.</div>
+        </div>
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#185FA5;"></span>frame</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc">빈칸 프레임이에요. <b>학습자가 직접 채우는 구조</b>예요.</div>
+        </div>
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#639922;"></span>model_pro</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc"><b>찬성 측 모범 답안</b>이에요. 주장-근거-예시 완성형이죠.</div>
+        </div>
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#639922;"></span>model_con</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc"><b>반대 측 모범 답안</b>이에요.</div>
+        </div>
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#D97706;"></span>claim</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc">주장이에요. <b>"~(으)ㄴ/는다고 생각합니다"</b> 문형을 사용해요.</div>
+        </div>
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#D97706;"></span>reason</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc">근거예요. <b>"왜냐하면 ~기 때문입니다"</b> 문형을 사용해요.</div>
+        </div>
+        <div class="leg-row">
+          <span class="leg-tag"><span class="leg-dot" style="background:#D97706;"></span>example</span>
+          <span class="leg-arrow">→</span>
+          <div class="leg-desc">예시예요. <b>"예를 들어"</b>로 시작해요.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section class="section" id="practice">
+      <span class="section-tag">워크시트 예시</span>
+      <h2 class="section-title">대화형 논증 구조 프레임</h2>
+      <p class="section-lead">학습자가 빈칸을 채우는 형식으로 주장-근거-예시를 완성해요.</p>
+
+      <!-- Topic 1: 외국어 조기 교육 -->
+      <div class="act-box">
+        <div class="act-header">
+          <div class="act-header-title">논증 구조 워크시트</div>
+          <div class="act-header-sub">TOPIK 4~5급 · 의견 표현 · 외국어 조기 교육</div>
+        </div>
+        <div class="act-body">
+          <div class="worksheet-topic">외국어 조기 교육은 필요한가?</div>
+
+          <!-- 주장 -->
+          <div class="frame-item claim">
+            <div class="frame-badge">①</div>
+            <div class="frame-content">
+              <div class="frame-label">주장 (Claim)</div>
+              <div class="frame-text">
+                저는
+                <input type="text" class="frame-input" placeholder="의견을 입력하세요" id="claim-1">
+                고 생각합니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- 근거 -->
+          <div class="frame-item reason">
+            <div class="frame-badge">②</div>
+            <div class="frame-content">
+              <div class="frame-label">근거 (Reason)</div>
+              <div class="frame-text">
+                왜냐하면
+                <input type="text" class="frame-input" placeholder="이유를 입력하세요" id="reason-1">
+                기 때문입니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- 예시 -->
+          <div class="frame-item example">
+            <div class="frame-badge">③</div>
+            <div class="frame-content">
+              <div class="frame-label">예시 (Example)</div>
+              <div class="frame-text">
+                예를 들어,
+                <input type="text" class="frame-input" placeholder="구체적 사례를 입력하세요" id="example-1">
+              </div>
+            </div>
+          </div>
+
+          <!-- 모범 답안 토글 -->
+          <button class="model-toggle" onclick="toggleModel(1)">📖 모범 답안 보기 (찬성)</button>
+          <div class="model-answer" id="model-1">
+            <div class="model-label">찬성 입장 모범 답안</div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">주장</div>
+              <div class="model-answer-text"><b>외국어 조기 교육이 필요하다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">근거</div>
+              <div class="model-answer-text"><b>어릴 때 언어 습득 능력이 가장 높기 때문이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">예시</div>
+              <div class="model-answer-text">영어를 일찍 시작한 아이들이 발음이 더 자연스럽다는 연구가 있다</div>
+            </div>
+          </div>
+
+          <button class="model-toggle" onclick="toggleModel(2)">📖 모범 답안 보기 (반대)</button>
+          <div class="model-answer" id="model-2">
+            <div class="model-label">반대 입장 모범 답안</div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">주장</div>
+              <div class="model-answer-text"><b>외국어 조기 교육은 필요하지 않다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">근거</div>
+              <div class="model-answer-text"><b>모국어 기초가 먼저 확립되어야 하기 때문이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">예시</div>
+              <div class="model-answer-text">모국어가 완성되지 않은 상태에서 외국어를 배우면 둘 다 중간 수준에 머무는 경우가 있다</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topic 2: 원격 근무 확대 -->
+      <div class="act-box">
+        <div class="act-header">
+          <div class="act-header-title">논증 구조 워크시트</div>
+          <div class="act-header-sub">TOPIK 4~5급 · 의견 표현 · 원격 근무 확대</div>
+        </div>
+        <div class="act-body">
+          <div class="worksheet-topic">원격 근무를 더 확대해야 한다면?</div>
+
+          <div class="frame-item claim">
+            <div class="frame-badge">①</div>
+            <div class="frame-content">
+              <div class="frame-label">주장 (Claim)</div>
+              <div class="frame-text">
+                저는
+                <input type="text" class="frame-input" placeholder="의견을 입력하세요" id="claim-2">
+                고 생각합니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="frame-item reason">
+            <div class="frame-badge">②</div>
+            <div class="frame-content">
+              <div class="frame-label">근거 (Reason)</div>
+              <div class="frame-text">
+                왜냐하면
+                <input type="text" class="frame-input" placeholder="이유를 입력하세요" id="reason-2">
+                기 때문입니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="frame-item example">
+            <div class="frame-badge">③</div>
+            <div class="frame-content">
+              <div class="frame-label">예시 (Example)</div>
+              <div class="frame-text">
+                예를 들어,
+                <input type="text" class="frame-input" placeholder="구체적 사례를 입력하세요" id="example-2">
+              </div>
+            </div>
+          </div>
+
+          <button class="model-toggle" onclick="toggleModel(3)">📖 모범 답안 보기 (찬성)</button>
+          <div class="model-answer" id="model-3">
+            <div class="model-label">찬성 입장 모범 답안</div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">주장</div>
+              <div class="model-answer-text"><b>원격 근무를 더 확대해야 한다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">근거</div>
+              <div class="model-answer-text"><b>직원의 업무 효율성이 높아지고 시간 낭비를 줄일 수 있기 때문이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">예시</div>
+              <div class="model-answer-text">통근 시간을 단축하면 개인 시간이 늘어나고, 회사도 사무실 운영 비용을 절감할 수 있다</div>
+            </div>
+          </div>
+
+          <button class="model-toggle" onclick="toggleModel(4)">📖 모범 답안 보기 (반대)</button>
+          <div class="model-answer" id="model-4">
+            <div class="model-label">반대 입장 모범 답안</div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">주장</div>
+              <div class="model-answer-text"><b>원격 근무 확대는 조심스럽다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">근거</div>
+              <div class="model-answer-text"><b>팀 간 소통이 약화되고 회사 문화가 훼손될 수 있기 때문이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">예시</div>
+              <div class="model-answer-text">신입사원이 업무 경험을 쌓기 어렵고, 팀원 간의 신뢰 형성이 느려질 수 있다</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topic 3: SNS의 영향 -->
+      <div class="act-box">
+        <div class="act-header">
+          <div class="act-header-title">논증 구조 워크시트</div>
+          <div class="act-header-sub">TOPIK 4~5급 · 의견 표현 · SNS의 영향</div>
+        </div>
+        <div class="act-body">
+          <div class="worksheet-topic">SNS는 우리 사회에 긍정적인가 부정적인가?</div>
+
+          <div class="frame-item claim">
+            <div class="frame-badge">①</div>
+            <div class="frame-content">
+              <div class="frame-label">주장 (Claim)</div>
+              <div class="frame-text">
+                저는
+                <input type="text" class="frame-input" placeholder="의견을 입력하세요" id="claim-3">
+                고 생각합니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="frame-item reason">
+            <div class="frame-badge">②</div>
+            <div class="frame-content">
+              <div class="frame-label">근거 (Reason)</div>
+              <div class="frame-text">
+                왜냐하면
+                <input type="text" class="frame-input" placeholder="이유를 입력하세요" id="reason-3">
+                기 때문입니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="frame-item example">
+            <div class="frame-badge">③</div>
+            <div class="frame-content">
+              <div class="frame-label">예시 (Example)</div>
+              <div class="frame-text">
+                예를 들어,
+                <input type="text" class="frame-input" placeholder="구체적 사례를 입력하세요" id="example-3">
+              </div>
+            </div>
+          </div>
+
+          <button class="model-toggle" onclick="toggleModel(5)">📖 모범 답안 보기 (긍정)</button>
+          <div class="model-answer" id="model-5">
+            <div class="model-label">긍정 입장 모범 답안</div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">주장</div>
+              <div class="model-answer-text"><b>SNS는 사회적으로 긍정적이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">근거</div>
+              <div class="model-answer-text"><b>사람들이 자신의 목소리를 자유롭게 표현하고 의견을 나눌 수 있게 해주기 때문이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">예시</div>
+              <div class="model-answer-text">SNS를 통해 사회적 이슈를 공론화하거나 필요한 사람들을 찾아 도움을 주는 사례가 많이 있다</div>
+            </div>
+          </div>
+
+          <button class="model-toggle" onclick="toggleModel(6)">📖 모범 답안 보기 (부정)</button>
+          <div class="model-answer" id="model-6">
+            <div class="model-label">부정 입장 모범 답안</div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">주장</div>
+              <div class="model-answer-text"><b>SNS는 부정적 측면이 더 크다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">근거</div>
+              <div class="model-answer-text"><b>확인되지 않은 정보가 빠르게 퍼지고 사람들의 정신 건강을 해칠 수 있기 때문이다</b></div>
+            </div>
+            <div class="model-answer-item">
+              <div style="font-size:11px;color:#888;margin-bottom:4px;">예시</div>
+              <div class="model-answer-text">가짜 뉴스로 인한 혼란이나 과도한 비교로 인한 우울증, 중독 문제 등이 사회 문제가 되고 있다</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECK -->
+    <section class="section" id="check">
+      <span class="section-tag">활동 평가 및 확장</span>
+      <h2 class="section-title">점검: 논증 구조가 유효한가?</h2>
+      <p class="section-lead">이 활동이 학습 목표를 달성했는지 확인하세요.</p>
+
+      <div class="sub-title">핵심 체크리스트</div>
+      <ul class="check-list">
+        <li>프레임이 직관적이고 학습자가 바로 채울 수 있는 구조인가요?</li>
+        <li>모범 답안의 주장-근거-예시가 논리적으로 연결되나요?</li>
+        <li>찬성·반대 모범 답안이 모두 설득력 있나요?</li>
+      </ul>
+
+      <div class="sub-title">난이도 조정 및 확장 방안</div>
+      <table class="var-table">
+        <thead>
+          <tr>
+            <th>조정 유형</th>
+            <th>설명</th>
+            <th>활용 시기</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>난이도 ↓</b></td>
+            <td>3단 → 2단 (주장+근거만) / 예시 없이 주장과 이유만 쓰기</td>
+            <td>초급 또는 TOPIK 3급 이하</td>
+          </tr>
+          <tr>
+            <td><b>난이도 ↑</b></td>
+            <td>3단 → 5단 (주장+근거+예시+반론+재반론) / 고급 논증 구조</td>
+            <td>고급 학습자 또는 고등학교 이상</td>
+          </tr>
+          <tr>
+            <td><b>인터랙션</b></td>
+            <td>개인 → 짝 피드백 / A가 작성한 논증을 B가 평가</td>
+            <td>소규모 집단 수업</td>
+          </tr>
+          <tr>
+            <td><b>확장</b></td>
+            <td>프레임 완성 → 발표 또는 에세이 / 완성된 프레임으로 2분 발표</td>
+            <td>수업의 후속 활동</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <b>교사 팁:</b> 학습자가 완성한 논증을 발표하게 하면, 같은 주제도 다양한 근거와 예시로 풍부해진다는 것을 깨닫게 돼요. 피드백 때는 "논증이 명확한가", "근거와 예시가 주장을 잘 뒷받침하는가" 두 가지에 집중하세요.
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="prose" style="margin-top:1.5rem;">
+        이 활동은 중~고급 학습자가 의견을 <b>체계적으로</b> 표현하도록 돕는 것이 핵심이에요. 주장-근거-예시 프레임을 반복해서 사용하면, 결국 "의견을 말할 때는 이 순서로"라는 습관이 자동화돼요. 학습자의 쓰기와 말하기 능력이 함께 발전하는 경험이 될 거예요.
+      </p>
+    </section>
+  </div>
+
+  <script>
+function scrollTo_(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function toggleModel(id) {
+  const model = document.getElementById('model-' + id);
+  const btn = event.target;
+  if (model) {
+    model.classList.toggle('show');
+    btn.classList.toggle('active');
+  }
+}
+
+// Scroll spy with IntersectionObserver
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('onclick').includes(entry.target.id)) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, {
+    rootMargin: '-40% 0px -55% 0px'
+  });
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+});
+  </script>
+</body>
+</html>

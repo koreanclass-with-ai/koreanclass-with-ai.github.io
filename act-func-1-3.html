@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>요청하기 대화자료 - AI로 직접/간접 요청 비교</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 500;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #f0f0f0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 1.5rem 0;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            border-bottom: 0.5px solid #d0d0d0;
+            z-index: 100;
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: #fff;
+            border: 0.5px solid #d0d0d0;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            border: 0.5px solid #d0d0d0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .chip {
+            background-color: #f9f9f7;
+            border: 0.5px solid #d0d0d0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Section Styling */
+        section {
+            background-color: #fff;
+            border: 0.5px solid #d0d0d0;
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        section h2 {
+            margin-top: 0;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background-color: #f9f9f7;
+            border: 0.5px solid #d0d0d0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            border-color: #999;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: #f9f9f7;
+        }
+
+        table th {
+            text-align: left;
+            padding: 1rem;
+            border: 0.5px solid #d0d0d0;
+            background-color: #f0f0f0;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        table td {
+            padding: 1rem;
+            border: 0.5px solid #d0d0d0;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #fafaf8;
+        }
+
+        /* Prompt Box */
+        .prompt-box {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 0.5px solid #444;
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .prompt-box .dots {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red {
+            background-color: #ff5f57;
+        }
+
+        .dot-yellow {
+            background-color: #ffbd2e;
+        }
+
+        .dot-green {
+            background-color: #28c940;
+        }
+
+        /* JSON Body */
+        .json-body {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            border: 0.5px solid #444;
+        }
+
+        .jk {
+            color: #9cdcfe;
+        }
+
+        .jv {
+            color: #ce9178;
+        }
+
+        .jn {
+            color: #b5cea8;
+        }
+
+        .jb {
+            color: #569cd6;
+        }
+
+        /* Dialogue Section */
+        .dialogue-pair {
+            background-color: #f9f9f7;
+            border: 0.5px solid #d0d0d0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .dialogue-pair h4 {
+            margin-top: 0;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #d0d0d0;
+            margin-bottom: 1rem;
+        }
+
+        .dialogue-box {
+            background-color: #fff;
+            padding: 1rem;
+            border-left: 3px solid #999;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .dialogue-box.direct {
+            border-left-color: #e74c3c;
+        }
+
+        .dialogue-box.indirect {
+            border-left-color: #3498db;
+        }
+
+        .dialogue-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dialogue-line {
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+        }
+
+        .dialogue-line strong {
+            color: #333;
+        }
+
+        .strategy-text {
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 0.5px solid #e0e0e0;
+        }
+
+        /* Analysis Box */
+        .analysis-box {
+            background-color: #f5f5f5;
+            border-left: 3px solid #9b59b6;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .analysis-label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .analysis-text {
+            color: #444;
+            line-height: 1.7;
+        }
+
+        /* Activity Box (Quiz) */
+        .act-box {
+            background-color: #f9f9f7;
+            border: 0.5px solid #d0d0d0;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .act-question {
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin: 2rem 0 1.5rem 0;
+            color: #333;
+        }
+
+        .act-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .act-option {
+            background-color: #fff;
+            border: 0.5px solid #d0d0d0;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .act-option:hover {
+            border-color: #999;
+            background-color: #fafaf8;
+        }
+
+        .act-option input[type="radio"] {
+            accent-color: #333;
+            cursor: pointer;
+        }
+
+        .act-option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .act-feedback {
+            background-color: #f0f0f0;
+            border-left: 3px solid #999;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .act-feedback.show {
+            display: block;
+        }
+
+        .act-feedback.correct {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+
+        .act-feedback.incorrect {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        .act-submit {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .act-submit:hover {
+            background-color: #555;
+        }
+
+        .act-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0 1.5rem 0;
+            padding-bottom: 1rem;
+            border-bottom: 0.5px solid #d0d0d0;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #333;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .score-box {
+            background-color: #f0f0f0;
+            border: 0.5px solid #d0d0d0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .score-box.show {
+            display: block;
+        }
+
+        .score-number {
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #333;
+            margin: 1rem 0;
+        }
+
+        /* Check List */
+        .check-list {
+            background-color: #f9f9f7;
+            border: 0.5px solid #d0d0d0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .check-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .check-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 0.5px solid #e0e0e0;
+        }
+
+        .check-list li:last-child {
+            border-bottom: none;
+        }
+
+        .check-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28c940;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Variation Table */
+        .var-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f9f9f7;
+            margin: 1.5rem 0;
+        }
+
+        .var-table th {
+            text-align: left;
+            padding: 1rem;
+            border: 0.5px solid #d0d0d0;
+            background-color: #f0f0f0;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .var-table td {
+            padding: 1rem;
+            border: 0.5px solid #d0d0d0;
+        }
+
+        .var-table tr:nth-child(even) {
+            background-color: #fafaf8;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            border-bottom: 1px dashed #999;
+            cursor: help;
+            color: #666;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -75px;
+            width: 150px;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Design Rationale Section */
+        .rationale-box {
+            background-color: #fffbf0;
+            border: 0.5px solid #e8d4b0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .rationale-box h4 {
+            margin-top: 0;
+            color: #6b5a3f;
+        }
+
+        .rationale-text {
+            color: #6b5a3f;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f0f0f0;
+            border-top: 0.5px solid #d0d0d0;
+            padding: 2rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+
+            .hero {
+                padding: 1.5rem 1rem;
+            }
+
+            .hero-chips {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .chip {
+                text-align: center;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .act-box {
+                padding: 1.5rem;
+            }
+
+            table, .var-table {
+                font-size: 0.85rem;
+            }
+
+            table th, table td,
+            .var-table th, .var-table td {
+                padding: 0.75rem;
+            }
+
+            .prompt-box, .json-body {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-brand">❸ 기능 중심 · 대인 관계</div>
+            <div class="nav-links">
+                <a href="javascript:void(0)" onclick="scrollTo_('intro')">개요</a>
+                <a href="javascript:void(0)" onclick="scrollTo_('build')">설계</a>
+                <a href="javascript:void(0)" onclick="scrollTo_('dialogues')">대화문</a>
+                <a href="javascript:void(0)" onclick="scrollTo_('practice')">연습</a>
+                <a href="javascript:void(0)" onclick="scrollTo_('check')">검토</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-tag">❸ 기능 중심 · 대인 관계</div>
+            <h1>요청하기 대화 자료</h1>
+            <p class="hero-desc">AI로 직접/간접 요청 비교 자료 만드는 법</p>
+            <p style="color: #999; font-size: 0.95rem; margin-bottom: 1.5rem;">프롬프트로 같은 상황의 직접 요청과 간접 요청 대화문을 만드는 과정을 안내해요.</p>
+            <div class="hero-chips">
+                <div class="chip">TOPIK 2~3급</div>
+                <div class="chip">초중급~중급</div>
+                <div class="chip">제작 시간 15분</div>
+                <div class="chip">대화문 4쌍 + 연습 4문항</div>
+            </div>
+        </section>
+
+        <!-- Intro Section -->
+        <section id="intro">
+            <h2>활동 개요</h2>
+            <table>
+                <tr>
+                    <th>항목</th>
+                    <th>내용</th>
+                </tr>
+                <tr>
+                    <td>활동 유형</td>
+                    <td>대화문 분석 + 연습</td>
+                </tr>
+                <tr>
+                    <td>범주</td>
+                    <td>❸ 기능 중심</td>
+                </tr>
+                <tr>
+                    <td>대상</td>
+                    <td>초중급~중급 (TOPIK 2~3급)</td>
+                </tr>
+                <tr>
+                    <td>목표</td>
+                    <td>직접 요청과 간접 요청의 차이를 인식하고 상황에 맞게 사용</td>
+                </tr>
+                <tr>
+                    <td>언어 기능</td>
+                    <td>읽기 · 말하기</td>
+                </tr>
+                <tr>
+                    <td>규모</td>
+                    <td>대화문 4쌍 + 연습 4문항 / 15분</td>
+                </tr>
+                <tr>
+                    <td>배포</td>
+                    <td>웹 기반 또는 인쇄용</td>
+                </tr>
+            </table>
+
+            <div class="rationale-box">
+                <h4>설계 근거</h4>
+                <div class="rationale-text">
+                    <p><strong>요청의 직접/간접 전략은 실제 대화문을 나란히 비교할 때 가장 잘 드러나요.</strong> "창문 좀 닫아 주세요"(직접)와 "여기 좀 춥지 않아요?"(간접)가 같은 상황에서 어떻게 다른 효과를 내는지를, 대화문의 맥락 안에서 보여줄 수 있거든요.</p>
+                    <p><strong>요청은 화자와 청자 사이의 상호작용이에요.</strong> 요청 표현만 따로 떼어놓으면 "문장"이 되지만, 대화 속에 놓으면 "전략"이 되잖아요. 상대의 반응(흔쾌히 수락 vs 난색 표시)까지 포함된 대화문은 "이 전략이 효과가 있었는가"를 학습자가 직접 판단하게 해줘요.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Build Section -->
+        <section id="build">
+            <h2>AI 프롬프트 설계</h2>
+
+            <h3>프롬프트 구조</h3>
+            <div class="prompt-box">
+                <div class="dots">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div style="margin-top: 1rem;">
+# 역할 (Role)
+한국어 교육 전문가 (화용론 전공)
+
+# 과제 (Task)
+TOPIK 2~3급 학습자를 위한 요청하기 대화문 + 분석 활동 생성
+
+# 조건 (Constraints)
+- 대화문 4쌍 (같은 상황의 직접 요청 vs 간접 요청)
+- 상황: 친구에게 노트 빌리기, 교수에게 추천서, 식당에서 물, 동료에게 교대 부탁
+- 각 쌍: 직접/간접의 효과 차이 해설
+- 연습 문항 4개: 새 상황에서 적절한 전략 선택
+
+# 출력 (Output)
+JSON 형식
+                </div>
+            </div>
+
+            <h3>JSON 출력 형식</h3>
+            <div class="json-body">
+{
+  <span class="jk">"pairs"</span>: [
+    {
+      <span class="jk">"id"</span>: <span class="jn">1</span>,
+      <span class="jk">"situation"</span>: <span class="jv">"친구에게 수업 노트를 빌리고 싶다"</span>,
+      <span class="jk">"direct"</span>: {
+        <span class="jk">"dialogue"</span>: [
+          <span class="jv">"A: 야, 노트 좀 빌려줘."</span>,
+          <span class="jv">"B: 응, 여기."</span>
+        ],
+        <span class="jk">"strategy"</span>: <span class="jv">"직접 요청 (반말, 명령형)"</span>
+      },
+      <span class="jk">"indirect"</span>: {
+        <span class="jk">"dialogue"</span>: [
+          <span class="jv">"A: 혹시 오늘 수업 노트 있어? 내가 빠져서..."</span>,
+          <span class="jv">"B: 응, 보내줄까?"</span>
+        ],
+        <span class="jk">"strategy"</span>: <span class="jv">"간접 요청 (상황 설명 → 상대가 제안)"</span>
+      },
+      <span class="jk">"analysis"</span>: <span class="jv">"친구 관계에서는 직접 요청도 자연스럽다. 다만 큰 부탁이면 간접이 더 적절하다."</span>
+    }
+  ]
+}
+            </div>
+
+            <h3>JSON 범례</h3>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>pairs</code></td>
+                    <td>대화문 쌍 목록이에요.</td>
+                </tr>
+                <tr>
+                    <td><code>direct</code></td>
+                    <td>직접 요청 대화문이에요. 직접적으로 원하는 것을 말해요.</td>
+                </tr>
+                <tr>
+                    <td><code>indirect</code></td>
+                    <td>간접 요청 대화문이에요. 상황 설명이나 질문으로 유도해요.</td>
+                </tr>
+                <tr>
+                    <td><code>analysis</code></td>
+                    <td>직접/간접의 효과 차이를 분석한 해설이에요.</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Dialogues Section -->
+        <section id="dialogues">
+            <h2>대화문 분석</h2>
+
+            <!-- Pair 1 -->
+            <div class="dialogue-pair">
+                <h4>상황 1: 친구에게 수업 노트 빌리기</h4>
+
+                <div class="dialogue-box direct">
+                    <div class="dialogue-label">✗ 직접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 야, 노트 좀 빌려줘.</div>
+                    <div class="dialogue-line"><strong>B:</strong> 응, 여기.</div>
+                    <div class="strategy-text"><strong>전략:</strong> 반말, 명령형 · 명확하고 즉각적</div>
+                </div>
+
+                <div class="dialogue-box indirect">
+                    <div class="dialogue-label">✓ 간접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 혹시 오늘 수업 노트 있어? 내가 빠져서...</div>
+                    <div class="dialogue-line"><strong>B:</strong> 응, 보내줄까?</div>
+                    <div class="strategy-text"><strong>전략:</strong> 상황 설명 + 질문 · 상대가 제안하도록 유도</div>
+                </div>
+
+                <div class="analysis-box">
+                    <div class="analysis-label">분석</div>
+                    <div class="analysis-text">
+                        친구 관계에서는 직접 요청도 자연스럽다. 다만 큰 부탁이면 간접이 더 적절하다. 간접 요청은 상대에게 "너도 할 수 있으면 해"라는 뉘앙스를 주어, 상대가 거절하기 쉽게 만든다.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pair 2 -->
+            <div class="dialogue-pair">
+                <h4>상황 2: 교수님에게 추천서 부탁하기</h4>
+
+                <div class="dialogue-box direct">
+                    <div class="dialogue-label">✗ 직접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 교수님, 추천서 써 주세요.</div>
+                    <div class="dialogue-line"><strong>B:</strong> 음... 언제까지 필요해요?</div>
+                    <div class="strategy-text"><strong>전략:</strong> 존댓말, 명령에 가까운 표현 · 부정절이 느껴짐</div>
+                </div>
+
+                <div class="dialogue-box indirect">
+                    <div class="dialogue-label">✓ 간접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 교수님, 혹시 시간이 되시면 추천서를 부탁드려도 될까요?</div>
+                    <div class="dialogue-line"><strong>B:</strong> 네, 괜찮습니다. 언제까지 필요하세요?</div>
+                    <div class="strategy-text"><strong>전략:</strong> 존댓말 + 완화 장치("-ㄹ 수 있을까요?", "혹시") · 상대의 자유의지 존중</div>
+                </div>
+
+                <div class="analysis-box">
+                    <div class="analysis-label">분석</div>
+                    <div class="analysis-text">
+                        큰 부탁은 간접이 필수다. "혹시", "-ㄹ 수 있을까요?" 같은 완화 장치들이 상대의 거절권을 보장한다. 이런 표현들이 오히려 더 정중하고, 상대에게 긍정적인 인상을 준다.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pair 3 -->
+            <div class="dialogue-pair">
+                <h4>상황 3: 식당에서 물 부탁하기</h4>
+
+                <div class="dialogue-box direct">
+                    <div class="dialogue-label">✓ 직접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 물 한 잔 주세요.</div>
+                    <div class="dialogue-line"><strong>B:</strong> 네, 바로 가져오겠습니다.</div>
+                    <div class="strategy-text"><strong>전략:</strong> 존댓말, 명확한 요청 · 종사원 역할이므로 직접이 자연스러움</div>
+                </div>
+
+                <div class="dialogue-box indirect">
+                    <div class="dialogue-label">△ 간접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 혹시 물 한 잔 주실 수 있을까요?</div>
+                    <div class="dialogue-line"><strong>B:</strong> 네, 바로 가져오겠습니다.</div>
+                    <div class="strategy-text"><strong>전략:</strong> 완화 장치 사용 · 지나친 정중함으로 어색할 수 있음</div>
+                </div>
+
+                <div class="analysis-box">
+                    <div class="analysis-label">분석</div>
+                    <div class="analysis-text">
+                        서비스 상황에서는 직접 요청이 자연스럽고 효율적이다. 간접 요청은 상황에 맞지 않을 수 있다. 대신 존댓말과 "주세요"의 정중함만으로도 충분하다.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pair 4 -->
+            <div class="dialogue-pair">
+                <h4>상황 4: 동료에게 교대 부탁하기</h4>
+
+                <div class="dialogue-box direct">
+                    <div class="dialogue-label">✗ 직접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 내일 교대 좀 해 줘.</div>
+                    <div class="dialogue-line"><strong>B:</strong> 어... 힘들 것 같은데...</div>
+                    <div class="strategy-text"><strong>전략:</strong> 반말, 명령형 · 상대에게 거절 여지를 남기지 않음</div>
+                </div>
+
+                <div class="dialogue-box indirect">
+                    <div class="dialogue-label">✓ 간접 요청</div>
+                    <div class="dialogue-line"><strong>A:</strong> 내일 교대 가능할까? 급한 일이 생겨서...</div>
+                    <div class="dialogue-line"><strong>B:</strong> 내가 한번 봐 볼게. 안 되면 연락할게.</div>
+                    <div class="strategy-text"><strong>전략:</strong> 질문형 + 사유 설명 · 상대의 상황을 배려하는 톤</div>
+                </div>
+
+                <div class="analysis-box">
+                    <div class="analysis-label">분석</div>
+                    <div class="analysis-text">
+                        같은 위치의 동료에게는 큰 부탁일 때 간접 요청이 효과적이다. 상대의 상황을 먼저 고려하는 톤이 "나도 원하지만, 너도 거절할 수 있어"라는 메시지를 전달한다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice">
+            <h2>연습 활동</h2>
+            <p>각 상황에서 더 적절한 요청 방식을 선택하세요. 선택 후 피드백을 확인할 수 있습니다.</p>
+
+            <div class="act-box">
+                <div class="act-progress">
+                    <span class="progress-text">문항 1/3</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress1" style="width: 33.33%;"></div>
+                    </div>
+                </div>
+
+                <div class="act-question">
+                    Q1: 도서관에서 옆 사람에게 조용히 해 달라고 하고 싶다 (모르는 사람)
+                </div>
+                <div class="act-options">
+                    <label class="act-option">
+                        <input type="radio" name="q1" value="direct" id="q1-direct">
+                        <label for="q1-direct" style="margin: 0;">
+                            "조용히 해 주세요." (직접 — 명령에 가까운 표현)
+                        </label>
+                    </label>
+                    <label class="act-option">
+                        <input type="radio" name="q1" value="indirect" id="q1-indirect">
+                        <label for="q1-indirect" style="margin: 0;">
+                            "저기, 혹시 조금만 작게 말씀해 주실 수 있을까요?" (간접 — 완곡)
+                        </label>
+                    </label>
+                </div>
+                <button class="act-submit" onclick="checkQ1()">확인</button>
+                <div class="act-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="act-box">
+                <div class="act-progress">
+                    <span class="progress-text">문항 2/3</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress2" style="width: 66.66%;"></div>
+                    </div>
+                </div>
+
+                <div class="act-question">
+                    Q2: 친구에게 펜 빌리기
+                </div>
+                <div class="act-options">
+                    <label class="act-option">
+                        <input type="radio" name="q2" value="direct" id="q2-direct">
+                        <label for="q2-direct" style="margin: 0;">
+                            "야, 펜 좀 빌려줘." (직접 — 반말, 명령형)
+                        </label>
+                    </label>
+                    <label class="act-option">
+                        <input type="radio" name="q2" value="indirect" id="q2-indirect">
+                        <label for="q2-indirect" style="margin: 0;">
+                            "혹시 여분의 필기구를 가지고 계신지요?" (간접 — 과도한 격식)
+                        </label>
+                    </label>
+                </div>
+                <button class="act-submit" onclick="checkQ2()">확인</button>
+                <div class="act-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="act-box">
+                <div class="act-progress">
+                    <span class="progress-text">문항 3/3</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress3" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="act-question">
+                    Q3: 교수님에게 추천서 부탁
+                </div>
+                <div class="act-options">
+                    <label class="act-option">
+                        <input type="radio" name="q3" value="direct" id="q3-direct">
+                        <label for="q3-direct" style="margin: 0;">
+                            "교수님, 추천서 써 주세요." (직접 — 명령에 가까운 표현)
+                        </label>
+                    </label>
+                    <label class="act-option">
+                        <input type="radio" name="q3" value="indirect" id="q3-indirect">
+                        <label for="q3-indirect" style="margin: 0;">
+                            "교수님, 혹시 시간이 되시면 추천서를 부탁드려도 될까요?" (간접 — 완화 장치)
+                        </label>
+                    </label>
+                </div>
+                <button class="act-submit" onclick="checkQ3()">확인</button>
+                <div class="act-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="score-box" id="scoreBox">
+                <h3>활동 완료!</h3>
+                <p>당신의 점수</p>
+                <div class="score-number" id="scoreNum">0/3</div>
+                <p id="scoreMsg"></p>
+            </div>
+        </section>
+
+        <!-- Check Section -->
+        <section id="check">
+            <h2>활동 검토 체크리스트</h2>
+
+            <div class="check-list">
+                <ul>
+                    <li>직접/간접 대화문이 같은 상황에 대한 것인가요?</li>
+                    <li>분석이 "왜 이 상황에서 이 전략이 적절한가"를 명확하게 설명하나요?</li>
+                    <li>연습 문항의 상황이 대화문에서 다루지 않은 새로운 맥락인가요?</li>
+                    <li>모든 대화문에 상대의 반응이 포함되어 있나요?</li>
+                    <li>학습자의 수준(TOPIK 2~3급)에 적합한 표현들인가요?</li>
+                </ul>
+            </div>
+
+            <h3>확장 가능한 변형</h3>
+            <table class="var-table">
+                <tr>
+                    <th>변형 유형</th>
+                    <th>예시</th>
+                    <th>목표</th>
+                </tr>
+                <tr>
+                    <td>기능 교체</td>
+                    <td>요청 → 거절 / 제안 / 조언 비교</td>
+                    <td>다양한 화용 기능의 직접/간접 차이 이해</td>
+                </tr>
+                <tr>
+                    <td>난이도 상향</td>
+                    <td>분석 → 역할극 / 대화 작성</td>
+                    <td>수용적 기능에서 생산적 기능으로 확장</td>
+                </tr>
+                <tr>
+                    <td>문화 초점</td>
+                    <td>한국어 간접 요청 특성 / "-ㄹ 수 있을까요?", "혹시..." 완화 장치 분석</td>
+                    <td>한국 언어문화의 높은 완곡성 인식</td>
+                </tr>
+                <tr>
+                    <td>대비 학습</td>
+                    <td>모국어의 직접/간접 요청과 비교</td>
+                    <td>언어 간 화용 차이의 인식</td>
+                </tr>
+            </table>
+
+            <h3>추가 자료</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>♦ 완화 장치 목록</h4>
+                    <p>
+                        · 혹시, 잠깐<br>
+                        · -ㄹ 수 있을까요?<br>
+                        · -어/아도 될까요?<br>
+                        · -(으)면 좋겠어요<br>
+                        · 괜찮으시면
+                    </p>
+                </div>
+                <div class="card">
+                    <h4>♦ 상황별 적절성</h4>
+                    <p>
+                        · 친구: 직접 가능<br>
+                        · 높은 사람: 간접 필수<br>
+                        · 모르는 사람: 간접 권장<br>
+                        · 서비스 상황: 직접 자연스러움
+                    </p>
+                </div>
+                <div class="card">
+                    <h4>♦ 거절 받기</h4>
+                    <p>
+                        간접 요청의 장점: 거절받을 때 양쪽 모두 "체면"을 지킬 수 있다. "괜찮습니다"라는 거절이 덜 상하다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Korean Language Education Activity · Interactive Learning Module</p>
+        <p style="font-size: 0.85rem; color: #999; margin-top: 1rem;">이 교육 자료는 AI 프롬프트를 활용한 대화문 생성 과정을 보여주며, 학습자들이 직접/간접 요청의 화용론적 차이를 이해하도록 설계되었습니다.</p>
+    </footer>
+
+    <script>
+        function scrollTo_(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        let scores = {
+            q1: false,
+            q2: false,
+            q3: false
+        };
+
+        function checkQ1() {
+            const selected = document.querySelector('input[name="q1"]:checked');
+            if (!selected) {
+                alert('선택해주세요.');
+                return;
+            }
+
+            const feedback = document.getElementById('feedback1');
+            const isCorrect = selected.value === 'indirect';
+
+            if (isCorrect) {
+                feedback.innerHTML = '<strong>✓ 정답!</strong> 모르는 사람에게는 간접 요청이 더 자연스럽고 정중해요. 완화 장치("혹시", "-ㄹ 수 있을까요?")가 상대에게 거절할 수 있는 여지를 주어요.';
+                feedback.classList.add('correct', 'show');
+                scores.q1 = true;
+            } else {
+                feedback.innerHTML = '<strong>✗ 다시 생각해보세요.</strong> 직접 명령은 모르는 사람에게 공격적으로 들릴 수 있어요. 간접 요청으로 상대의 의견을 존중하는 게 더 좋습니다.';
+                feedback.classList.add('incorrect', 'show');
+                scores.q1 = false;
+            }
+
+            setTimeout(() => updateScore(), 500);
+        }
+
+        function checkQ2() {
+            const selected = document.querySelector('input[name="q2"]:checked');
+            if (!selected) {
+                alert('선택해주세요.');
+                return;
+            }
+
+            const feedback = document.getElementById('feedback2');
+            const isCorrect = selected.value === 'direct';
+
+            if (isCorrect) {
+                feedback.innerHTML = '<strong>✓ 정답!</strong> 친구에게 작은 부탁은 직접 요청도 자연스럽고 편해요. 반대로 과도한 격식은 상대를 어색하게 만들 수 있습니다.';
+                feedback.classList.add('correct', 'show');
+                scores.q2 = true;
+            } else {
+                feedback.innerHTML = '<strong>✗ 다시 생각해보세요.</strong> 친구 관계에서는 직접 요청이 자연스럽습니다. 과도한 격식은 오히려 어색하고 거리감을 만들어요.';
+                feedback.classList.add('incorrect', 'show');
+                scores.q2 = false;
+            }
+
+            setTimeout(() => updateScore(), 500);
+        }
+
+        function checkQ3() {
+            const selected = document.querySelector('input[name="q3"]:checked');
+            if (!selected) {
+                alert('선택해주세요.');
+                return;
+            }
+
+            const feedback = document.getElementById('feedback3');
+            const isCorrect = selected.value === 'indirect';
+
+            if (isCorrect) {
+                feedback.innerHTML = '<strong>✓ 정답!</strong> 큰 부탁은 간접 요청이 필수예요. 완화 장치들이 상대의 거절권을 존중하고, 오히려 더 정중하고 긍정적인 인상을 줍니다.';
+                feedback.classList.add('correct', 'show');
+                scores.q3 = true;
+            } else {
+                feedback.innerHTML = '<strong>✗ 다시 생각해보세요.</strong> 큰 부탁은 직접 요청이 너무 직접적으로 느껴질 수 있어요. "혹시", "-ㄹ 수 있을까요?" 같은 완화 장치를 사용하는 게 좋습니다.';
+                feedback.classList.add('incorrect', 'show');
+                scores.q3 = false;
+            }
+
+            setTimeout(() => updateScore(), 500);
+        }
+
+        function updateScore() {
+            const total = Object.values(scores).filter(v => v).length;
+            if (Object.values(scores).every(v => v !== false)) {
+                const scoreBox = document.getElementById('scoreBox');
+                const scoreNum = document.getElementById('scoreNum');
+                const scoreMsg = document.getElementById('scoreMsg');
+
+                scoreNum.textContent = total + '/3';
+
+                if (total === 3) {
+                    scoreMsg.textContent = '완벽해요! 요청하기의 직접/간접 전략을 잘 이해했습니다. 🎉';
+                } else if (total === 2) {
+                    scoreMsg.textContent = '좋아요! 대부분 맞혔어요. 다시 한 번 분석을 읽어보세요.';
+                } else {
+                    scoreMsg.textContent = '다시 한 번 대화문 분석을 읽어보고 차이점을 찾아보세요.';
+                }
+
+                scoreBox.classList.add('show');
+                scoreBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    </script>
+</body>
+</html>

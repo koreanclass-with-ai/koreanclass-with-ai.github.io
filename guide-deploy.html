@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>배포 가이드 — 만든 앱을 학생에게 보여주는 법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}.nav a:hover{color:#1a1a1a;}.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;}
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}.prose b{color:#1a1a1a;font-weight:500;}.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.step-list{display:flex;flex-direction:column;gap:12px;margin:1rem 0;}.step-item{padding:14px;background:#f9f9f7;border-radius:10px;}.step-num{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#185FA5;width:22px;height:22px;border-radius:50%;text-align:center;line-height:22px;margin-right:8px;}.step-label{font-size:14px;font-weight:700;color:#1a1a1a;}.step-desc{font-size:13px;color:#555;line-height:1.7;margin-top:6px;}
+@media(max-width:640px){.wrap{padding:1rem .75rem 3rem;}.hero,.section{padding:1.25rem;border-radius:12px;}.hero-title{font-size:20px;}.nav{gap:6px;}.nav a{padding:7px 10px;font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="tag">🚀 가이드</div>
+  <h1 class="hero-title">배포 가이드</h1>
+  <p class="hero-desc">완성된 앱을 학생이 접속할 수 있는 링크로 만드는 법. 링크 하나면 교실에서 바로 쓸 수 있어요.</p>
+  <div class="meta">
+    <span class="chip">링크 공유</span>
+    <span class="chip">QR코드</span>
+    <span class="chip">교실 활용</span>
+  </div>
+</div>
+
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#upload" data-section="upload">링크 만들기</a>
+    <a href="#qr" data-section="qr">QR코드</a>
+    <a href="#classroom" data-section="classroom">교실 활용 팁</a>
+  </div>
+</div>
+
+<div class="section" id="upload">
+  <div class="section-tag">UPLOAD</div>
+  <div class="section-title">완성된 앱을 링크로 만들기</div>
+  <p class="prose">코드 생성 도구에서 만든 HTML 파일은 내 컴퓨터에만 있어요. 학생이 접속하려면 인터넷에 올려야 해요. 어렵지 않아요.</p>
+
+  <div class="sub-title">방법 1: Antigravity에서 바로 배포</div>
+  <p class="prose">Antigravity로 만들었다면 내장 배포 기능으로 바로 URL을 받을 수 있어요. 가장 간단한 방법이에요.</p>
+
+  <div class="sub-title">방법 2: Netlify 드래그 앤 드롭</div>
+  <div class="step-list">
+    <div class="step-item">
+      <span class="step-num">1</span><span class="step-label">netlify.com 접속</span>
+      <div class="step-desc">무료 회원가입 후 로그인하세요.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">2</span><span class="step-label">파일 드래그 앤 드롭</span>
+      <div class="step-desc">"Sites" 탭에서 HTML 파일(또는 폴더)을 브라우저 화면에 끌어다 놓으세요.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">3</span><span class="step-label">링크 복사</span>
+      <div class="step-desc">몇 초 후 자동으로 URL이 생성돼요. 이 링크를 학생에게 공유하면 끝.</div>
+    </div>
+  </div>
+
+  <div class="sub-title">방법 3: GitHub Pages</div>
+  <p class="prose">GitHub에 파일을 올리면 무료로 웹사이트가 만들어져요. 여러 활동을 한 사이트에 모아서 관리할 때 좋아요. 다만 GitHub 사용법을 조금 알아야 해요.</p>
+
+  <div class="tip">처음이라면 <b>방법 1(Antigravity 내장 배포)</b> 또는 <b>방법 2(Netlify 드래그 앤 드롭)</b>를 추천해요. 둘 다 무료예요.</div>
+</div>
+
+<div class="section" id="qr">
+  <div class="section-tag">QR</div>
+  <div class="section-title">QR코드 만들기</div>
+  <p class="prose">링크가 생겼으면 QR코드를 만들어서 교실에서 보여주세요. 학생이 스마트폰 카메라로 찍으면 바로 접속돼요.</p>
+
+  <div class="step-list">
+    <div class="step-item">
+      <span class="step-num">1</span><span class="step-label">QR코드 생성 사이트 접속</span>
+      <div class="step-desc">구글에서 "QR코드 생성"을 검색하면 무료 사이트가 많아요.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">2</span><span class="step-label">URL 붙여넣기</span>
+      <div class="step-desc">배포된 앱의 URL을 넣고 생성 버튼을 누르세요.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">3</span><span class="step-label">교실에서 보여주기</span>
+      <div class="step-desc">QR코드 이미지를 PPT에 넣거나 프린트해서 교실에 붙이세요.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="classroom">
+  <div class="section-tag">CLASSROOM</div>
+  <div class="section-title">교실에서 활용하는 팁</div>
+
+  <div class="sub-title">수업 중 활용</div>
+  <p class="prose"><b>도입 단계:</b> 전 시간 배운 내용 복습용으로 3~5분 퀴즈를 풀게 하세요. 워밍업으로 딱이에요.</p>
+  <p class="prose"><b>연습 단계:</b> 새 문법을 설명한 뒤, 바로 앱으로 연습하게 하세요. "지금 배운 거 연습해볼까요?" + QR코드.</p>
+  <p class="prose"><b>마무리 단계:</b> 수업 끝나기 5분 전에 "오늘 배운 거 확인해볼게요" + 앱 링크.</p>
+
+  <div class="sub-title">수업 외 활용</div>
+  <p class="prose"><b>숙제:</b> 링크를 메시지로 보내주세요. "오늘 배운 에/에서, 집에서 한 번 더 풀어보세요."</p>
+  <p class="prose"><b>자율 학습:</b> 여러 활동 링크를 한 페이지에 모아두면 학생이 원하는 걸 골라서 풀 수 있어요.</p>
+
+  <div class="warn">학생들의 스마트폰 기종이 다양하니까, 배포 후 <b>안드로이드와 아이폰 둘 다</b>에서 테스트해 보세요.</div>
+</div>
+
+</div>
+<script>
+const navLinks=document.querySelectorAll('#main-nav a[data-section]');const sections=document.querySelectorAll('.section[id]');const observer=new IntersectionObserver(e=>{e.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>a.classList.remove('active'));const active=document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);if(active)active.classList.add('active');}});},{rootMargin:'-40% 0px -55% 0px'});sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

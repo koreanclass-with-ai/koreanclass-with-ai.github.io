@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>칼럼 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --green:#2E8B57;--green-light:#F0FFF4;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+
+/* ── 헤더 ── */
+.page-header{padding:120px 0 24px;text-align:center;}
+.page-header h1{font-size:clamp(32px,5vw,52px);font-weight:900;line-height:1.15;letter-spacing:-0.03em;margin-bottom:12px;}
+.page-header p{font-size:17px;color:var(--text-sub);max-width:520px;margin:0 auto;}
+
+/* ── 파트 구분 ── */
+.part{margin:48px auto 0;max-width:720px;}
+.part-label{
+  font-size:12px;font-weight:700;
+  letter-spacing:0.08em;
+  color:var(--blue);
+  margin-bottom:16px;
+  padding-bottom:8px;
+  border-bottom:2px solid var(--blue);
+  display:inline-block;
+}
+
+/* ── 챕터 아코디언 ── */
+.ch-list{display:flex;flex-direction:column;gap:10px;margin-bottom:48px;}
+
+.ch-item{
+  background:var(--card);
+  border:0.5px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  transition:box-shadow .2s;
+}
+.ch-item:hover{box-shadow:0 4px 16px rgba(0,0,0,0.03);}
+
+.ch-header{
+  display:flex;align-items:center;gap:16px;
+  padding:20px 24px;
+  cursor:pointer;
+  user-select:none;
+  transition:background .15s;
+}
+.ch-header:hover{background:rgba(0,0,0,0.01);}
+
+.ch-num{
+  width:40px;height:40px;
+  border-radius:10px;
+  background:var(--blue-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;
+  color:var(--blue);
+  flex-shrink:0;
+}
+.ch-info{flex:1;}
+.ch-info h3{font-size:16px;font-weight:800;letter-spacing:-0.01em;margin-bottom:2px;}
+.ch-info .ch-q{font-size:12px;color:var(--text-sub);font-style:italic;}
+.ch-meta{
+  display:flex;gap:8px;align-items:center;
+  font-size:11px;color:var(--text-light);
+  flex-shrink:0;
+}
+.ch-arrow{
+  font-size:16px;color:var(--text-light);
+  transition:transform .3s;
+  flex-shrink:0;
+}
+.ch-item.open .ch-arrow{transform:rotate(180deg);}
+
+/* 절 목록 */
+.ch-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s cubic-bezier(.22,1,.36,1);
+}
+.ch-item.open .ch-body{max-height:600px;}
+
+.sec-list{
+  padding:0 24px 20px;
+  margin-left:56px;
+  border-top:0.5px solid var(--border);
+  padding-top:16px;
+}
+.sec-item{
+  display:flex;align-items:baseline;gap:10px;
+  padding:8px 0;
+  border-bottom:0.5px solid rgba(0,0,0,0.04);
+}
+.sec-item:last-child{border-bottom:none;}
+.sec-num{
+  font-size:12px;font-weight:700;color:var(--blue);
+  min-width:28px;flex-shrink:0;
+}
+.sec-title{font-size:14px;font-weight:600;}
+.sec-desc{font-size:12px;color:var(--text-sub);margin-top:2px;}
+
+/* 읽기 버튼 */
+.sec-link{
+  margin-left:auto;
+  font-size:11px;font-weight:600;
+  color:var(--blue);
+  text-decoration:none;
+  opacity:0.6;
+  transition:opacity .2s;
+  flex-shrink:0;
+}
+.sec-link:hover{opacity:1;}
+
+/* ── 하단 ── */
+.bottom-note{
+  text-align:center;
+  padding:32px 0 80px;
+  font-size:13px;color:var(--text-sub);
+  max-width:720px;margin:0 auto;
+}
+
+/* 애니메이션 */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+@media(max-width:640px){
+  .ch-header{padding:16px 18px;}
+  .sec-list{margin-left:0;}
+  .ch-meta{display:none;}
+}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html">활동</a><a href="demo.html">데모</a><a href="column.html" class="active">칼럼</a><a href="faq.html">FAQ</a></div></div></nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="section-tag">Column</div>
+    <h1>칼럼</h1>
+    <p>한국어 수업 활동의 이론적 배경과 설계 원리를 다룹니다.</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- I부 -->
+  <div class="part reveal">
+    <div class="part-label">I부 — 교수 활동 개괄</div>
+    <div class="ch-list">
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">1</div>
+          <div class="ch-info">
+            <h3>교수 활동의 범위와 기능</h3>
+            <div class="ch-q">"교수 활동이란 무엇이며, 어디까지를 활동이라 부르는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">1.1</span><div><div class="sec-title">교수 활동의 개념</div><div class="sec-desc">활동의 정의, 활동·연습·과제의 구분, 용어 사용의 원칙</div></div><a class="sec-link" href="column-ch1.html#sec-1-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">1.2</span><div><div class="sec-title">활동의 구성 요소</div><div class="sec-desc">목표, 입력, 절차, 교사·학습자 역할</div></div><a class="sec-link" href="column-ch1.html#sec-1-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">1.3</span><div><div class="sec-title">활동의 기능</div><div class="sec-desc">형태 연습, 의미 전달, 상호작용, 과제 수행</div></div><a class="sec-link" href="column-ch1.html#sec-1-3">읽기 →</a></div>
+        </div></div>
+      </div>
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">2</div>
+          <div class="ch-info">
+            <h3>언어 교수 이론과 활동</h3>
+            <div class="ch-q">"언어 교수 이론은 활동을 어떻게 변화시켜 왔는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">2.1</span><div><div class="sec-title">교수법의 변천과 활동</div><div class="sec-desc">문법 번역식 → 청화식 → 의사소통 접근법 → TBLT</div></div><a class="sec-link" href="column-ch2.html#sec-2-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">2.2</span><div><div class="sec-title">Littlewood의 의사소통 연속체</div><div class="sec-desc">형태 중심에서 의미 중심으로의 연속적 스펙트럼</div></div><a class="sec-link" href="column-ch2.html#sec-2-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">2.3</span><div><div class="sec-title">SLA 연구와 활동 설계</div><div class="sec-desc">입력 가설, 상호작용 가설, 출력 가설의 교수적 함의</div></div><a class="sec-link" href="column-ch2.html#sec-2-3">읽기 →</a></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- II부 -->
+  <div class="part reveal">
+    <div class="part-label">II부 — 활동의 분류와 설계</div>
+    <div class="ch-list">
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">3</div>
+          <div class="ch-info">
+            <h3>활동의 분류</h3>
+            <div class="ch-q">"활동에는 어떤 종류가 있고, 무엇을 기준으로 나누는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">3.1</span><div><div class="sec-title">분류의 기준</div><div class="sec-desc">교수 목표, 학습자 참여 방식, 인지적 부담 수준</div></div><a class="sec-link" href="column-ch3.html#sec-3-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">3.2</span><div><div class="sec-title">네 범주와 14개 유형</div><div class="sec-desc">형태 중심 / 의미 중심 / 기능 중심 / 과제 기반</div></div><a class="sec-link" href="column-ch3.html#sec-3-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">3.3</span><div><div class="sec-title">범주 간 관계와 배열</div><div class="sec-desc">형태→의미→기능→과제의 진행 논리</div></div><a class="sec-link" href="column-ch3.html#sec-3-3">읽기 →</a></div>
+        </div></div>
+      </div>
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">4</div>
+          <div class="ch-info">
+            <h3>활동의 설계 원리</h3>
+            <div class="ch-q">"좋은 활동은 어떤 원리로 설계되는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">4.1</span><div><div class="sec-title">AI가 바꾸는 자료 제작 환경</div><div class="sec-desc">기존 한계, AI 도입으로 달라지는 것, SAMR 모형</div></div><a class="sec-link" href="column-ch4.html#sec-4-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">4.2</span><div><div class="sec-title">바이브 코딩의 정의와 원리</div><div class="sec-desc">자연어 지시 기반 코드 생성의 작동 방식</div></div><a class="sec-link" href="column-ch4.html#sec-4-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">4.3</span><div><div class="sec-title">도구의 5범주와 선택 기준</div><div class="sec-desc">텍스트, 이미지, 음성, 코드, 디자인 도구</div></div><a class="sec-link" href="column-ch4.html#sec-4-3">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">4.4</span><div><div class="sec-title">제작 워크플로우</div><div class="sec-desc">5단계 제작 과정과 교사 검토 3축</div></div><a class="sec-link" href="column-ch4.html#sec-4-4">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">4.5</span><div><div class="sec-title">프롬프트 설계의 원리</div><div class="sec-desc">프롬프트 2유형, 프롬프트 = 교수 설계의 연장</div></div><a class="sec-link" href="column-ch4.html#sec-4-5">읽기 →</a></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- III부 -->
+  <div class="part reveal">
+    <div class="part-label">III부 — 수업에서의 활동 운용</div>
+    <div class="ch-list">
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">5</div>
+          <div class="ch-info">
+            <h3>언어 기능과 의사소통 기능</h3>
+            <div class="ch-q">"말하기·듣기·읽기·쓰기에 따라 활동은 어떻게 달라지는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">5.1</span><div><div class="sec-title">언어 기능이란</div><div class="sec-desc">말하기·듣기·읽기·쓰기의 정의와 특성</div></div><a class="sec-link" href="column-ch5.html#sec-5-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">5.2</span><div><div class="sec-title">언어 기능별 자료의 특성</div><div class="sec-desc">말하기·듣기·읽기·쓰기 자료가 갖춰야 할 조건</div></div><a class="sec-link" href="column-ch5.html#sec-5-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">5.3</span><div><div class="sec-title">하나의 활동, 네 가지 기능 변형</div><div class="sec-desc">입력·출력 채널 전환의 원리</div></div><a class="sec-link" href="column-ch5.html#sec-5-3">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">5.4</span><div><div class="sec-title">의사소통 기능과 활동의 결합</div><div class="sec-desc">거절, 요청, 제안 등 기능별 활동 조합 방법</div></div><a class="sec-link" href="column-ch5.html#sec-5-4">읽기 →</a></div>
+        </div></div>
+      </div>
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">6</div>
+          <div class="ch-info">
+            <h3>수업 설계의 원리</h3>
+            <div class="ch-q">"하나의 수업 안에서 활동을 어떤 순서로 배열하는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">6.1</span><div><div class="sec-title">수업의 기본 구조</div><div class="sec-desc">도입→전개→마무리의 흐름과 각 단계의 활동</div></div><a class="sec-link" href="column-ch6.html#sec-6-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">6.2</span><div><div class="sec-title">활동과 기능의 조합 원리</div><div class="sec-desc">미시→중시→거시의 설계 논리</div></div><a class="sec-link" href="column-ch6.html#sec-6-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">6.3</span><div><div class="sec-title">학습자 변수와 수업 설계</div><div class="sec-desc">레벨·모어·목적에 따른 활동 비중 조절</div></div><a class="sec-link" href="column-ch6.html#sec-6-3">읽기 →</a></div>
+        </div></div>
+      </div>
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">7</div>
+          <div class="ch-info">
+            <h3>평가와 활동</h3>
+            <div class="ch-q">"활동이 효과적이었는지 어떻게 평가하는가?"</div>
+          </div>
+          
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">7.1</span><div><div class="sec-title">형성 평가와 총괄 평가</div><div class="sec-desc">수업 내 평가의 유형과 역할</div></div><a class="sec-link" href="column-ch7.html#sec-7-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">7.2</span><div><div class="sec-title">범주별 평가 기준</div><div class="sec-desc">형태·의미·기능·과제별 평가 기준 비교</div></div><a class="sec-link" href="column-ch7.html#sec-7-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">7.3</span><div><div class="sec-title">AI 자동 채점과 교사 평가</div><div class="sec-desc">자동화 가능 영역과 교사 판단이 필요한 영역</div></div><a class="sec-link" href="column-ch7.html#sec-7-3">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">7.4</span><div><div class="sec-title">피드백의 설계</div><div class="sec-desc">피드백 3요소, 단계적 피드백, 수업 단계별 평가 통합</div></div><a class="sec-link" href="column-ch7.html#sec-7-4">읽기 →</a></div>
+        </div></div>
+      </div>
+
+
+      <div class="ch-item" onclick="toggleCh(this)">
+        <div class="ch-header">
+          <div class="ch-num">8</div>
+          <div class="ch-info">
+            <h3>AI 기반 활동 자료의 제작</h3>
+            <div class="ch-q">AI 도구로 수업 자료를 어떻게 만드는가?</div>
+          </div>
+          <div class="ch-arrow">▾</div>
+        </div>
+        <div class="ch-body"><div class="sec-list">
+          <div class="sec-item"><span class="sec-num">8.1</span><div><div class="sec-title">AI가 바꾸는 자료 제작 환경</div><div class="sec-desc">기존 한계, AI 도입으로 달라지는 것, SAMR 모형</div></div><a class="sec-link" href="column-ch8.html#sec-8-1">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">8.2</span><div><div class="sec-title">바이브 코딩의 정의와 원리</div><div class="sec-desc">자연어 지시 기반 코드 생성의 작동 방식</div></div><a class="sec-link" href="column-ch8.html#sec-8-2">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">8.3</span><div><div class="sec-title">도구의 범주와 선택 기준</div><div class="sec-desc">텍스트, 이미지, 음성, 코드, 디자인 도구</div></div><a class="sec-link" href="column-ch8.html#sec-8-3">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">8.4</span><div><div class="sec-title">제작 워크플로우</div><div class="sec-desc">단계별 제작 과정과 교사 검토</div></div><a class="sec-link" href="column-ch8.html#sec-8-4">읽기 →</a></div>
+          <div class="sec-item"><span class="sec-num">8.5</span><div><div class="sec-title">프롬프트 설계의 원리</div><div class="sec-desc">프롬프트 유형, 프롬프트 = 교수 설계의 연장</div></div><a class="sec-link" href="column-ch8.html#sec-8-5">읽기 →</a></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bottom-note reveal">
+    이 글들은 「AI로 만드는 한국어 수업」 이론편의 내용을 기반으로 합니다.
+  </div>
+
+</div>
+
+<footer><div class="container">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+function toggleCh(el){
+  const wasOpen=el.classList.contains('open');
+  el.classList.toggle('open');
+}
+
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

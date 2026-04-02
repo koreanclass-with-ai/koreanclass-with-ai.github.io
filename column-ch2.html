@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2장. 언어 교수 이론과 활동 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* ── 네비 ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+
+/* ── 글 헤더 ── */
+.article-header{
+  padding:120px 0 40px;
+  text-align:center;
+  border-bottom:0.5px solid var(--border);
+}
+.article-header .part-label{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  color:var(--blue);margin-bottom:8px;
+}
+.article-header h1{
+  font-size:clamp(28px,4.5vw,42px);
+  font-weight:900;line-height:1.25;
+  letter-spacing:-0.02em;
+  max-width:640px;margin:0 auto 12px;
+}
+.article-header .ch-question{
+  font-size:16px;color:var(--text-sub);
+  font-style:italic;
+}
+
+/* ── 목차 사이드바 (스티키) ── */
+.layout{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:48px;
+  max-width:1000px;
+  margin:0 auto;
+  padding:40px 32px 80px;
+}
+.toc{
+  position:sticky;top:80px;
+  align-self:start;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+  padding-right:16px;
+}
+.toc-label{font-size:11px;font-weight:700;color:var(--text-light);letter-spacing:0.06em;margin-bottom:12px;}
+.toc a{
+  display:block;
+  font-size:12px;font-weight:500;
+  color:var(--text-sub);
+  text-decoration:none;
+  padding:6px 0;
+  border-left:2px solid transparent;
+  padding-left:12px;
+  transition:all .15s;
+  line-height:1.4;
+}
+.toc a:hover{color:var(--text);}
+.toc a.active{color:var(--text);font-weight:700;border-left-color:var(--blue);}
+
+/* ── 본문 ── */
+.article{max-width:680px;}
+.article h2{
+  font-size:22px;font-weight:800;
+  letter-spacing:-0.01em;
+  margin:48px 0 16px;
+  padding-top:24px;
+}
+.article h3{
+  font-size:17px;font-weight:700;
+  margin:32px 0 12px;
+  color:var(--text);
+}
+.article p{
+  font-size:15px;
+  margin-bottom:16px;
+  line-height:1.85;
+  color:#333;
+}
+.article ul,.article ol{
+  margin:12px 0 20px 20px;
+  font-size:15px;line-height:1.85;
+  color:#333;
+}
+.article li{margin-bottom:6px;}
+.article table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;
+  font-size:14px;
+}
+.article th,.article td{
+  padding:10px 14px;
+  border:0.5px solid var(--border);
+  text-align:left;
+}
+.article th{background:var(--bg-alt);font-weight:700;font-size:13px;}
+.article blockquote{
+  border-left:3px solid var(--blue);
+  padding:12px 20px;
+  margin:20px 0;
+  background:var(--blue-light);
+  border-radius:0 8px 8px 0;
+  font-size:14px;
+  color:#444;
+}
+
+/* 더 읽을거리 박스 */
+.further-reading{
+  background:var(--card);
+  border:0.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  margin:40px 0;
+}
+.further-reading h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.further-reading ul{margin:0;padding-left:18px;font-size:13px;color:var(--text-sub);}
+.further-reading li{margin-bottom:4px;}
+
+/* 이전/다음 네비 */
+.ch-nav{
+  display:flex;justify-content:space-between;
+  padding:32px 0;
+  border-top:0.5px solid var(--border);
+  margin-top:48px;
+}
+.ch-nav a{
+  text-decoration:none;color:var(--text-sub);
+  font-size:13px;font-weight:600;
+  transition:color .2s;
+}
+.ch-nav a:hover{color:var(--blue);}
+.ch-nav .next{margin-left:auto;}
+
+/* ── 모바일 ── */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;gap:0;}
+  .toc{display:none;}
+  .article-header h1{font-size:28px;}
+}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html">활동</a><a href="demo.html">데모</a><a href="column.html" class="active">칼럼</a><a href="faq.html">FAQ</a></div></div></nav>
+
+<header class="article-header">
+  <div class="part-label">I부 — 교수 활동 개괄</div>
+  <h1>2장. 언어 교수 이론과 활동</h1>
+  <div class="ch-question">언어 교수 이론은 활동을 어떻게 변화시켜 왔는가?</div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-label">목차</div>
+    <!-- 절 목차 자동 생성: 본문의 h2 id를 참조 -->
+        <a href="#sec-2-1">2.1 교수법 변천과 활동</a>
+    <a href="#sec-2-2">2.2 제2언어 습득 연구와 활동</a>
+    <a href="#sec-2-3">2.3 의사소통 연속체</a>
+    <a href="#sec-2-4">2.4 한국어 교육에서의 활동 연구</a>
+    <a href="#sec-2-5">2.5 **5.** 기술의 변천과 활동</a>
+    <a href="#sec-2-6">2.6 **5.1. CALL**의 세대별 진화</a>
+  </aside>
+
+  <article class="article">
+    <!-- 본문: docx 내용을 여기에 변환하여 삽입 -->
+    <h2 id="sec-2-1">2.1 교수법 변천과 활동</h2>
+<p>1장에서 활동을 정의하고 그 기능을 살펴보았다면, 여기서는 한 걸음 더 들어가 묻는다. 활동은 어디에서 온 것인가? 오늘날 한국어 교실에서 교사가 일상적으로 사용하는 빈칸 채우기, 역할극, 모둠 토론 같은 활동들은 하루아침에 등장한 것이 아니라, 언어 교수법의 변천 속에서 점진적으로 형성되고 변화해 왔다. 교수법의 역사를 활동의 관점에서 되짚어 보는 것은, 현재의 교실 활동이 왜 이런 형태를 띠고 있는지를 이해하는 데 필수적이다.</p>
+<h3>1.1. 문법번역식과 청각구두식에서의 활동</h3>
+<p>근대 언어 교육의 출발점으로 흔히 거론되는 문법번역식(Grammar-Translation Method)은 목표 언어의 문법 규칙을 모국어로 설명하고, 문학 텍스트를 번역하는 것을 핵심으로 삼았다. 이 접근법에서 학습자가 수행하는 작업은 번역, 문법 규칙 암기, 예문 분석 등이었다. 오늘날의 관점에서 보면 이것도 일종의 '활동'이라 할 수 있으나, 학습자가 목표 언어를 실제로 사용하는 기회는 극히 제한적이었다. 문법번역식에서 활동은 언어 사용의 도구가 아니라 언어 분석의 도구였다.</p>
+<ol><li>~50년대에 등장한 청각구두식(Audiolingual Method)은 이에 대한</li></ol>
+<p>반작용이었다. 행동주의 심리학의 자극-반응-강화 이론에 기반한 이 접근법은 구두 반복 연습(oral drill)을 핵심 활동으로 채택하였다. 교사가 모델 문장을 제시하면 학습자가 이를 따라 말하고, 특정 요소를 교체하거나 변형하는 패턴 연습(pattern practice)이 수업의 중심이 되었다. 대치 연습(substitution drill), 변형 연습(transformation drill), 반복 연습(repetition drill) 등이 대표적이다.</p>
+<p>청각구두식의 활동은 두 가지 점에서 문법번역식과 결정적으로 달랐다. 첫째, 학습자가 목표 언어를 구두로 산출하는 기회가 대폭 늘어났다. 둘째, 활동이 명시적으로 설계되고 체계적으로 배열되었다. 그러나 이 활동들은 철저히 통제된 환경에서 정해진 반응을 산출하는 것이었으며, 학습자가 자신의 생각이나 의도를 언어로 표현하는 기회는 거의 없었다.</p>
+<h3>1.2. 의사소통 중심 교수법과 활동</h3>
+<p>1970년대 이후 등장한 의사소통 중심 교수법(Communicative Language Teaching, CLT)은 언어 교육의 목표를 '문법적 정확성'에서 '의사소통 능력(communicative competence)'으로 전환시켰다. Hymes(1972)가 제안한 의사소통 능력의 개념은 문법적으로 올바른 문장을 만드는 것만으로는 충분하지 않으며, 사회적 맥락에서 적절하게 언어를 사용하는 능력이 필요하다는 인식을 확산시켰다.</p>
+<p>이러한 전환은 활동의 성격을 근본적으로 바꾸었다. 청각구두식에서 활동이 정해진 형태를 반복하는 것이었다면, CLT에서 활동은 의미를 전달하고 협상하는 것이 되었다. 정보 차(information gap) 활동, 롤플레이, 의견 교환, 문제 해결 등 학습자가 실제로 의미를 주고받아야 하는 활동이 교실의 중심으로 들어왔다. 활동의 '성공'을 판단하는 기준도 형태적 정확성에서 의사소통의 효과성으로 이동하였다.</p>
+<p>CLT의 등장과 함께 활동의 유형도 크게 다양해졌다. 기계적 연습(mechanical practice), 의미 있는 연습(meaningful practice), 의사소통적 연습(communicative practice)이라는 활동의 스펙트럼이 명시적으로 구분되기 시작했으며(Paulston, 1971), 교사는 수업 안에서 이 세 수준의 활동을 의도적으로 배열하게 되었다. 이 스펙트럼은 이후 Littlewood(2004)의 의사소통 연속체로 체계화된다.</p>
+<h3>1.3. 과제 기반 교수법과 활동</h3>
+<p>1990년대 이후 CLT의 발전적 형태로 등장한 과제 기반 교수법(Task-Based Language Teaching, TBLT)은 활동의 위상을 한 단계 더 끌어올렸다. CLT에서 활동이 수업의 '수단'이었다면, TBLT에서 과제(task)는 수업의 '목적'이자 '조직 원리'가 되었다.</p>
+<p>Willis & Willis(2007)는 과제를 중심으로 수업을 과제 전(pre-task), 과제 수행(task cycle), 과제 후(post-task)의 세 단계로 구성할 것을 제안하였다. 과제 전 단계에서는 주제를 도입하고 필요한 언어를 활성화하며, 과제 수행 단계에서는 학습자가 과제를 수행하면서 자연스럽게 목표 언어를 사용하고, 과제 후 단계에서는 과제 수행 과정에서 드러난 언어적 문제에 초점을 맞추어 형태에 대한 주의 집중이 이루어진다.</p>
+<p>TBLT에서 특히 주목할 점은 형태 초점(focus on form)의 위치이다. 전통적인 교수법에서 형태 학습이 수업의 출발점이었다면, TBLT에서는 형태 학습이 과제 수행의 결과로 자연스럽게 발생하거나, 과제 후 단계에서 의도적으로 배치된다. 이는 형태 학습 활동의 교수적 역할에 대한 근본적인 재인식을 요구하며, 4장에서 형태 학습 활동의 설계 원리를 다룰 때 다시 논의한다.</p>
+<p>TBLT에 대해서는 "과제만으로는 정확성이 보장되지 않는다"는 비판도 존재한다(Sheen, 2003). 이 비판에 대한 대응으로, 과제와 형태 학습 활동을 적절히 조합하는 절충적 접근이 현재 많은 교실에서 채택되고 있다. 이 책에서 제시하는 네 범주(형태 학습 → 의미 구성 → 기능 중심 → 과제 기반)의 배열도 이러한 절충적 관점에 기반한다.</p>
+<p>교수법 변천의 흐름 속에서 활동의 위치를 정리하면 다음과 같다.</p>
+<p>교수법       시기           활동의 성격        대표 활동 유형</p>
+<p>문법번역식   \~1940년대     언어 분석의 도구   번역, 문법 규칙 암기 청각구두식   1940\~60년대   형태 반복의 수단   패턴 드릴, 대치·변형·반복 연습 CLT          1970년대\~     의미 전달의 수단   정보 차, 롤플레이, 의견 교환 TBLT         1990년대\~     수업의 조직 원리   과제 수행, 문제 해결, 프로젝트</p>
+<p>이 표에서 오른쪽으로 갈수록 활동에 대한 학습자의 자율성이 높아지고, 교사의 통제가 줄어든다는 점에 주목할 필요가 있다. 이 경향성은 곧이어 다루는 의사소통 연속체의 기본 원리와 정확히 대응한다.</p>
+<h2 id="sec-2-2">2.2 제2언어 습득 연구와 활동</h2>
+<p>교수법의 변천이 활동의 '형태'를 바꿔 왔다면, 제2언어 습득(SLA) 연구는 활동이 '왜' 학습에 기여하는지를 설명해 왔다. 교실에서 특정 유형의 활동이 효과적인 이유를 이해하기 위해서는, SLA 연구에서 밝혀진 언어 습득의 핵심 조건들을 알아야 한다.</p>
+<h3>2.1. 입력 가설과 활동</h3>
+<p>Krashen(1985)의 입력 가설(Input Hypothesis)은 언어 습득의 필수 조건으로 '이해 가능한 입력(comprehensible input)'을 제시하였다. 학습자가 현재 수준(i)보다 약간 높은 수준(i+1)의 입력에 노출될 때 습득이 촉진된다는 것이다. 이 가설이 활동 설계에 주는 시사점은 명확하다. 읽기 텍스트나 듣기 자료를 활용하는 활동은 학습자에게 이해 가능한 입력을 제공하는 기능을 수행하며, 텍스트의 난이도를 학습자 수준에 맞게 조절하는 것이 핵심적인 설계 판단이 된다.</p>
+<p>입력 가설은 그 자체로는 입력의 양과 질만 보장하면 습득이 자동으로 이루어진다고 보았으나, 이후의 연구들은 입력만으로는 불충분하며 상호작용과 출력이 함께 필요하다는 점을 밝혀냈다.</p>
+<h3>2.2. 상호작용 가설과 활동</h3>
+<p>Long(1996)의 상호작용 가설(Interaction Hypothesis)은 학습자가 다른 화자와 상호작용하는 과정에서 발생하는 <b>의미 협상(negotiation of meaning)</b>이 습득에 핵심적으로 기여한다고 주장하였다. 의미 협상이란, 대화 중에 이해가 되지 않는 부분이 생겼을 때 이해 점검(comprehension check), 확인 요청(confirmation request), 명료화 요청(clarification request) 등을 통해 소통의 문제를 해결해 나가는 과정이다.</p>
+<p>이 과정에서 학습자는 자신의 중간언어와 목표 언어 사이의 차이를 인식하게 되며, 이 인식이 기존의 언어 체계를 수정하는 계기가 된다. 활동 설계의 관점에서 보면, 정보 차 활동, 모둠 토론, 짝 활동 등 학습자 간 상호작용을 유발하는 활동이 이 기능을 수행한다. 상호작용의 양과 질은 활동의 구조에 의해 크게 좌우되므로, 의미 협상이 자연스럽게 발생하도록 활동을 설계하는 것이 중요하다. 이에 대한 구체적인 논의는 4장 '의미 구성 활동의 설계'에서 다룬다.</p>
+<h3>2.3. 출력 가설과 활동</h3>
+<p>Swain(1995)의 출력 가설(Output Hypothesis)은 학습자가 목표 언어를 산출(output)하는 경험 자체가 습득에 기여한다고 주장하였다. 입력 가설이 '듣고 읽는 것'의 중요성을 강조했다면, 출력 가설은 '말하고 쓰는 것'의 독자적 역할을 부각시켰다.</p>
+<p>Swain에 따르면, 출력은 세 가지 방식으로 습득에 기여한다. 첫째, 알아차리기(noticing) 기능이다. 학습자는 자신이 말하거나 쓰려 할 때, 자신이 표현하고자 하는 의미와 실제로 표현할 수 있는 형태 사이의 차이를 인식하게 된다. 이 '차이에 대한 인식'이 습득의 출발점이 된다. 둘째, 가설 검증(hypothesis testing) 기능이다. 학습자는 자신의 산출을 통해 목표 언어에 대한 가설을 시험하고, 상대방의 반응을 통해 그 가설의 적절성을 확인한다. 셋째, 메타언어적(metalinguistic) 기능이다. 학습자가 언어에 대해 이야기하는 과정 자체가 언어 지식의 내면화를 촉진한다.</p>
+<p>활동 설계의 관점에서, 말하기와 쓰기를 요구하는 활동은 단순히 '연습'의 기회를 제공하는 것이 아니라, 학습자의 중간언어 체계를 발전시키는 인지적 과정을 촉발한다. 특히 <b>밀린 출력(pushed output)</b> --- 학습자가 현재 수준보다 약간 더 복잡하거나 정교한 언어를 산출하도록 요구받는 상황 --- 이 습득에 가장 효과적이다. 과제 기반 활동에서 학습자가 복잡한 의미를 전달하기 위해 노력하는 과정이 이에 해당한다.</p>
+<h3>2.4. 기능 연습 이론과 자동화</h3>
+<p>DeKeyser(2007)의 기능 연습 이론(Skill Acquisition Theory)은 위의 세 가설과는 다른 각도에서 활동의 역할을 설명한다. 이 이론에 따르면, 언어 학습은 인지심리학의 기능 습득 모형을 따르며, 선언적 지식(declarative knowledge)에서 절차적 지식(procedural knowledge)으로의 전환을 거친다.</p>
+<p>쉽게 말하면, 문법 규칙을 '아는 것'(선언적)과 대화 중에 그 규칙을 '자동으로 쓰는 것'(절차적)은 질적으로 다른 지식 상태이며, 전자에서 후자로의 전환에는 <b>충분한 양의 반복 연습</b>이 필요하다. 이 연습은 무의미한 반복이 아니라, 의미 있는 맥락 안에서의 반복이어야 효과적이다.</p>
+<p>이 이론이 활동 설계에 주는 시사점은 직접적이다. 형태 학습 활동(빈칸 채우기, 변환 연습, 퀴즈 등)은 선언적 지식을 절차적 지식으로 전환시키는 데 핵심적인 역할을 한다. 학습자가 문법 규칙을 설명할 수 있다고 해서 대화에서 그 규칙을 자동으로 사용할 수 있는 것은 아니며, 이 거리를 좁히는 것이 형태 학습 활동의 교수적 존재 이유이다.</p>
+<p>네 가지 이론이 활동에 주는 시사점을 정리하면 다음과 같다.</p>
+<p>SLA 이론         핵심 주장                        대응하는 활동의 교수적 기능</p>
+<p>입력 가설        이해 가능한 입력이 습득의 조건   입력 제공 (읽기·듣기 활동) 상호작용 가설    의미 협상이 습득을 촉진          상호작용 촉진 (정보 차, 모둠 활동) 출력 가설        언어 산출이 알아차리기를 유발    출력 유도 (말하기·쓰기 활동) 기능 연습 이론   반복 연습이 자동화를 촉진        자동화 촉진 (형태 연습, 퀴즈)</p>
+<p>이 네 가지 기능은 1장 2.2에서 제시한 활동의 교수적 기능과 정확히 대응한다. 각 이론은 서로 대립하는 것이 아니라, 활동이 습득에 기여하는 서로 다른 경로를 설명하는 것으로 이해해야 한다. 잘 설계된 수업은 이 네 가지 경로를 모두 활성화하는 다양한 유형의 활동을 포함한다.</p>
+<h2 id="sec-2-3">2.3 의사소통 연속체</h2>
+<h3>3.1. 연속체적 관점의 배경</h3>
+<p>1장에서 논의한 바와 같이, 교실 내 활동은 형태에 초점을 두는 연습과 의미에 초점을 두는 과제 사이에 분포하며, 대부분의 활동은 양극 사이의 어딘가에 위치한다. 1절에서 살펴본 교수법의 변천도 이 스펙트럼 위에서의 강조점 이동으로 이해할 수 있다. 문법번역식과 청각구두식은 스펙트럼의 왼쪽(형태)에, CLT와 TBLT는 스펙트럼의 오른쪽(의미)에 위치한다.</p>
+<p>Littlewood(2004)는 이 관찰을 체계화하여, 교실 활동을 다섯 단계의 <b>의사소통 연속체(communicative continuum)</b>로 정리하였다.</p>
+<p>단계   범주                   초점                 교사 통제</p>
+<p>①      비의사소통적 학습      언어 체계            최대 ②      전의사소통적 연습      형태 + 제한된 의미   높음 ③      의사소통적 언어 연습   의미 + 기능적 사용   중간 ④      구조화된 의사소통      과제 수행            낮음 ⑤      자유로운 의사소통      실제적 의사소통      최소</p>
+<p>이 연속체의 핵심 원리는 두 가지이다. 첫째, ①에서 ⑤로 갈수록 학습자의 인지적 초점이 언어 형태에서 의미 전달로 이동한다. 둘째, ①에서 ⑤로 갈수록 교사의 통제가 줄어들고 학습자의 자율성이 높아진다.</p>
+<p>이 두 원리는 앞에서 정리한 교수법 변천의 방향(형태→의미, 통제→자율)과 정확히 일치한다. 의사소통 연속체는 교수법의 역사적 변천을 하나의 수업 안에서 재현하는 것으로 이해할 수 있다. 하나의 수업이 형태 연습에서 시작하여 자유로운 의사소통으로 이행하는 배열은, 교수법의 100년 역사가 50분 안에 압축된 것이다.</p>
+<h3>3.2. 연속체의 의의와 한계</h3>
+<p>연속체적 관점의 가장 큰 의의는 활동을 이분법이 아닌 스펙트럼으로 이해할 수 있게 한 점이다. 연습과 과제를 대립시키는 이분법에서는 "이 활동은 연습인가, 과제인가?"라는 질문이 제기되지만, 연속체 위에서는 "이 활동은 연속체의 어디쯤에 위치하는가?"라는, 보다 생산적인 질문이 가능해진다.</p>
+<p>이러한 관점 전환은 실천적으로도 중요하다. 교사가 수업을 설계할 때, 연속체의 왼쪽 끝에서 오른쪽 끝으로 이행하는 활동의 흐름을 의식적으로 배열할 수 있기 때문이다. 형태 연습으로 시작하여 의미 구성 활동을 거쳐 과제 수행으로 나아가는 배열은 연속체의 논리를 수업 구성에 직접 적용한 것이며, 이에 대한 상세한 논의는 6장에서 다룬다.</p>
+<p>그러나 이 연속체에는 몇 가지 한계도 있다. 첫째, 다섯 단계 사이의 경계가 명확하지 않으며, 특히 ②와 ③의 구분이 실제 교실에서 모호한 경우가 많다. 둘째, '거절하기'나 '요청하기'와 같은 <b>의사소통 기능</b>을 중심으로 설계된 활동은 ②와 ④ 사이 어디에나 위치할 수 있어, 연속체 위에서의 위치가 불분명하다. 한국어 교육 분야에서도 강현화(2007)가 의사소통 기능에 초점을 둔 활동이 이 연속체 위에서 독립적인 위치를 가져야 한다고 지적한 바 있다.</p>
+<p>셋째, 연속체는 '의사소통 능력의 발달'이라는 단일한 축을 전제하지만, 실제 교실에서는 정확성과 유창성이 동시에 발달해야 하며, 때로는 유창성이 먼저 발달한 후 정확성이 뒤따르는 역방향의 흐름도 관찰된다.</p>
+<p>이러한 한계를 보완하기 위해 이 책에서는 Littlewood의 다섯 단계를 네 개의 범주로 재구성한다. 재구성의 핵심은 ①과 ②를 통합하여 '형태 학습 중심 활동'으로 묶고, 연속체에서 독립적 위치를 갖지 못했던 의사소통 기능 중심 활동을 별도의 범주로 설정하는 것이다. 이 재구성에 대한 상세한 논의는 3장에서 이어진다.</p>
+<h2 id="sec-2-4">2.4 한국어 교육에서의 활동 연구</h2>
+<h3>4.1. 한국어 교재의 활동 구성 변천</h3>
+<p>한국어 교육에서 활동의 변천은 한국어 교재의 발전 과정과 궤를 같이한다. 1970\~80년대의 초기 한국어 교재들은 문법번역식과 청각구두식의 영향 아래 문법 설명과 문형 연습 중심으로 구성되어 있었다. 연세대학교의 초기 한국어 교재나 이화여자대학교의 초기 교재에서 활동은 주로 문형 대입 연습이나 번역 연습의 형태를 띠었다.</p>
+<p>1990년대 이후 CLT의 영향이 한국어 교육에도 본격적으로 미치면서, 교재의 활동 구성이 크게 변화하기 시작하였다. 서울대학교의 《한국어》(1997)를 비롯한 주요 기관의 교재들은 문법 연습과 의사소통 활동을 단원 내에서 체계적으로 배열하는 구조를 채택하였다. 전형적인 단원 구성은 '문법 설명 → 기계적 연습 → 유의미 연습 → 의사소통 활동'의 순서를 따르며, 이는 Littlewood의 연속체와 동일한 논리에 기반한다.</p>
+<p>2000년대 이후에는 과제 기반 활동이 교재에 적극적으로 반영되기 시작하였다. 역할극, 프로젝트, 토론 등이 단원의 마무리 활동으로 배치되는 것이 일반화되었고, '말하기·듣기·읽기·쓰기'의 네 기능을 통합하는 활동도 늘어났다. 최근의 교재들은 다양한 멀티미디어 자료와 온라인 학습 자원을 활동에 통합하는 경향을 보이고 있다.</p>
+<h3>4.2. 활동 연구의 동향과 과제</h3>
+<p>한국어 교육 분야에서 활동에 대한 연구는 크게 세 갈래로 이루어져 왔다.</p>
+<p>첫째, <b>교재 분석 연구</b>이다. 한국어 교재에 포함된 활동의 유형, 비중, 배열을 분석하는 연구가 꾸준히 이루어져 왔다. 강현화(2007)는 주요 한국어 교재의 문법 활동 유형을 분석하여 기계적 연습의 비중이 여전히 높음을 지적하였고, 이후의 연구들도 교재별 활동 유형의 분포와 배열에 대한 분석을 축적해 왔다.</p>
+<p>둘째, <b>활동 효과 연구</b>이다. 특정 활동 유형이 학습자의 언어 능력 발달에 미치는 효과를 실험적으로 검증하는 연구가 있다. 과제 기반 활동의 효과, 정보 차 활동과 의미 협상의 관계, 형태 초점 활동의 효과 등이 주요 연구 주제이다.</p>
+<p>셋째, <b>활동 설계 연구</b>이다. 학습자 변인(레벨, 학습 목적, 모국어 배경)에 따라 활동을 어떻게 설계하고 수정해야 하는지를 다루는 연구이다. 학문 목적 학습자를 위한 과제 설계, 다문화 가정 학습자를 위한 활동 수정 등이 이 범주에 속한다.</p>
+<p>이 세 갈래의 연구에서 공통적으로 지적되는 과제는 <b>활동 설계의 원리에 대한 체계적 논의의 부족</b>이다. 교재에 어떤 활동이 포함되어 있는지를 분석하는 연구는 풍부하지만, "이 활동을 왜 이렇게 설계해야 하는가"라는 설계 원리에 대한 논의는 상대적으로 부족하다. 빈칸 채우기를 선택형으로 만들 것인가 입력형으로 만들 것인가, 롤플레이에서 화자의 관계를 어떻게 설정할 것인가, 과제의 복잡도를 어떤 변인으로 조절할 것인가 --- 이런 실천적 설계 판단의 근거를 이론적으로 제공하는 것이 아직 충분히 이루어지지 못했다.</p>
+<p>이 책의 4장 '활동의 설계 원리'는 바로 이 빈자리를 메우려는 시도이다.</p>
+<h2 id="sec-2-5">2.5 **5.** 기술의 변천과 활동</h2>
+<p>교수법이 문법번역식에서 의사소통 중심 교수법으로 전환되는 동안, 교육 기술도 함께 변해 왔다.이 두 변화는 서로 무관하지 않다. 기술 환경의 변화는 교실에서 가능한 활동의 범위를 넓혔고, 때로는 활동의 성격 자체를 바꾸기도 하였다. 이 절에서는 컴퓨터 보조 언어 학습(Computer-AssistedLanguage Learning, CALL)의 발전 과정을 교수법의 변천과 병렬적으로 조망한다.</p>
+<h2 id="sec-2-6">2.6 **5.1. CALL**의 세대별 진화</h2>
+<p>Warschauer(1996)는 CALL의 역사를 교수법의 변천에 대응시켜 세 단계로 구분하였다.</p>
+<p>첫 번째는 행동주의 <b>CALL</b>(1960\~70년대)이다. PLATO 시스템으로 대표되는 이 시기의 기술 활용은 청각구두식의 연장선에 있었다. 컴퓨터가 제시하는 문항에 학습자가 응답하고, 정오 피드백을받는 반복 연습(drill-and-practice)이 핵심이었다. 활동의 유형은 빈칸 채우기, 선다형 문항, 문형변환 연습 등 형태 중심 활동에 한정되었으며, 1절에서 다룬 청각구두식의 패턴 연습을 컴퓨터 화면위로 옮긴 것에 가까웠다.</p>
+<p>두 번째는 의사소통적 <b>CALL</b>(1980\~90년대)이다. 개인용 컴퓨터의 보급과 함께 시뮬레이션, 텍스트 기반 게임, 워드프로세서 활용 등이 교실에 도입되었다. 이 시기의 CALL은 CLT의 영향을 받아,학습자가 의미를 다루고 선택을 내리는 활동을 지향했다. 기술이 반복 연습의 도구에서 의사소통의매체로 역할이 바뀌기 시작한 시점이다.</p>
+<p>세 번째는 통합적 <b>CALL</b>(2000년대)이다. 인터넷과 멀티미디어의 발전으로 텍스트, 이미지, 음성,영상이 하나의 환경에서 통합되었다. 웹 기반 학습, 이메일 교환, 화상 회의 등이 가능해지면서, 활동은 교실 안에서 교실 밖으로 확장되었고, 학습자 간 실시간 상호작용이 기술적으로 가능해졌다.Bax(2003)는 기술이 교실에 완전히 내재화되어 더 이상 \'특별한 것\'으로 인식되지 않는 상태를\<em>\</em>\"정상화(normalization)\"\<em>\</em>라 칭하며, 이것이 CALL의 궁극적 지향점이라고 제안하였다.</p>
+<p>이후 소셜 미디어와 Web 2.0 기술의 확산에 따라 블로그, 위키, 원격 협업 등을 활용한 소셜<b>CALL</b>(2005\~2015)이 전개되었고, 2020년대 중반 이후에는 대규모 언어 모델(LLM)과 생성형 AI를 활용한 <b>AI</b> 강화 <b>CALL</b> 시대가 열렸다. AI 강화 CALL에 대해서는 8장에서 상세히 다룬다.</p>
+<h3><b>5.2. CALL</b>의 진화가 활동에 던지는 시사점</h3>
+<p>CALL의 세대별 진화를 1절의 교수법 변천과 나란히 놓으면, 흥미로운 대응 관계가 드러난다. 행동주의 CALL은 청각구두식과, 의사소통적 CALL은 CLT와, 통합적 CALL은 TBLT와 시기적·이론적</p>
+<p>으로 병행하였다. 그러나 이 대응이 기계적인 것은 아니다. 기술의 변화가 교수법의 변화를 일방적으로 추동한 것도, 교수법의 변화가 기술의 활용을 일방적으로 결정한 것도 아니다. 양자는 상호 영향 관계에 있으며, 그 교차점에서 교실 활동의 가능성이 확장되어 왔다.</p>
+<p>이 역사에서 한 가지 분명한 점은, 기술은 그 자체로 활동의 질을 보장하지 않는다는 것이다. 행동주의 CALL 시대에 반복 연습만 가능했던 것은 컴퓨터의 성능 때문이 아니라, 당시의 지배적 교수 이론이 반복 연습을 최선의 학습 방법으로 간주했기 때문이다. 마찬가지로 현재의 AI 도구가 다양한유형의 자료를 생성할 수 있다고 해서, 그것이 자동으로 좋은 활동이 되는 것은 아니다. 도구의 가능성을 교수적으로 의미 있는 활동으로 전환하는 것은 교사의 설계 판단에 달려 있다.Chapelle(2001)이 CALL 자료의 질을 기술적 정교함이 아니라 언어 학습 잠재력, 학습자 적합성,의미 초점 등의 교수적 기준으로 평가해야 한다고 주장한 것은 이 맥락에서 여전히 유효하다.</p>
+<p>이러한 인식은 곧 8장에서 다룰 AI 기반 자료 제작의 핵심 원리로 연결된다. AI 도구는 5세대 CALL의 산물이지만, 그 도구를 활용하여 만들어지는 활동의 질은 1\~7장에서 다룬 교수 활동론의 이해에근거한 교사의 판단에 의해 결정된다.</p>
+<div class="further-reading"><h4>더 읽을거리</h4><ul>
+<ul><li>Littlewood, W. (2004). The task-based approach: Some questions and</li></ul>
+<blockquote>suggestions. <em>ELT Journal</em>, 58(4), 319--326.</blockquote>
+<ul><li>Ellis, R. (2003). <em>Task-based Language Learning and Teaching</em>.</li></ul>
+<blockquote>Oxford University Press.</blockquote>
+<ul><li>Willis, D. & Willis, J. (2007). <em>Doing Task-Based Teaching</em>. Oxford</li></ul>
+<blockquote>University Press.</blockquote>
+<ul><li>Krashen, S. (1985). <em>The Input Hypothesis: Issues and Implications</em>.</li></ul>
+<blockquote>Longman.</blockquote>
+<ul><li>Long, M. H. (1996). The role of the linguistic environment in second</li></ul>
+<blockquote>language acquisition. In W. C. Ritchie & T. K. Bhatia (Eds.),<br><em>Handbook of Second Language Acquisition</em>. Academic Press.</blockquote>
+<ul><li>Swain, M. (1995). Three functions of output in second language</li></ul>
+<blockquote>learning. In G. Cook & B. Seidlhofer (Eds.), *Principle and<br>Practice in Applied Linguistics*. Oxford University Press.</blockquote>
+<ul><li>DeKeyser, R. (2007). <em>Practice in a Second Language</em>. Cambridge</li></ul>
+<blockquote>University Press.</blockquote>
+<ul><li>Hymes, D. (1972). On communicative competence. In J. B. Pride & J.</li></ul>
+<blockquote>Holmes (Eds.), <em>Sociolinguistics</em>. Penguin.</blockquote>
+<ul><li>Richards, J. C. & Rodgers, T. S. (2014). *Approaches and Methods in</li></ul>
+<blockquote>Language Teaching* (3rd ed.). Cambridge University Press.</blockquote>
+<ul><li>강현화 (2007). 한국어 교재의 문법 활동 유형 분석. *외국어로서의</li></ul>
+<blockquote>한국어교육*, 32.</blockquote>
+<ul><li>Warschauer, M. (1996). Computer-assisted language learning: An</li></ul>
+<blockquote>introduction. In S.Fotos (Ed.), Multimedia Language Teaching.<br>Logos International.</blockquote>
+<ul><li>Bax, S. (2003). CALL --- past, present and future. System, 31(1),</li></ul>
+<blockquote>13--28.</blockquote>
+<ul><li>Chapelle, C. A. (2001). Computer Applications in Second Language</li></ul>
+<blockquote>Acquisition.Cambridge University Press.</blockquote>
+</ul></div>
+
+    <!-- 더 읽을거리 (있는 경우) -->
+    <!--
+    <div class="further-reading">
+      <h4>더 읽을거리</h4>
+      <ul>
+        <li>참고문헌 1</li>
+        <li>참고문헌 2</li>
+      </ul>
+    </div>
+    -->
+
+    <!-- 이전/다음 -->
+    <div class="ch-nav">
+      <a href="column-ch1.html" class="prev">← 1장. 교수 활동의 범위와 기능</a>
+      <a href="column-ch3.html" class="next">3장. 활동의 분류 →</a>
+    </div>
+  </article>
+</div>
+
+<footer><div style="max-width:1100px;margin:0 auto;padding:0 32px;">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+// 스크롤 스파이 — 현재 읽는 절에 active 표시
+const headings = document.querySelectorAll('.article h2[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+
+headings.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

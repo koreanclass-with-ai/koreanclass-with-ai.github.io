@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>약국에서 증상 설명하기 | 역할극 카드 제작</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}.nav{display:flex;gap:8px;flex-wrap:wrap;}.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}.nav a:hover{color:#1a1a1a;}.nav a.primary,.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}.section-lead{font-size:13px;color:#888;margin-bottom:16px;}.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}.prose b{color:#1a1a1a;font-weight:500;}.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}.overview-table tr{border-bottom:0.5px solid #e5e5e5;}.overview-table tr:last-child{border-bottom:none;}.overview-table td:first-child{background:#f5f5f3;color:#666;padding:9px 14px;width:110px;font-weight:500;}.overview-table td:last-child{padding:9px 14px;color:#1a1a1a;}.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:1rem;}.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}.prompt-bar-left{display:flex;align-items:center;gap:5px;}.prompt-dot{width:8px;height:8px;border-radius:50%;}.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}.p-section{color:#8b949e;}.p-val{color:#e6edf3;}.p-key{color:#79c0ff;}.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:6px;}.layer-desc{font-size:13px;color:#555;line-height:1.7;}.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}.json-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#cdd6f4;white-space:pre-wrap;background:#1e1e2e;}.jk{color:#89b4fa;cursor:pointer;border-radius:3px;padding:1px 3px;transition:background .15s;}.jk:hover,.jk.active{background:rgba(137,180,250,0.2);}.js{color:#a6e3a1;}.jn{color:#fab387;}.legend{display:flex;flex-direction:column;gap:0;margin-top:14px;}.leg-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid #e5e5e5;}.leg-row:last-child{border-bottom:none;}.leg-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;padding:4px 11px;background:#f5f5f3;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:1px;}.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}.leg-arrow{font-size:12px;color:#aaa;flex-shrink:0;margin-top:3px;}.leg-desc{font-size:13px;color:#555;line-height:1.7;}.leg-desc b{color:#1a1a1a;font-weight:500;}.tooltip{position:fixed;background:#fff;border:0.5px solid #ddd;border-radius:12px;padding:12px 14px;width:220px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;line-height:1.7;z-index:9999;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 16px rgba(0,0,0,.08);}.tooltip.show{opacity:1;}.tt-title{font-weight:700;font-size:12px;color:#185FA5;margin-bottom:4px;}.tt-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:6px;font-weight:700;}.badge-yes{background:#EAF3DE;color:#3B6D11;}.badge-no{background:#f5f5f3;color:#888;}.act-box{border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin:1rem 0;}.act-header{background:#185FA5;padding:1.1rem 1.25rem;color:#fff;}.act-header-title{font-size:15px;font-weight:700;margin-bottom:2px;}.act-header-sub{font-size:11px;opacity:.8;}.act-body{padding:1.25rem;}.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}.var-table{width:100%;border-collapse:collapse;font-size:13px;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}.var-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:#888;letter-spacing:.05em;background:#f5f5f3;border-bottom:0.5px solid #e5e5e5;}.var-table td{padding:9px 12px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:top;line-height:1.6;}.var-table tr:last-child td{border-bottom:none;}.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:1rem 0;}.card-set{background:#fff;border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;}.card-header{padding:10px 12px;color:#fff;font-weight:700;font-size:12px;}.card-header.blue{background:#185FA5;}.card-header.green{background:#3B6D11;}.card-header.purple{background:#7C3AED;}.card-body{padding:12px;font-size:12px;line-height:1.7;color:#1a1a1a;}.card-row-item{margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid #e5e5e5;}.card-row-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}.card-row-item-label{font-size:10px;color:#888;font-weight:700;margin-bottom:2px;}.card-row-item-value{color:#1a1a1a;font-weight:500;}.item-list{display:flex;flex-direction:column;gap:4px;list-style:none;}.item-list li{font-size:12px;color:#555;padding:4px 0;}.item-list li::before{content:"• ";color:#999;margin-right:6px;}.demo-note{background:#E6F1FB;border:0.5px solid #378ADD;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:1rem;text-align:center;}.card-container{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1rem 0;}.card-container-item{background:#f9f9f7;border:0.5px solid #e5e5e5;border-radius:10px;overflow:hidden;}.card-container-header{padding:10px 12px;color:#fff;font-weight:700;font-size:11px;}.card-container-header.blue{background:#185FA5;}.card-container-header.green{background:#3B6D11;}.card-container-header.purple{background:#7C3AED;}.card-container-body{padding:10px 12px;}.card-container-body-item{font-size:11px;color:#555;margin-bottom:6px;line-height:1.6;}.card-container-body-item-label{color:#888;font-size:10px;font-weight:700;}.card-container-body-item-value{color:#1a1a1a;font-weight:500;margin-top:2px;}.card-container-body-list{display:flex;flex-direction:column;gap:4px;list-style:none;}.card-container-body-list li{font-size:11px;color:#555;padding:4px 0;line-height:1.5;}.card-container-body-list li::before{content:"• ";color:#999;margin-right:4px;}@media(max-width:640px){.wrap{padding:1rem .75rem 3rem;}.hero,.section{padding:1.25rem;border-radius:12px;}.hero-title{font-size:20px;}.nav{gap:6px;}.nav a{padding:7px 10px;font-size:12px;}.legend .leg-row{flex-direction:column;gap:4px;}.card-container{grid-template-columns:1fr;}.card-row{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="tag">❹ 과제 기반 · 역할극</div>
+      <h1 class="hero-title">약국에서 증상 설명하기, AI로 역할극 카드 만드는 법</h1>
+      <p class="hero-desc">프롬프트로 약국 시뮬레이션 역할 카드 세트를 만드는 과정을 안내해요.</p>
+      <div class="meta">
+        <span class="chip">TOPIK 2~3급 · 초중급~중급</span>
+        <span class="chip">제작 시간 15~20분</span>
+        <span class="chip">역할 카드 3세트</span>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="sticky-nav nav">
+      <a class="primary" href="javascript:void(0)" onclick="scrollTo_('intro')">개요</a>
+      <a href="javascript:void(0)" onclick="scrollTo_('design')">설계 근거</a>
+      <a href="javascript:void(0)" onclick="scrollTo_('prompt')">프롬프트</a>
+      <a href="javascript:void(0)" onclick="scrollTo_('practice')">실습</a>
+      <a href="javascript:void(0)" onclick="scrollTo_('check')">검증</a>
+      <a href="javascript:void(0)" onclick="scrollTo_('extend')">확장</a>
+    </nav>
+
+    <!-- INTRO -->
+    <div id="intro" class="section">
+      <div class="section-tag">소개</div>
+      <h2 class="section-title">활동 개요</h2>
+      <table class="overview-table">
+        <tr>
+          <td>활동 유형</td>
+          <td>역할극 (실생활 시뮬레이션)</td>
+        </tr>
+        <tr>
+          <td>범주</td>
+          <td>❹ 과제 기반</td>
+        </tr>
+        <tr>
+          <td>대상</td>
+          <td>초중급~중급 (TOPIK 2~3급)</td>
+        </tr>
+        <tr>
+          <td>목표</td>
+          <td>약국에서 증상을 설명하고 약을 구매하는 과제 완수</td>
+        </tr>
+        <tr>
+          <td>언어 기능</td>
+          <td>말하기 · 듣기</td>
+        </tr>
+        <tr>
+          <td>규모</td>
+          <td>역할 카드 3세트 / 15~20분</td>
+        </tr>
+        <tr>
+          <td>배포</td>
+          <td>역할 카드 + 유용 표현 카드 + 약 정보 카드</td>
+        </tr>
+      </table>
+      <div class="tip">
+        이 활동은 실제 약국 상황에서 학습자가 자연스럽게 마주칠 수 있는 상황을 교실로 가져옵니다. 프롬프트 하나로 맞춤형 역할극 자료를 생성할 수 있어요.
+      </div>
+    </div>
+
+    <!-- DESIGN RATIONALE -->
+    <div id="design" class="section">
+      <div class="section-tag">설계</div>
+      <h2 class="section-title">설계 근거</h2>
+      <div class="prose">
+        약국에서 약을 사는 건 한국 생활에서 학습자가 실제로 부딪히는 상황이에요. 교실에서 미리 연습해 두면 실제 상황에서의 불안이 줄어들거든요. 역할극은 실제 상황을 교실로 가져오는 가장 직접적인 방법이에요.
+      </div>
+      <div class="prose">
+        약국 상황에서는 <b>증상 묘사, 정보 요청, 확인</b>이 자연스럽게 결합돼요. 하나의 기능만 따로 연습하면 이 결합이 경험되지 않잖아요. 역할극은 여러 기능이 하나의 상황 안에서 자연스럽게 이어지는 경험을 제공해요.
+      </div>
+      <div class="caution">
+        <b>핵심 설계 원칙:</b> 환자 카드에 "두통"이라는 키워드만 주고 "머리가 아파요"라는 완성 문장을 주지 않는 게 중요해요. 학습자가 자신의 언어로 표현하도록 유도하는 거거든요.
+      </div>
+      <div class="warn">
+        <b>유용 표현 카드의 역할:</b> 이건 "비계(scaffolding)"예요. 초급에게는 역할극 전에 미리 제공하고, 중급에게는 역할극 후 확인용으로 활용하면 돼요.
+      </div>
+    </div>
+
+    <!-- PROMPT BUILD -->
+    <div id="prompt" class="section">
+      <div class="section-tag">생성</div>
+      <h2 class="section-title">프롬프트 구성</h2>
+      <p class="section-lead">AI로 역할 카드 세트를 생성하기 위한 체계적인 프롬프트입니다.</p>
+
+      <div class="sub-title">프롬프트 내용</div>
+      <div class="prompt-box">
+        <div class="prompt-bar">
+          <div class="prompt-bar-left">
+            <span class="prompt-dot" style="background:#ef4444;"></span>
+            <span class="prompt-dot" style="background:#eab308;"></span>
+            <span class="prompt-dot" style="background:#22c55e;"></span>
+          </div>
+          <span class="prompt-filename">pharmacy-roleplay.txt</span>
+        </div>
+        <div class="prompt-body"><span class="p-key">역할:</span> <span class="p-val">한국어 교육 전문가</span>
+
+<span class="p-key">과제:</span> <span class="p-val">TOPIK 2~3급 학습자를 위한 약국 역할극 카드 세트 생성</span>
+
+<span class="p-key">조건:</span>
+<span class="p-val">- 3세트 난이도 순서:</span>
+  <span class="p-val">  세트1: 단순 (두통)</span>
+  <span class="p-val">  세트2: 복합 (기침+콧물+열)</span>
+  <span class="p-val">  세트3: 복합+알레르기 언급</span>
+
+<span class="p-val">- 각 세트마다 3장:</span>
+  <span class="p-val">  ① 환자 카드 (증상 키워드만, 완성 문장 아님)</span>
+  <span class="p-val">  ② 약사 카드 (약 정보)</span>
+  <span class="p-val">  ③ 유용 표현 카드</span>
+
+<span class="p-val">- 환자 카드에는 키워드만 제시 (예: "두통" O, "머리가 아파요" X)</span>
+
+<span class="p-section">출력 형식: JSON</span>
+<span class="p-val">{
+  "sets": [
+    {
+      "id": 1,
+      "difficulty": "쉬움",
+      "patient_card": {
+        "symptoms": ["두통"],
+        "duration": "오늘 아침부터",
+        "allergies": "없음",
+        "goal": "두통약을 사세요."
+      },
+      "pharmacist_card": {
+        "recommended": [
+          {
+            "name": "약물명",
+            "dosage": "복용량",
+            "frequency": "빈도",
+            "timing": "복용 시간",
+            "price": "가격"
+          }
+        ],
+        "questions_to_ask": ["약사가 물어볼 질문 1", "질문 2"]
+      },
+      "useful_expressions": {
+        "patient": ["환자 표현 1", "표현 2", ...],
+        "pharmacist": ["약사 표현 1", "표현 2", ...]
+      }
+    },
+    ...
+  ]
+}</span></div>
+      </div>
+
+      <div class="sub-title">JSON 필드 설명</div>
+      <div class="legend">
+        <div class="leg-row">
+          <div class="leg-tag">
+            <div class="leg-dot" style="background:#89b4fa;"></div>
+            <span>sets</span>
+          </div>
+          <div class="leg-arrow">→</div>
+          <div class="leg-desc">역할 카드 세트 배열 (3개)</div>
+        </div>
+        <div class="leg-row">
+          <div class="leg-tag">
+            <div class="leg-dot" style="background:#a6e3a1;"></div>
+            <span>patient_card</span>
+          </div>
+          <div class="leg-arrow">→</div>
+          <div class="leg-desc"><b>환자 카드</b> - 증상 키워드만 포함 (완성 문장 제외)</div>
+        </div>
+        <div class="leg-row">
+          <div class="leg-tag">
+            <div class="leg-dot" style="background:#fab387;"></div>
+            <span>pharmacist_card</span>
+          </div>
+          <div class="leg-arrow">→</div>
+          <div class="leg-desc"><b>약사 카드</b> - 약 정보와 질문 리스트</div>
+        </div>
+        <div class="leg-row">
+          <div class="leg-tag">
+            <div class="leg-dot" style="background:#f38181;"></div>
+            <span>useful_expressions</span>
+          </div>
+          <div class="leg-arrow">→</div>
+          <div class="leg-desc"><b>유용 표현</b> - 환자용/약사용 나누어 제시</div>
+        </div>
+        <div class="leg-row">
+          <div class="leg-tag">
+            <div class="leg-dot" style="background:#89b4fa;"></div>
+            <span>recommended</span>
+          </div>
+          <div class="leg-arrow">→</div>
+          <div class="leg-desc">추천 약 정보 (약물명, 복용량, 빈도, 타이밍, 가격)</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        이 프롬프트를 ChatGPT, Claude, Gemini 등 대형 언어 모델에 입력하면 JSON 형식으로 즉시 3세트의 역할극 카드를 생성할 수 있습니다.
+      </div>
+    </div>
+
+    <!-- PRACTICE -->
+    <div id="practice" class="section">
+      <div class="section-tag">실습</div>
+      <h2 class="section-title">역할극 카드 데모</h2>
+      <p class="section-lead">완성된 자료의 실제 모습을 보여줍니다.</p>
+
+      <div class="demo-note">
+        이 활동은 웹앱 데모 대신 완성된 자료의 모습을 보여줍니다.
+      </div>
+
+      <div class="sub-title">세트 1 (쉬움) - 두통</div>
+      <div class="card-container">
+        <div class="card-container-item">
+          <div class="card-container-header blue">환자 카드</div>
+          <div class="card-container-body">
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">증상</div>
+              <div class="card-container-body-item-value">두통</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">시작</div>
+              <div class="card-container-body-item-value">오늘 아침부터</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">알레르기</div>
+              <div class="card-container-body-item-value">없음</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">목표</div>
+              <div class="card-container-body-item-value">두통약을 사세요.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-container-item">
+          <div class="card-container-header green">약사 카드</div>
+          <div class="card-container-body">
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">추천 약</div>
+              <div class="card-container-body-item-value">타이레놀</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">복용량</div>
+              <div class="card-container-body-item-value">1정</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">빈도</div>
+              <div class="card-container-body-item-value">하루 3번</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">타이밍</div>
+              <div class="card-container-body-item-value">식후 30분</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">가격</div>
+              <div class="card-container-body-item-value">5,000원</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-container-item">
+          <div class="card-container-header purple">유용 표현</div>
+          <div class="card-container-body">
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">환자</div>
+              <ul class="card-container-body-list">
+                <li>머리가 아파요</li>
+                <li>약 좀 주세요</li>
+                <li>어떻게 먹어요?</li>
+                <li>하루에 몇 번이에요?</li>
+                <li>알레르기는 없어요</li>
+              </ul>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">약사</div>
+              <ul class="card-container-body-list">
+                <li>어디가 아프세요?</li>
+                <li>이 약을 드세요</li>
+                <li>식후 30분에 드세요</li>
+                <li>하루 세 번이에요</li>
+                <li>5,000원입니다</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-title">세트 2 (중간) - 복합 증상</div>
+      <div class="card-container">
+        <div class="card-container-item">
+          <div class="card-container-header blue">환자 카드</div>
+          <div class="card-container-body">
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">증상</div>
+              <div class="card-container-body-item-value">기침, 콧물, 열</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">시작</div>
+              <div class="card-container-body-item-value">3일 전</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">알레르기</div>
+              <div class="card-container-body-item-value">없음</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">목표</div>
+              <div class="card-container-body-item-value">감기약을 사세요.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-container-item">
+          <div class="card-container-header green">약사 카드</div>
+          <div class="card-container-body">
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">추천 약</div>
+              <div class="card-container-body-item-value">감기약 세트</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">구성</div>
+              <div class="card-container-body-item-value">소염제+기침약</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">빈도</div>
+              <div class="card-container-body-item-value">하루 3번</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">타이밍</div>
+              <div class="card-container-body-item-value">식후</div>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">가격</div>
+              <div class="card-container-body-item-value">12,000원</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-container-item">
+          <div class="card-container-header purple">유용 표현</div>
+          <div class="card-container-body">
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">환자</div>
+              <ul class="card-container-body-list">
+                <li>기침이 자꾸 나와요</li>
+                <li>콧물이 흘러요</li>
+                <li>열이 있어요</li>
+                <li>언제부터 먹어야 해요?</li>
+                <li>부작용은 없어요?</li>
+              </ul>
+            </div>
+            <div class="card-container-body-item">
+              <div class="card-container-body-item-label">약사</div>
+              <ul class="card-container-body-list">
+                <li>기침은 언제부터 시작했어요?</li>
+                <li>열은 재봤어요?</li>
+                <li>다른 약 드시는 거 있어요?</li>
+                <li>이 약들을 함께 드세요</li>
+                <li>3일 후에도 안 좋으면 병원 가세요</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        각 세트는 난이도가 점진적으로 상향됩니다. 세트 1의 단순한 상황에서 충분히 역할극을 연습한 후 세트 2, 3으로 진행하세요.
+      </div>
+    </div>
+
+    <!-- CHECK -->
+    <div id="check" class="section">
+      <div class="section-tag">검증</div>
+      <h2 class="section-title">자료 품질 확인</h2>
+      <p class="section-lead">AI가 생성한 카드 세트를 평가하기 위한 체크리스트입니다.</p>
+
+      <div class="sub-title">필수 확인 항목</div>
+      <ul class="check-list">
+        <li>3개 세트가 난이도 순서대로 구성됐는가? (단순 → 복합 → 복합+알레르기)</li>
+        <li>환자 카드에 키워드만 있고 완성 문장은 없는가?</li>
+        <li>약 정보 (약물명, 복용량, 빈도, 가격)가 현실적인가?</li>
+        <li>유용 표현이 TOPIK 2~3급 수준에 맞는가?</li>
+        <li>약사 카드의 질문이 자연스러운 회화 흐름을 유도하는가?</li>
+      </ul>
+
+      <div class="sub-title">변수 조정 옵션</div>
+      <table class="var-table">
+        <thead>
+          <tr>
+            <th>변수</th>
+            <th>적용 방법</th>
+            <th>효과</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>장소 교체</td>
+            <td>프롬프트에서 "약국" → "병원", "식당", "은행"으로 변경</td>
+            <td>다양한 실생활 상황 확보</td>
+          </tr>
+          <tr>
+            <td>난이도 상향</td>
+            <td>유용 표현 제거, 약사 질문 복잡화</td>
+            <td>고급 학습자용 버전</td>
+          </tr>
+          <tr>
+            <td>난이도 하향</td>
+            <td>환자 카드에 부분 완성 문장 추가</td>
+            <td>초급 학습자용 버전</td>
+          </tr>
+          <tr>
+            <td>확장 활동</td>
+            <td>역할극 후 약 복용법 메모 작성</td>
+            <td>쓰기 기능 통합</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>유의사항:</b> 약 정보는 반드시 실제 한국 의약품 정보와 대조하세요. 활동의 목적이 언어 학습이지만, 부정확한 의료 정보는 학습자의 실생활에 영향을 미칠 수 있습니다.
+      </div>
+    </div>
+
+    <!-- EXTEND -->
+    <div id="extend" class="section">
+      <div class="section-tag">확장</div>
+      <h2 class="section-title">활동 확장 방안</h2>
+
+      <div class="sub-title">1단계: 사전 활동</div>
+      <div class="prose">
+        역할극 전에 학습자들과 함께 <b>실제 한국 약국의 특징</b>을 논의하세요. 약사와의 상호작용이 의사와는 다른 점, 약국에서 구매할 수 있는 약의 종류 등을 사전 지식으로 쌓으면 역할극이 더욱 몰입감 있어질 거든요.
+      </div>
+
+      <div class="sub-title">2단계: 역할극 수행</div>
+      <div class="prose">
+        학습자 2명이 한 세트를 맡아 최소 2~3분의 대화를 진행하도록 하세요. 처음에는 카드를 보며 진행해도 괜찮아요. 더 높은 난이도라면 카드를 안 보고 자유 회화로 전환하는 것도 좋습니다.
+      </div>
+
+      <div class="sub-title">3단계: 피드백</div>
+      <div class="prose">
+        역할극을 진행한 후 <b>발음, 자연스러움, 의사소통 성공 여부</b>를 중심으로 피드백을 제시하세요. 부자연스러운 부분이 있다면 유용 표현 카드를 다시 함께 검토하는 것도 좋은 방법입니다.
+      </div>
+
+      <div class="sub-title">4단계: 확장 활동</div>
+      <div class="layer-list">
+        <div class="layer-item">
+          <div class="layer-tag">쓰기</div>
+          <div class="layer-desc">역할극에서 나눈 대화를 글로 작성하고, 약사가 추천한 약의 복용법을 메모 형태로 정리</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-tag">듣기</div>
+          <div class="layer-desc">원어민 약사의 음성 샘플을 들으며 자연스러운 발음과 속도 확인</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-tag">읽기</div>
+          <div class="layer-desc">실제 약국 약설명서나 약 패키지의 한글 정보 읽기</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-tag">상황 확장</div>
+          <div class="layer-desc">약국 방문 후 집에서 약사의 조언을 실생활 일기로 기록</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        이 활동은 순수 역할극에 그치지 않고, <b>약국 방문이라는 실제 과제</b>와 연결될 때 가장 큰 학습 효과를 거둬요. 역할극 후 학습자들이 실제로 약국을 방문하도록 권장하고, 그 경험을 되돌아보는 시간을 가지세요.
+      </div>
+    </div>
+
+    <!-- TIPS -->
+    <div style="margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);">
+      <div class="section-tag">팁</div>
+      <h2 class="section-title">효과적인 활용 방법</h2>
+      <div class="warn">
+        <b>학습자 쌍 배치:</b> 초급 학습자가 환자 역, 중급 학습자가 약사 역을 맡으면 난이도 차이를 보완할 수 있어요. 약사 역이 더 많은 언어 입력을 제공하기 때문입니다.
+      </div>
+      <div class="tip">
+        <b>반복 실습:</b> 같은 세트를 두 번 수행하게 하세요. 첫 번째는 카드를 보며, 두 번째는 카드 없이. 두 번째에는 더욱 자연스럽고 자신감 있는 표현이 나올 거예요.
+      </div>
+      <div class="caution">
+        <b>문법 교정의 타이밍:</b> 역할극 중간에 문법을 바로 잡지 마세요. 의사소통 흐름을 방해하거든요. 역할극이 끝난 후 피드백 시간에 주요 오류만 선택해서 다루는 것이 좋습니다.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // scrollTo_ function
+    function scrollTo_(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Scroll spy with nav highlighting
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.nav a').forEach(a => {
+            a.classList.remove('active');
+            if (a.getAttribute('onclick')?.includes(id)) {
+              a.classList.add('active');
+            }
+          });
+        }
+      });
+    }, {
+      rootMargin: '-40% 0px -55% 0px'
+    });
+
+    document.querySelectorAll('[id]').forEach(el => {
+      if (['intro', 'design', 'prompt', 'practice', 'check', 'extend'].includes(el.id)) {
+        observer.observe(el);
+      }
+    });
+
+    // Tooltip system
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    document.body.appendChild(tooltip);
+
+    document.addEventListener('mouseover', e => {
+      const target = e.target.closest('[data-tooltip]');
+      if (!target) return;
+
+      tooltip.innerHTML = `
+        <div class="tt-title">${target.dataset.tooltipTitle || '정보'}</div>
+        <div>${target.dataset.tooltip}</div>
+        ${target.dataset.tooltipBadge ? `<span class="tt-badge ${target.dataset.tooltipBadge}">${target.dataset.tooltipBadgeText}</span>` : ''}
+      `;
+      tooltip.classList.add('show');
+
+      const rect = target.getBoundingClientRect();
+      tooltip.style.left = (rect.left + rect.width / 2 - 110) + 'px';
+      tooltip.style.top = (rect.top - 120) + 'px';
+    });
+
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest('[data-tooltip]')) {
+        tooltip.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

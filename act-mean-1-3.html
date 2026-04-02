@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>틀린 그림 찾기, AI로 비교 묘사 활동 만드는 법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}
+.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+
+/* ── 히어로 ── */
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#10B981;background:#ECFDF5;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}
+.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}
+.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}
+.nav a:hover{color:#1a1a1a;}
+.nav a.primary,.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}
+
+/* ── 섹션 카드 ── */
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}
+.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+
+/* ── 공통 텍스트 ── */
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}
+.prose b{color:#1a1a1a;font-weight:500;}
+.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}
+.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+
+/* ── 개요표 ── */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.overview-table tr{border-bottom:0.5px solid #e5e5e5;}
+.overview-table tr:last-child{border-bottom:none;}
+.overview-table td:first-child{background:#f5f5f3;color:#666;padding:9px 14px;width:110px;font-weight:500;}
+.overview-table td:last-child{padding:9px 14px;color:#1a1a1a;}
+
+/* ── 알림 박스 ── */
+.tip{background:#ECFDF5;border-left:3px solid #10B981;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#065F46;line-height:1.75;margin:1rem 0;}
+.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.caution b{font-weight:500;}
+
+/* ── 가이드 링크 ── */
+.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:1rem;}
+
+/* ── 프롬프트 카드 ── */
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}
+.prompt-bar-left{display:flex;align-items:center;gap:5px;}
+.prompt-dot{width:8px;height:8px;border-radius:50%;}
+.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}
+.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.p-section{color:#8b949e;}.p-val{color:#e6edf3;}.p-cmt{color:#e3b341;}.p-key{color:#79c0ff;}
+
+/* ── 응용 레이어 ── */
+.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}
+.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}
+.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#10B981;background:#ECFDF5;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.layer-desc{font-size:13px;color:#555;line-height:1.7;}
+
+/* ── 스티키 네비 ── */
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}
+
+/* ── JSON ── */
+.json-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#cdd6f4;white-space:pre-wrap;background:#1e1e2e;}
+.jk{color:#89b4fa;cursor:pointer;border-radius:3px;padding:1px 3px;transition:background .15s;}
+.jk:hover,.jk.active{background:rgba(137,180,250,0.2);}
+.js{color:#a6e3a1;}.jn{color:#fab387;}
+.legend{display:flex;flex-direction:column;gap:0;margin-top:14px;}
+.leg-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid #e5e5e5;}
+.leg-row:last-child{border-bottom:none;}
+.leg-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;padding:4px 11px;background:#f5f5f3;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.leg-arrow{font-size:12px;color:#aaa;flex-shrink:0;margin-top:3px;}
+.leg-desc{font-size:13px;color:#555;line-height:1.7;}
+.leg-desc b{color:#1a1a1a;font-weight:500;}
+
+/* ── 툴팁 ── */
+.tooltip{position:fixed;background:#fff;border:0.5px solid #ddd;border-radius:12px;padding:12px 14px;width:220px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;line-height:1.7;z-index:9999;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.tooltip.show{opacity:1;}
+.tt-title{font-weight:700;font-size:12px;color:#10B981;margin-bottom:4px;}
+.tt-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:6px;font-weight:700;}
+.badge-yes{background:#ECFDF5;color:#065F46;}.badge-no{background:#f5f5f3;color:#888;}
+
+/* ── 데모 ── */
+.demo-box{border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.demo-header{background:#10B981;padding:1.1rem 1.25rem;color:#fff;}
+.demo-header-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.demo-header-sub{font-size:11px;opacity:.8;}
+.demo-body{padding:1.25rem;}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.demo-col{padding:1rem;background:#f9f9f7;border-radius:10px;border:0.5px solid #e5e5e5;}
+.demo-col-title{font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:0.75rem;text-align:center;}
+.demo-col-text{font-size:13px;color:#555;line-height:1.7;}
+.diff-list{display:flex;flex-direction:column;gap:8px;}
+.diff-item{padding:10px 12px;background:#fff;border:0.5px solid #e5e5e5;border-radius:8px;cursor:pointer;transition:all .15s;}
+.diff-item:hover{background:#f0f8ff;border-color:#10B981;}
+.diff-num{font-size:11px;font-weight:700;color:#10B981;margin-bottom:3px;}
+.diff-q{font-size:13px;color:#1a1a1a;font-weight:500;margin-bottom:6px;}
+.diff-ans{font-size:13px;color:#10B981;line-height:1.6;display:none;padding-top:6px;border-top:0.5px solid #e5e5e5;}
+.diff-ans.show{display:block;}
+
+/* ── 체크리스트 ── */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}
+.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+.check-list li::before{content:"✓";color:#10B981;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ── 변형 테이블 ── */
+.var-table{width:100%;border-collapse:collapse;font-size:13px;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.var-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:#888;letter-spacing:.05em;background:#f5f5f3;border-bottom:0.5px solid #e5e5e5;}
+.var-table td{padding:9px 12px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:top;line-height:1.6;}
+.var-table tr:last-child td{border-bottom:none;}
+
+/* ── 모바일 ── */
+@media(max-width:640px){
+  .wrap{padding:1rem .75rem 3rem;}
+  .hero,.section{padding:1.25rem;border-radius:12px;}
+  .hero-title{font-size:20px;}
+  .nav{gap:6px;}
+  .nav a{padding:7px 10px;font-size:12px;}
+  .demo-grid{grid-template-columns:1fr;}
+  .legend .leg-row{flex-direction:column;gap:4px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══ 히어로 ══ -->
+<div class="hero">
+  <div class="tag">❷ 의미 구성 · 시각 자료</div>
+  <h1 class="hero-title">틀린 그림 찾기,<br>AI로 비교 묘사 활동 만드는 법</h1>
+  <p class="hero-desc">프롬프트로 두 그림의 차이점 데이터를 뽑고, 위치·존재 표현 연습 활동을 만드는 과정을 안내해요.</p>
+  <div class="meta">
+    <span class="chip">TOPIK 1~2급 · 초급~초중급</span>
+    <span class="chip">제작 시간 10분</span>
+    <span class="chip">인쇄용 또는 웹 기반</span>
+  </div>
+</div>
+
+<!-- ══ 스티키 네비 ══ -->
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#intro" data-section="intro">설계 의도</a>
+    <a href="#build" data-section="build">제작 과정</a>
+    <a href="#practice" data-section="practice">연습 문제</a>
+    <a href="#check" data-section="check">점검·응용</a>
+  </div>
+</div>
+
+<!-- ══ INTRO ══ -->
+<div class="section" id="intro">
+  <div class="section-tag">INTRO</div>
+  <div class="section-title">💡 왜 이 형식으로 만들었나요?</div>
+
+  <table class="overview-table">
+    <tr><td>활동 유형</td><td>시각 자료 기반 (비교)</td></tr>
+    <tr><td>범주</td><td>❷ 의미 구성</td></tr>
+    <tr><td>대상</td><td>초급~초중급 (TOPIK 1~2급)</td></tr>
+    <tr><td>목표</td><td>두 그림의 차이점을 위치·존재 표현으로 묘사</td></tr>
+    <tr><td>언어 기능</td><td>말하기</td></tr>
+    <tr><td>규모</td><td>그림 2세트 / 10분</td></tr>
+    <tr><td>배포</td><td>인쇄용 또는 웹 기반</td></tr>
+  </table>
+
+  <p class="prose">틀린 그림 찾기는 게임적 요소와 언어 연습이 결합된 형태예요. 학습자가 차이를 발견하는 순간 "이걸 어떻게 말하지?"라는 자연스러운 언어 사용 동기가 생기거든요.</p>
+  <p class="prose"><b>두 그림의 차이는 대부분 어떻게 나타날까요?</b> "무엇이 있다/없다", "어디에 있다", "몇 개이다" 같은 존재·위치·수량 표현으로 묘사돼요. 학습자가 일상에서 가장 자주 쓰는 기초 표현을 게임적 맥락 안에서 반복 연습시킬 수 있어요.</p>
+</div>
+
+<!-- ══ BUILD ══ -->
+<div class="section" id="build">
+  <div class="section-tag">BUILD</div>
+  <div class="section-title">🤖 Step 1. AI한테 차이점 데이터를 만들어 달라고 하세요</div>
+  <p class="prose">Claude, ChatGPT, Gemini 아무거나 열고 아래 프롬프트를 그대로 붙여넣으세요.</p>
+  <a class="guide-link" href="guide-prompt.html">📐 프롬프트를 잘 쓰는 법이 궁금하다면 → 프롬프트 작성 가이드 보기</a>
+
+  <div class="sub-title">⚠️ 이 활동에서 특히 주의하세요</div>
+  <div class="caution">이미지 생성 도구로 두 그림을 따로 만들 때, <b>base_description을 공통으로 주고 차이점만 바꾸면</b> 일관된 스타일의 그림 세트가 만들어져요. 예: "현대식 거실, 밝은 조명, 따뜻한 톤" → 이 설명으로 먼저 그림 A를 만들고, 같은 설명으로 차이점을 포함해 그림 B를 만들면 톤이 맞아요.</div>
+
+  <div class="prompt-box">
+    <div class="prompt-bar">
+      <div class="prompt-bar-left">
+        <div class="prompt-dot" style="background:#ff5f57"></div>
+        <div class="prompt-dot" style="background:#febc2e"></div>
+        <div class="prompt-dot" style="background:#28c840"></div>
+        <span class="prompt-filename">prompt.txt</span>
+      </div>
+    </div>
+    <div class="prompt-body"><span class="p-section"># 역할</span>
+<span class="p-val">한국어 교육 전문가</span>
+
+<span class="p-section"># 과제</span>
+<span class="p-val">TOPIK 1~2급 학습자를 위한 틀린 그림 찾기 활동의 차이점 데이터 생성</span>
+
+<span class="p-section"># 조건</span>
+<span class="p-key">-</span> <span class="p-val">그림 세트: 2개 (거실 장면, 교실 장면)</span>
+<span class="p-key">-</span> <span class="p-val">각 세트 차이점: 5개</span>
+<span class="p-key">-</span> <span class="p-val">차이점 유형: 위치, 존재(있다/없다), 수량, 색상, 크기 변화 포함</span>
+<span class="p-key">-</span> <span class="p-val">각 차이점: 원본 상태, 변형 상태, 모범 문장, 사용 표현 포함</span>
+<span class="p-key">-</span> <span class="p-val">어휘: 초급~초중급 (TOPIK 1~2급 기본 어휘만)</span>
+
+<span class="p-section"># 출력</span>
+<span class="p-val">JSON 형식</span></div>
+  </div>
+
+  <div class="tip">역할은 그대로 두고, 과제와 조건만 바꾸면 다른 주제의 비교 활동도 만들 수 있어요. "교실/카페/부엌" 등 학습자에게 친숙한 장면으로요.</div>
+
+  <div class="sub-title">🔁 이렇게 바꿔서 응용하세요</div>
+  <p class="prose">그림 주제를 바꾸거나 난이도를 조절하려면 과제와 조건만 수정하면 돼요.</p>
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">역할</div><div class="layer-desc">그대로 두세요. 교육 전문가 역할은 어떤 시각 자료 활동에도 통해요.</div></div>
+    <div class="layer-item"><div class="layer-tag">과제</div><div class="layer-desc">차이점을 찾는 대신 "변화 표현으로 설명하기" (-았/었는데 지금은)로 바꿀 수도 있어요.</div></div>
+    <div class="layer-item"><div class="layer-tag">조건</div><div class="layer-desc">차이점을 8~10개로 늘리거나 짝 활동으로 변경하세요 (한 명은 그림만 보고 설명, 다른 학습자가 찾기).</div></div>
+    <div class="layer-item"><div class="layer-tag">출력</div><div class="layer-desc">앱으로 만들 거면 JSON, 인쇄용이면 "A4 워크시트로 정리해줘"로 바꾸세요.</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">📤 Step 2. 결과를 확인하세요</div>
+  <p class="prose">AI가 아래처럼 JSON 형식으로 차이점 데이터를 만들어 줘요. 직접 수정해서 쓸 수도 있어요. <b>파란색 키에 마우스를 올려보세요.</b></p>
+
+  <div class="prompt-box">
+    <div class="prompt-bar">
+      <div class="prompt-bar-left">
+        <div class="prompt-dot" style="background:#ff5f57"></div>
+        <div class="prompt-dot" style="background:#febc2e"></div>
+        <div class="prompt-dot" style="background:#28c840"></div>
+        <span class="prompt-filename">output.json</span>
+      </div>
+    </div>
+    <div class="json-body">
+{
+  <span class="jk" data-key="sets">"sets"</span>: [
+    {
+      <span class="jk" data-key="id">"id"</span>: <span class="jn">1</span>,
+      <span class="jk" data-key="scene">"scene"</span>: <span class="js">"거실"</span>,
+      <span class="jk" data-key="base_description">"base_description"</span>: <span class="js">"밝은 거실, 소파와 테이블이 있고, 창문으로 햇빛이 들어오는 따뜻한 장면"</span>,
+      <span class="jk" data-key="differences">"differences"</span>: [
+        {
+          <span class="jk" data-key="original">"original"</span>: <span class="js">"테이블 위에 컵이 있다"</span>,
+          <span class="jk" data-key="changed">"changed"</span>: <span class="js">"테이블 위에 컵이 없다"</span>,
+          <span class="jk" data-key="sentence">"sentence"</span>: <span class="js">"왼쪽 그림에는 컵이 있는데, 오른쪽에는 없어요."</span>,
+          <span class="jk" data-key="grammar">"grammar"</span>: <span class="js">"존재 표현 (있다/없다)"</span>
+        },
+        {
+          <span class="jk" data-key="original">"original"</span>: <span class="js">"고양이가 소파 위에 있다"</span>,
+          <span class="jk" data-key="changed">"changed"</span>: <span class="js">"고양이가 의자 위에 있다"</span>,
+          <span class="jk" data-key="sentence">"sentence"</span>: <span class="js">"왼쪽에서는 고양이가 소파 위에 있는데, 오른쪽에서는 의자 위에 있어요."</span>,
+          <span class="jk" data-key="grammar">"grammar"</span>: <span class="js">"위치 표현 (어디에 있다)"</span>
+        },
+        { <span class="jk" data-key="id">"..."</span>: <span class="js">"..."</span> }
+      ]
+    },
+    { <span class="jk" data-key="id">"..."</span>: <span class="js">"..."</span> }
+  ]
+}
+    </div>
+  </div>
+  <div class="legend">
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#10b981"></div>scene</div><span class="leg-arrow">→</span><span class="leg-desc">그림의 <b>장면 이름</b>이에요. (거실, 교실 등)</span></div>
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#3b82f6"></div>base_description</div><span class="leg-arrow">→</span><span class="leg-desc">이미지 생성 도구에 줄 <b>기본 장면 묘사</b>이에요. 두 그림이 같은 스타일로 만들어지도록 합니다.</span></div>
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#a78bfa"></div>original</div><span class="leg-arrow">→</span><span class="leg-desc">그림 A의 <b>원본 상태</b>를 설명해요.</span></div>
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#10b981"></div>changed</div><span class="leg-arrow">→</span><span class="leg-desc">그림 B의 <b>변형 상태</b>를 설명해요.</span></div>
+    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#ec4899"></div>sentence</div><span class="leg-arrow">→</span><span class="leg-desc">차이점을 묘사하는 <b>모범 문장</b>이에요. 학습자의 답을 돕는 참고 표현입니다.</span></div>
+  </div>
+
+  <div class="warn">⚠️ AI가 만든 차이점 데이터는 꼭 확인하세요. 그림과 실제로 맞는지, 모범 문장이 자연스러운지 검토해야 해요. AI는 빠르게 초안을 만들어 주는 조수고, 교육적 판단은 선생님 몫이에요.</div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">🛠 Step 3. 그림을 만들고 활동 자료를 완성하세요</div>
+  <p class="prose">JSON 데이터가 준비됐으면, 이미지 생성 도구(DALL-E, Midjourney 등)를 사용해요.</p>
+  <p class="prose"><b>Step 1: 그림 A 만들기</b><br>base_description + "사진처럼 사실적인 스타일" → 그림 A 생성</p>
+  <p class="prose"><b>Step 2: 그림 B 만들기</b><br>base_description + differences의 changed를 모두 포함 + "같은 스타일" → 그림 B 생성</p>
+  <p class="prose"><b>Step 3: 인쇄용 또는 웹 활동으로 배포</b><br>완성된 두 그림을 나란히 배치하고, 아래에 "차이점을 찾아보세요" 문제를 출력하거나 웹 인터랙티브로 만들면 돼요.</p>
+  <a class="guide-link" href="guide-media.html">🚀 이미지 생성 도구 프롬프트 작성법이 궁금하다면 → 이미지 프롬프트 가이드 보기</a>
+</div>
+
+<!-- ══ PRACTICE ══ -->
+<div class="section" id="practice">
+  <div class="section-tag">PRACTICE</div>
+  <div class="section-title">🎯 완성된 활동의 모습</div>
+  <p class="section-lead">이 활동은 웹앱 데모 대신 완성된 자료의 모습을 보여줍니다. 학습자들이 풀 때 이런 식으로 진행돼요.</p>
+
+  <div class="demo-box">
+    <div class="demo-header"><div class="demo-header-title">틀린 그림 찾기 · 거실 장면</div><div class="demo-header-sub">TOPIK 1~2급 · 두 그림 비교 · 5차이점</div></div>
+    <div class="demo-body">
+      <div class="demo-grid">
+        <div class="demo-col">
+          <div class="demo-col-title">그림 A</div>
+          <div class="demo-col-text">밝은 거실, 소파에 고양이가 앉아 있고, 테이블 위에는 꽃과 컵이 있어요. 창문으로는 밝은 햇빛이 들어와요.</div>
+        </div>
+        <div class="demo-col">
+          <div class="demo-col-title">그림 B</div>
+          <div class="demo-col-text">비슷한 거실 장면이지만, 몇 가지가 달라요. 자세히 살펴보고 차이점을 찾아 말해 보세요.</div>
+        </div>
+      </div>
+
+      <div class="diff-list">
+        <div class="diff-item" onclick="toggleAns(this)">
+          <div class="diff-num">차이점 1</div>
+          <div class="diff-q">테이블 위의 컵에 대해 뭐가 다를까요?</div>
+          <div class="diff-ans">
+            <strong>모범 문장:</strong> "왼쪽 그림에는 컵이 있는데, 오른쪽에는 없어요."<br>
+            <strong>문법:</strong> 존재 표현 (있다/없다)
+          </div>
+        </div>
+        <div class="diff-item" onclick="toggleAns(this)">
+          <div class="diff-num">차이점 2</div>
+          <div class="diff-q">고양이의 위치가 어떻게 달라요?</div>
+          <div class="diff-ans">
+            <strong>모범 문장:</strong> "왼쪽에서는 고양이가 소파 위에 있는데, 오른쪽에서는 의자 위에 있어요."<br>
+            <strong>문법:</strong> 위치 표현 (어디에 있다)
+          </div>
+        </div>
+        <div class="diff-item" onclick="toggleAns(this)">
+          <div class="diff-num">차이점 3</div>
+          <div class="diff-q">꽃의 개수가 어떻게 다를까요?</div>
+          <div class="diff-ans">
+            <strong>모범 문장:</strong> "왼쪽에는 꽃이 두 송이인데, 오른쪽에는 세 송이예요."<br>
+            <strong>문법:</strong> 수량 표현 (몇 개/몇 송이)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">학습자는 먼저 두 그림을 보고 자신의 말로 차이를 설명해 보세요. 그 다음 모범 문장을 보면서 "아, 이렇게 말하는구나"라고 배우는 거예요. 틀린 것 찾기보다는 <b>차이점을 어떻게 표현할지</b>를 배우는 활동입니다.</div>
+</div>
+
+<!-- ══ CHECK ══ -->
+<div class="section" id="check">
+  <div class="section-tag">CHECK</div>
+  <div class="section-title">✅ 이것만 확인하세요</div>
+  <ul class="check-list">
+    <li>차이점 5개가 적절한 난이도인가요?</li>
+    <li>모범 문장의 어휘가 TOPIK 1~2급 초급 수준인가요?</li>
+    <li>위치/존재/수량/색상/크기 표현이 다양하게 섞여 있나요?</li>
+    <li>각 차이점이 그림에서 명확하게 구분되나요?</li>
+    <li>모범 문장이 문법적으로 자연스러운가요?</li>
+  </ul>
+
+  <div class="section-title">🔄 이렇게 바꿔 쓸 수도 있어요</div>
+  <table class="var-table">
+    <thead><tr><th>바꾸고 싶은 것</th><th>방법</th><th>예시</th></tr></thead>
+    <tbody>
+      <tr><td>문법 초점 전환</td><td>차이점을 변화 표현으로 설명하기</td><td>"-았/었는데 지금은" (소파 위에 있었는데 지금은 의자 위에 있어요)</td></tr>
+      <tr><td>난이도 올리기</td><td>차이점을 8~10개로 늘리거나 시간 제한 추가</td><td>2분 내에 모든 차이점 찾기</td></tr>
+      <tr><td>인터랙션 추가</td><td>짝 활동: A는 그림만 보고 설명, B가 찾기</td><td>역할 교환해서 2라운드 진행</td></tr>
+      <tr><td>배포 형식 변경</td><td>인쇄 → 웹 인터랙티브 또는 슬라이드쇼</td><td>클릭하면 차이점이 표시되는 버전</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- .wrap -->
+
+<div class="tooltip" id="tt"><div class="tt-title" id="tt-title"></div><div id="tt-role"></div><div id="tt-badge"></div></div>
+
+<script>
+// JSON 툴팁
+const info = {
+  sets: {title:'"sets" — 그림 세트 목록', role:'모든 그림 세트가 이 안에 들어가요.', edit:false},
+  id: {title:'"id" — 세트 번호', role:'순서를 구분하는 번호예요.', edit:false},
+  scene: {title:'"scene" — 장면 이름', role:'거실, 교실 등 장면의 이름이에요.', edit:true},
+  base_description: {title:'"base_description" — 기본 장면 묘사', role:'이미지 생성 도구에 줄 공통 설명이에요. 두 그림의 스타일을 맞추는 데 필요해요.', edit:true},
+  differences: {title:'"differences" — 차이점 목록', role:'각 세트의 모든 차이점이 여기 들어가요.', edit:false},
+  original: {title:'"original" — 원본 상태', role:'그림 A에서 보이는 상태를 설명해요.', edit:true},
+  changed: {title:'"changed" — 변형 상태', role:'그림 B에서 보이는 상태를 설명해요.', edit:true},
+  sentence: {title:'"sentence" — 모범 문장', role:'차이점을 올바르게 표현하는 한국어 문장이에요. 학습자의 학습 목표예요.', edit:true},
+  grammar: {title:'"grammar" — 문법 표현', role:'사용되는 문법 항목을 표시해요. (존재, 위치, 수량 등)', edit:true}
+};
+const tt = document.getElementById('tt');
+function showTip(key, e) {
+  const d = info[key]; if (!d) return;
+  document.getElementById('tt-title').textContent = d.title;
+  document.getElementById('tt-role').textContent = d.role;
+  document.getElementById('tt-badge').innerHTML = d.edit ? '<span class="tt-badge badge-yes">✏️ 수정 가능</span>' : '<span class="tt-badge badge-no">수정 불필요</span>';
+  posTip(e); tt.classList.add('show');
+  document.querySelectorAll('.jk').forEach(el => el.classList.toggle('active', el.dataset.key === key));
+}
+function hideTip() { tt.classList.remove('show'); document.querySelectorAll('.jk').forEach(el => el.classList.remove('active')); }
+function posTip(e) {
+  const x = e.clientX + 16, y = e.clientY - 10, w = 220, vw = window.innerWidth, vh = window.innerHeight;
+  tt.style.left = (x + w > vw ? x - w - 32 : x) + 'px';
+  tt.style.top = (y + 160 > vh ? y - 160 : y) + 'px';
+}
+document.querySelectorAll('.jk[data-key]').forEach(el => {
+  el.addEventListener('mouseenter', e => showTip(el.dataset.key, e));
+  el.addEventListener('mousemove', e => posTip(e));
+  el.addEventListener('mouseleave', hideTip);
+});
+
+// 데모 토글
+function toggleAns(el) {
+  const ans = el.querySelector('.diff-ans');
+  ans.classList.toggle('show');
+  el.style.background = ans.classList.contains('show') ? '#ecfdf5' : '#fff';
+}
+
+// 스크롤 스파이
+const navLinks = document.querySelectorAll('#main-nav a[data-section]');
+const sections = document.querySelectorAll('.section[id]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

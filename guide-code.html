@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>코드 생성 도구 가이드 — 재료를 앱으로 조립하기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}.nav a:hover{color:#1a1a1a;}.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;}
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}.prose b{color:#1a1a1a;font-weight:500;}.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.step-list{display:flex;flex-direction:column;gap:12px;margin:1rem 0;}.step-item{padding:14px;background:#f9f9f7;border-radius:10px;}.step-num{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#185FA5;width:22px;height:22px;border-radius:50%;text-align:center;line-height:22px;margin-right:8px;}.step-label{font-size:14px;font-weight:700;color:#1a1a1a;}.step-desc{font-size:13px;color:#555;line-height:1.7;margin-top:6px;}
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;border-bottom:1px solid #30363d;}.prompt-bar-left{display:flex;align-items:center;gap:5px;}.prompt-dot{width:8px;height:8px;border-radius:50%;}.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}
+@media(max-width:640px){.wrap{padding:1rem .75rem 3rem;}.hero,.section{padding:1.25rem;border-radius:12px;}.hero-title{font-size:20px;}.nav{gap:6px;}.nav a{padding:7px 10px;font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="tag">🔧 가이드</div>
+  <h1 class="hero-title">코드 생성 도구 가이드</h1>
+  <p class="hero-desc">AI가 만든 재료(텍스트, 이미지, 음성)를 웹앱으로 조립하는 도구. 코딩을 몰라도 돼요.</p>
+  <div class="meta">
+    <span class="chip">Antigravity</span>
+    <span class="chip">바이브 코딩</span>
+    <span class="chip">코딩 지식 불필요</span>
+  </div>
+</div>
+
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#what" data-section="what">이게 뭔가요</a>
+    <a href="#setup" data-section="setup">설치·설정</a>
+    <a href="#use" data-section="use">사용법</a>
+    <a href="#tips" data-section="tips">실전 팁</a>
+  </div>
+</div>
+
+<div class="section" id="what">
+  <div class="section-tag">WHAT</div>
+  <div class="section-title">코드 생성 도구가 뭔가요?</div>
+  <p class="prose">코딩을 직접 하는 게 아니라, AI한테 <b>"이런 앱 만들어줘"</b>라고 한국어로 설명하면 AI가 코드를 짜주는 방식이에요. 이걸 '바이브 코딩'이라고 해요.</p>
+  <p class="prose">활동 페이지의 Step 3에서 "코드 생성 도구에 붙여넣고"라고 한 게 바로 이 도구예요. JSON 데이터 + 원하는 기능 설명을 넣으면 학습자가 쓸 수 있는 웹앱이 나와요.</p>
+  <p class="prose"><b>Antigravity</b>를 추천해요. Google에서 만든 도구고, 무료 플랜으로 시작할 수 있어요.</p>
+</div>
+
+<div class="section" id="setup">
+  <div class="section-tag">SETUP</div>
+  <div class="section-title">설치와 초기 설정</div>
+  <p class="section-lead">처음 한 번만 하면 돼요. 5분이면 끝나요.</p>
+
+  <div class="step-list">
+    <div class="step-item">
+      <span class="step-num">1</span><span class="step-label">다운로드</span>
+      <div class="step-desc">antigravity.google/download에서 사용 중인 운영체제(Windows/macOS)에 맞는 버전을 다운로드하고 설치하세요.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">2</span><span class="step-label">초기 설정</span>
+      <div class="step-desc"><b>Start fresh</b> 선택 → 테마 취향대로 → <b>Review-driven development</b> 모드 → <b>Normal</b> 키보드 → <b>Recommended</b> 확장 설치.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">3</span><span class="step-label">로그인</span>
+      <div class="step-desc">구글 계정으로 로그인하세요. 무료 Individual 플랜으로 시작 가능해요.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">4</span><span class="step-label">한국어팩 설치</span>
+      <div class="step-desc">왼쪽 메뉴 → 확장 기능(사각형 아이콘) → "korean" 검색 → Korean Language Pack 설치.</div>
+    </div>
+    <div class="step-item">
+      <span class="step-num">5</span><span class="step-label">작업 폴더 열기</span>
+      <div class="step-desc">바탕화면에 폴더 하나 만들고(예: "한국어수업앱"), Open Folder로 선택하세요. 앱 파일들이 여기에 저장돼요.</div>
+    </div>
+  </div>
+
+  <div class="tip"><b>Review-driven development</b>를 꼭 선택하세요. AI가 뭔가 하기 전에 "이렇게 할까요?" 하고 물어봐요. 코드를 모르는 상태에서 AI가 마음대로 파일을 바꾸면 당황스러우니까요.</div>
+</div>
+
+<div class="section" id="use">
+  <div class="section-tag">USE</div>
+  <div class="section-title">사용법</div>
+  <p class="section-lead">설치 끝나면 채팅창에 한국어로 원하는 걸 적으면 돼요.</p>
+
+  <div class="sub-title">프롬프트에 넣을 세 가지</div>
+  <p class="prose"><b>① 앱 설명</b> — 어떤 앱인지 큰 그림. "한국어 학습용 빈칸 채우기 웹앱"</p>
+  <p class="prose"><b>② 기능 명세</b> — 버튼 누르면 어떻게 되는지 구체적으로. "정답 선택 시 초록색, 오답 시 빨간색, 해설 표시"</p>
+  <p class="prose"><b>③ 데이터</b> — AI가 만들어준 JSON을 그대로 붙여넣기.</p>
+
+  <div class="prompt-box">
+    <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">예시: Antigravity 프롬프트</span></div></div>
+    <div class="prompt-body">이 데이터로 한국어 학습용 빈칸 채우기 웹앱 만들어줘.
+
+기능:
+- '에' 또는 '에서' 선택하면 즉시 정답/오답 표시
+- 문항마다 해설 표시
+- 10문항 다 풀면 점수 보여주기
+- 문항 순서 매번 랜덤
+- 모바일 반응형
+
+데이터:
+[여기에 JSON 붙여넣기]</div>
+  </div>
+
+  <div class="caution">한 번에 완벽하게 나오지 않아요. "문제 순서를 랜덤으로 해줘", "버튼 크기 좀 키워줘" 같은 수정 요청을 여러 번 하는 게 정상이에요.</div>
+</div>
+
+<div class="section" id="tips">
+  <div class="section-tag">TIPS</div>
+  <div class="section-title">실전 팁</div>
+
+  <ul class="check-list">
+    <li><b>작게 시작하세요.</b> 처음부터 기능 10개를 한꺼번에 넣지 말고, 문제 5개짜리 간단한 퀴즈부터 만든 다음 기능을 하나씩 추가하세요.</li>
+    <li><b>에러가 나도 괜찮아요.</b> 에러 메시지를 그대로 복사해서 "이런 에러가 나는데 고쳐 줘"라고 하면 알아서 고쳐줘요. 에러가 뭔 뜻인지 몰라도 돼요.</li>
+    <li><b>미리보기를 자주 확인하세요.</b> 수정할 때마다 브라우저에서 결과를 확인하고, 학생 입장에서 직접 눌러보세요.</li>
+    <li><b>모바일 테스트는 필수예요.</b> 학생들이 스마트폰으로 접속하니까, 폰에서도 잘 되는지 확인하세요.</li>
+    <li><b>완성되면 파일을 백업하세요.</b> 폴더에 생긴 HTML 파일이 곧 완성된 앱이에요. 다른 곳에도 복사해 두세요.</li>
+  </ul>
+</div>
+
+</div>
+<script>
+const navLinks=document.querySelectorAll('#main-nav a[data-section]');const sections=document.querySelectorAll('.section[id]');const observer=new IntersectionObserver(e=>{e.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>a.classList.remove('active'));const active=document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);if(active)active.classList.add('active');}});},{rootMargin:'-40% 0px -55% 0px'});sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

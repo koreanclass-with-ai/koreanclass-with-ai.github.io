@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자유 주제 발표, AI로 발표 준비 워크시트 만드는 법</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Noto Sans KR", sans-serif;
+      background-color: #f9f9f7;
+      color: #2b2b2b;
+      line-height: 1.6;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 500;
+      margin: 1.5rem 0 1rem 0;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      border-bottom: 0.5px solid #d0ccc8;
+      padding-bottom: 0.8rem;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+    }
+
+    h4 {
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0.8rem 0;
+      font-size: 1rem;
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background-color: #ffffff;
+      border-bottom: 0.5px solid #d0ccc8;
+      padding: 1rem 1.5rem;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2b2b2b;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #6b5b4f;
+    }
+
+    nav a.active {
+      color: #4a7c59;
+      border-bottom: 2px solid #4a7c59;
+      padding-bottom: 0.3rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #f9f9f7 0%, #f5f1ed 100%);
+      padding: 4rem 1.5rem;
+      text-align: center;
+      border-bottom: 0.5px solid #d0ccc8;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background-color: #e8e4df;
+      color: #6b5b4f;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      margin: 1rem 0;
+      color: #2b2b2b;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: #555;
+      max-width: 700px;
+      margin: 1.5rem auto;
+      line-height: 1.7;
+    }
+
+    .chips {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .chip {
+      background-color: #ffffff;
+      border: 0.5px solid #d0ccc8;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #555;
+      font-weight: 500;
+    }
+
+    /* Section */
+    section {
+      padding: 3rem 1.5rem;
+      border-bottom: 0.5px solid #d0ccc8;
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* Intro Box */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .intro-item {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border: 0.5px solid #d0ccc8;
+      border-radius: 6px;
+    }
+
+    .intro-item h4 {
+      margin-top: 0;
+      color: #4a7c59;
+      margin-bottom: 0.8rem;
+    }
+
+    .intro-item ul {
+      list-style-position: inside;
+      padding-left: 0;
+    }
+
+    .intro-item li {
+      margin: 0.5rem 0;
+      color: #555;
+    }
+
+    .rationale-box {
+      background-color: #ffffff;
+      border-left: 3px solid #4a7c59;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 4px;
+      border: 0.5px solid #d0ccc8;
+    }
+
+    .rationale-box h4 {
+      margin-top: 0;
+      color: #4a7c59;
+    }
+
+    /* Workflow Steps */
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .step-card {
+      background-color: #ffffff;
+      border: 0.5px solid #d0ccc8;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .step-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: #4a7c59;
+      color: #ffffff;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-card h4 {
+      margin-top: 0;
+      color: #2b2b2b;
+      margin-bottom: 1rem;
+    }
+
+    .step-card p {
+      font-size: 0.95rem;
+      color: #555;
+      margin: 0.5rem 0;
+    }
+
+    .step-details {
+      background-color: #f9f9f7;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      border: 0.5px solid #e8e4df;
+    }
+
+    /* Rubric Table */
+    .rubric-wrapper {
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+    }
+
+    table thead {
+      background-color: #4a7c59;
+      color: #ffffff;
+    }
+
+    table th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 0.5px solid #d0ccc8;
+    }
+
+    table td {
+      padding: 1rem;
+      border: 0.5px solid #d0ccc8;
+      font-size: 0.9rem;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #f9f9f7;
+    }
+
+    table tbody tr:hover {
+      background-color: #f5f1ed;
+    }
+
+    table .level-excellent {
+      background-color: #e8f5e9;
+    }
+
+    table .level-good {
+      background-color: #fff9c4;
+    }
+
+    table .level-developing {
+      background-color: #ffebee;
+    }
+
+    /* Pattern Chips */
+    .patterns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .pattern-chip {
+      background-color: #2b2b2b;
+      color: #f9f9f7;
+      padding: 1.2rem;
+      border-radius: 6px;
+      border: 0.5px solid #4a4a4a;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .pattern-chip .label {
+      font-size: 0.75rem;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .pattern-chip .text {
+      font-weight: 500;
+    }
+
+    /* JSON Box */
+    .json-box {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1.5rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      border: 0.5px solid #3e3e3e;
+      margin: 2rem 0;
+    }
+
+    .json-box pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Checklist */
+    .checklist {
+      background-color: #ffffff;
+      border: 0.5px solid #d0ccc8;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .checklist h4 {
+      margin-top: 0;
+      color: #4a7c59;
+      margin-bottom: 1rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin: 0.8rem 0;
+      padding: 0.5rem;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: #4a7c59;
+    }
+
+    .checklist-item label {
+      flex: 1;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    /* Variation Table */
+    .variation-table {
+      margin: 2rem 0;
+    }
+
+    .var-header {
+      background-color: #4a7c59;
+      color: #ffffff;
+      padding: 0.8rem 1rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .var-item {
+      background-color: #ffffff;
+      border: 0.5px solid #d0ccc8;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .var-item strong {
+      color: #4a7c59;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      nav ul {
+        gap: 1rem;
+        font-size: 0.85rem;
+      }
+
+      .hero {
+        padding: 2.5rem 1rem;
+      }
+
+      .hero-desc {
+        font-size: 1rem;
+      }
+
+      .chips {
+        gap: 0.5rem;
+      }
+
+      .chip {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+
+      .intro-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .steps-container {
+        grid-template-columns: 1fr;
+      }
+
+      .patterns-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 2rem 1rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      table th, table td {
+        padding: 0.8rem;
+      }
+
+      .rubric-wrapper {
+        margin: 1rem -1rem;
+        padding: 0 1rem;
+      }
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted #4a7c59;
+      cursor: help;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      background-color: #2b2b2b;
+      color: #f9f9f7;
+      text-align: center;
+      padding: 0.6rem 0.8rem;
+      border-radius: 4px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      font-weight: 400;
+    }
+
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #2b2b2b transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Scroll Spy */
+    .scroll-indicator {
+      position: fixed;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: #aaa;
+      z-index: 50;
+      display: none;
+    }
+
+    @media (min-width: 1200px) {
+      .scroll-indicator {
+        display: block;
+      }
+    }
+
+    /* Footer */
+    footer {
+      background-color: #ffffff;
+      border-top: 0.5px solid #d0ccc8;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="navbar">
+    <ul>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('hero')" class="nav-link">홈</a></li>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('intro')" class="nav-link">활동 정보</a></li>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('design')" class="nav-link">설계 근거</a></li>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('build')" class="nav-link">프롬프트 & JSON</a></li>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('practice')" class="nav-link">실습 자료</a></li>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('check')" class="nav-link">체크리스트</a></li>
+      <li><a href="javascript:void(0)" onclick="scrollTo_('var')" class="nav-link">변형 방안</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="container">
+      <span class="hero-tag">❹ 과제 기반 · 프로젝트</span>
+      <h1>자유 주제 발표, AI로 발표 준비 워크시트 만드는 법</h1>
+      <p class="hero-desc">프롬프트로 발표 준비 워크시트와 평가 루브릭을 만드는 과정을 안내해요. 학습자가 관심 있는 주제를 선택해서 준비하고 발표하는 통합 활동입니다.</p>
+      <div class="chips">
+        <span class="chip">TOPIK 3~5급 · 중급~고급</span>
+        <span class="chip">준비 30분 + 발표 3분</span>
+        <span class="chip">개인 또는 2인</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Introduction -->
+  <section id="intro" class="container">
+    <h2>활동 정보</h2>
+    <div class="intro-grid">
+      <div class="intro-item">
+        <h4>기본 개요</h4>
+        <ul>
+          <li><strong>활동 유형:</strong> 프로젝트 (발표)</li>
+          <li><strong>범주:</strong> ❹ 과제 기반</li>
+          <li><strong>대상:</strong> 중급~고급 (TOPIK 3~5급)</li>
+          <li><strong>언어 기능:</strong> 읽기 · 쓰기 · 말하기 · 듣기</li>
+        </ul>
+      </div>
+      <div class="intro-item">
+        <h4>시간 & 규모</h4>
+        <ul>
+          <li><strong>규모:</strong> 개인 또는 2인</li>
+          <li><strong>준비:</strong> 30분</li>
+          <li><strong>발표:</strong> 3분 + 질의응답</li>
+          <li><strong>배포:</strong> 워크시트 + 루브릭</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>목표</h3>
+    <p>학습자가 관심 있는 주제를 조사하고, 발표 자료를 준비해서 3분 발표를 진행합니다. 조사(읽기) → 정리(쓰기) → 발표(말하기) → 질의응답(듣기+말하기)의 과정 속에서 네 기능이 자연스럽게 통합돼요.</p>
+  </section>
+
+  <!-- Design Rationale -->
+  <section id="design" class="container">
+    <h2>설계 근거</h2>
+
+    <div class="rationale-box">
+      <h4>왜 '자유 주제'인가?</h4>
+      <p>학습자가 관심 있는 주제를 직접 선택하면 동기가 높아져요. "한국의 계절에 대해 발표하세요"보다 "관심 있는 주제를 골라 발표하세요"가 학습자의 투자를 더 이끌어내거든요. 자기 관심사를 한국어로 표현하는 경험은 "이 언어로 내가 하고 싶은 말을 할 수 있구나"라는 성취감을 줘요.</p>
+    </div>
+
+    <div class="rationale-box">
+      <h4>왜 '워크시트'인가?</h4>
+      <p>발표는 조사(읽기) → 정리(쓰기) → 발표(말하기) → 질의응답(듣기+말하기)의 과정을 거지면서 네 기능이 자연스럽게 통합되잖아요. 단계별 워크시트를 제공하면 학습자가 "무엇을 어떤 순서로 준비해야 하는지"를 명확하게 인식해요. 막연함을 제거하고 단계적으로 나아가니까요.</p>
+    </div>
+
+    <div class="rationale-box">
+      <h4>왜 'AI 워크시트 만들기'인가?</h4>
+      <p>교사가 미리 워크시트를 만드는 것도 좋지만, 학습자가 직접 프롬프트를 활용해서 자신의 발표 주제에 맞는 워크시트를 만들어보는 경험도 중요해요. 이 과정 자체가 "한국어로 설명하기 · 요청하기"라는 쓰기 연습이 되니까요. 또한 자신이 만든 자료일수록 더 성실하게 활용하게 되는 것도 있고요.</p>
+    </div>
+  </section>
+
+  <!-- Build: Prompt & JSON -->
+  <section id="build" class="container">
+    <h2>프롬프트 & 빌드</h2>
+
+    <h3>AI 프롬프트 (예시)</h3>
+    <div class="json-box">
+      <pre>다음 정보에 맞게 발표 준비 워크시트를 만들어 줄래?
+
+발표 주제: [내 주제를 여기 입력]
+난이도: TOPIK 3~5급 (중급~고급)
+발표 시간: 3분
+필요한 것:
+1. 5단계 워크시트 (주제 선택 → 조사 → 구조 → 슬라이드 계획 → 연습)
+2. 각 단계별 질문 가이드
+3. 발표 평가 루브릭 (4차원 × 3수준)
+4. 도입-본론-결론에 쓸 수 있는 핵심 문형
+
+워크시트는 한국어로, 학습자가 직접 채울 수 있게 명확하게 만들어 줘. 루브릭도 마찬가지로 구체적으로.</pre>
+    </div>
+
+    <h3>JSON 구조 예시</h3>
+    <div class="json-box">
+      <pre>{
+  "worksheet": {
+    "step1_topic": {
+      "title": "① 주제 선택",
+      "description": "관심 있는 주제를 찾아요",
+      "questions": [
+        "내가 가장 관심 있는 주제 3개를 생각해 봐요",
+        "그 중에서 가장 하고 싶은 발표 주제 1개를 정해요",
+        "그 주제를 정한 이유는 뭐야?"
+      ]
+    },
+    "step2_research": {
+      "title": "② 조사",
+      "description": "주제에 대한 핵심 내용을 찾아요",
+      "questions": [
+        "내 주제의 핵심 내용 3가지는 뭐야?",
+        "각 내용의 출처는 어디야? (책, 웹사이트, 영상 등)",
+        "3분 안에 설명할 수 있게 정리해 봐"
+      ]
+    },
+    "step3_structure": {
+      "title": "③ 구조 잡기",
+      "description": "발표의 흐름을 정해요",
+      "questions": [
+        "도입: 어떻게 시작할 거야? (인사 + 주제 소개)",
+        "본론: 조사한 내용 3가지를 어떤 순서로 말할 거야?",
+        "결론: 어떻게 마무리할 거야?"
+      ]
+    },
+    "step4_slides": {
+      "title": "④ 슬라이드 계획",
+      "description": "슬라이드나 자료를 준비해요",
+      "questions": [
+        "몇 장의 슬라이드가 필요해? (3~5장 추천)",
+        "각 슬라이드의 제목과 키워드는?",
+        "그림이나 표는? 어디에 넣을 거야?"
+      ]
+    },
+    "step5_practice": {
+      "title": "⑤ 연습",
+      "description": "발표를 연습해요",
+      "questions": [
+        "실제로 말해 보니 시간이 맞아?",
+        "어려운 발음은 없어?",
+        "다시 한 번 연습해 봐"
+      ]
+    }
+  },
+  "rubric": {
+    "dimensions": [
+      "내용 (주제의 정확성과 깊이)",
+      "구성 (도입-본론-결론의 논리성)",
+      "언어 사용 (발음, 문법, 어휘)",
+      "전달력 (청중과의 상호작용, 목소리, 속도)"
+    ],
+    "levels": {
+      "excellent": {
+        "내용": "주제를 정확하게 이해하고 있으며, 핵심 내용이 명확하고 깊이 있음",
+        "구성": "도입-본론-결론이 명확하고 흐름이 자연스러움",
+        "언어 사용": "발음이 정확하고, 문법이 올바르며, 어휘가 적절함",
+        "전달력": "청중과 눈맞춤을 하고, 목소리가 명확하며, 속도가 적절함"
+      },
+      "good": {
+        "내용": "주제를 대체로 이해하고 있으며, 핵심 내용이 있음",
+        "구성": "도입-본론-결론의 구조가 있으나 일부 흐름이 어색할 수 있음",
+        "언어 사용": "대체로 정확한 발음과 문법이나 약간의 오류가 있을 수 있음",
+        "전달력": "대체로 명확하게 전달하나 일부 속도 조절이 필요할 수 있음"
+      },
+      "developing": {
+        "내용": "주제의 이해가 부족하거나 내용이 불명확함",
+        "구성": "도입-본론-결론의 구조가 명확하지 않거나 흐름이 끊김",
+        "언어 사용": "발음이나 문법에 오류가 있어 이해에 방해가 될 수 있음",
+        "전달력": "발표 전달이 명확하지 않거나 속도가 너무 빠르거나 느림"
+      }
+    }
+  },
+  "key_patterns": [
+    "오늘 ~에 대해 발표하겠습니다",
+    "먼저, ~입니다",
+    "다음으로, ~입니다",
+    "마지막으로, ~입니다",
+    "이상으로 발표를 마치겠습니다"
+  ]
+}</pre>
+    </div>
+  </section>
+
+  <!-- Practice Materials -->
+  <section id="practice" class="container">
+    <h2>실습 자료</h2>
+
+    <h3>5단계 워크시트</h3>
+    <p>각 단계를 카드로 시각화했어요. 학습자가 단계적으로 따라할 수 있게 구성돼 있어요.</p>
+
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-number">①</div>
+        <h4>주제 선택</h4>
+        <p>관심 있는 주제를 찾아요</p>
+        <div class="step-details">
+          <strong>해야 할 일:</strong>
+          <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+            <li>관심 주제 3개 생각해 보기</li>
+            <li>가장 하고 싶은 주제 1개 선택</li>
+            <li>선택 이유 메모하기</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">②</div>
+        <h4>조사</h4>
+        <p>핵심 내용과 출처를 찾아요</p>
+        <div class="step-details">
+          <strong>해야 할 일:</strong>
+          <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+            <li>핵심 내용 3가지 찾기</li>
+            <li>각 내용의 출처 기록</li>
+            <li>3분 안에 설명할 분량 확인</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">③</div>
+        <h4>구조 잡기</h4>
+        <p>도입-본론-결론 프레임을 만들어요</p>
+        <div class="step-details">
+          <strong>해야 할 일:</strong>
+          <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+            <li>도입: 인사 + 주제 소개</li>
+            <li>본론: 3가지 내용 순서 정하기</li>
+            <li>결론: 마무리 준비하기</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">④</div>
+        <h4>슬라이드 계획</h4>
+        <p>3~5장의 슬라이드를 설계해요</p>
+        <div class="step-details">
+          <strong>해야 할 일:</strong>
+          <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+            <li>슬라이드 장수 결정 (3~5장)</li>
+            <li>각 슬라이드 제목 정하기</li>
+            <li>키워드와 이미지 계획</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">⑤</div>
+        <h4>연습</h4>
+        <p>발표를 여러 번 연습해요</p>
+        <div class="step-details">
+          <strong>해야 할 일:</strong>
+          <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+            <li>시간 체크 (3분 내)</li>
+            <li>발음 점검</li>
+            <li>자신감 있게 말하기 연습</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>평가 루브릭 (4차원 × 3수준)</h3>
+    <p>학습자와 교사가 함께 사용할 수 있는 평가 기준이에요. 구체적이고 명확해서 자가 평가나 동료 평가에도 활용할 수 있어요.</p>
+
+    <div class="rubric-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%;">평가 항목</th>
+            <th style="width: 27%;">우수 (3점)</th>
+            <th style="width: 27%;">좋음 (2점)</th>
+            <th style="width: 26%;">보완 필요 (1점)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>내용</strong> (주제의 정확성과 깊이)</td>
+            <td class="level-excellent">주제를 정확하게 이해하고 있으며, 핵심 내용이 명확하고 깊이 있음</td>
+            <td class="level-good">주제를 대체로 이해하고 있으며, 핵심 내용이 있음</td>
+            <td class="level-developing">주제의 이해가 부족하거나 내용이 불명확함</td>
+          </tr>
+          <tr>
+            <td><strong>구성</strong> (도입-본론-결론의 논리성)</td>
+            <td class="level-excellent">도입-본론-결론이 명확하고 흐름이 자연스러움</td>
+            <td class="level-good">도입-본론-결론의 구조가 있으나 일부 흐름이 어색할 수 있음</td>
+            <td class="level-developing">도입-본론-결론의 구조가 명확하지 않거나 흐름이 끊김</td>
+          </tr>
+          <tr>
+            <td><strong>언어 사용</strong> (발음, 문법, 어휘)</td>
+            <td class="level-excellent">발음이 정확하고, 문법이 올바르며, 어휘가 적절함</td>
+            <td class="level-good">대체로 정확한 발음과 문법이나 약간의 오류가 있을 수 있음</td>
+            <td class="level-developing">발음이나 문법에 오류가 있어 이해에 방해가 될 수 있음</td>
+          </tr>
+          <tr>
+            <td><strong>전달력</strong> (청중과의 상호작용, 속도)</td>
+            <td class="level-excellent">청중과 눈맞춤을 하고, 목소리가 명확하며, 속도가 적절함</td>
+            <td class="level-good">대체로 명확하게 전달하나 일부 속도 조절이 필요할 수 있음</td>
+            <td class="level-developing">발표 전달이 명확하지 않거나 속도가 너무 빠르거나 느림</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>핵심 문형</h3>
+    <p>발표 각 단계에서 사용할 수 있는 유용한 문형들이에요. 학습자가 자신의 발표에 맞게 응용해서 사용하면 돼요.</p>
+
+    <div class="patterns-grid">
+      <div class="pattern-chip">
+        <div class="label">도입</div>
+        <div class="text">오늘 ~에 대해 발표하겠습니다</div>
+      </div>
+      <div class="pattern-chip">
+        <div class="label">본론 시작</div>
+        <div class="text">먼저 ~입니다</div>
+      </div>
+      <div class="pattern-chip">
+        <div class="label">본론 중간</div>
+        <div class="text">다음으로 ~입니다</div>
+      </div>
+      <div class="pattern-chip">
+        <div class="label">본론 마무리</div>
+        <div class="text">마지막으로 ~입니다</div>
+      </div>
+      <div class="pattern-chip">
+        <div class="label">결론</div>
+        <div class="text">이상으로 발표를 마치겠습니다</div>
+      </div>
+      <div class="pattern-chip">
+        <div class="label">질의응답</div>
+        <div class="text">질문이 있으시면 말씀해 주세요</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Checklist -->
+  <section id="check" class="container">
+    <h2>체크리스트</h2>
+    <p>이 활동을 설계할 때 확인해야 할 사항들이에요. 각 항목을 체크해 보세요.</p>
+
+    <div class="checklist">
+      <h4>워크시트 설계</h4>
+      <div class="checklist-item">
+        <input type="checkbox" id="check1">
+        <label for="check1">5단계 워크시트가 논리적으로 연결되어 있는가? (①→②→③→④→⑤)</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check2">
+        <label for="check2">각 단계가 학습자가 직접 채울 수 있도록 명확한 질문으로 구성되어 있는가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check3">
+        <label for="check3">단계별 예시나 샘플이 제공되는가?</label>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h4>루브릭 설계</h4>
+      <div class="checklist-item">
+        <input type="checkbox" id="check4">
+        <label for="check4">4개 차원 (내용, 구성, 언어, 전달력)이 모두 명확한가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check5">
+        <label for="check5">3개 수준 (우수, 좋음, 보완 필요)의 차이가 구체적으로 드러나는가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check6">
+        <label for="check6">루브릭을 학습자가 자가 평가할 수 있을 정도로 명확한가?</label>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h4>핵심 문형 & 구조</h4>
+      <div class="checklist-item">
+        <input type="checkbox" id="check7">
+        <label for="check7">제시된 문형들이 도입-본론-결론 과정을 모두 포함하는가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check8">
+        <label for="check8">학습자가 문형을 응용해서 자신의 발표에 맞게 사용할 수 있을 정도로 단순한가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check9">
+        <label for="check9">문형이 TOPIK 3~5급 수준에 적절한가?</label>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h4>전체 활동</h4>
+      <div class="checklist-item">
+        <input type="checkbox" id="check10">
+        <label for="check10">30분 준비 + 3분 발표의 시간 배분이 현실적인가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check11">
+        <label for="check11">개인과 2인 모두에게 적용할 수 있게 설계되어 있는가?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check12">
+        <label for="check12">학습자가 '자유 주제'라는 조건 하에서도 의욕 있게 참여할 것 같은가?</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Variations -->
+  <section id="var" class="container">
+    <h2>변형 방안</h2>
+    <p>기본 설계를 바탕으로 필요에 따라 조정할 수 있는 여러 방안들이에요. 교실의 상황과 학습자의 수준에 맞게 선택해서 사용하세요.</p>
+
+    <div class="variation-table">
+      <div class="var-header">난이도 조정</div>
+      <div class="var-item">
+        <strong>낮추기:</strong> 주제 목록에서 선택하게 하기. 예: "한국 음식, 한국 영화, 한국 축제, 한국 스포츠" 중에서 고르세요.
+      </div>
+      <div class="var-item">
+        <strong>높이기:</strong> 발표 시간을 5분으로 늘리고 질의응답 시간을 2~3분 추가. 더 깊이 있는 조사와 상호작용이 가능해져요.
+      </div>
+    </div>
+
+    <div class="variation-table">
+      <div class="var-header">형태 변형</div>
+      <div class="var-item">
+        <strong>현장 발표 (기본):</strong> 학습자가 직접 앞에 나와서 발표하고 피드백 받기.
+      </div>
+      <div class="var-item">
+        <strong>영상 제작:</strong> 발표를 영상으로 촬영해서 제출. 재촬영이 가능하고, 반복 연습에 도움이 돼요.
+      </div>
+      <div class="var-item">
+        <strong>팟캐스트 스타일:</strong> 오디오만 녹음해서 제출. 시각 자료 없이 목소리만으로 전달하는 연습이 가능해요.
+      </div>
+    </div>
+
+    <div class="variation-table">
+      <div class="var-header">평가 방식 변형</div>
+      <div class="var-item">
+        <strong>교사 평가:</strong> 교사가 루브릭으로 평가하고 피드백 제공 (기본).
+      </div>
+      <div class="var-item">
+        <strong>동료 평가:</strong> 학습자들이 서로의 발표를 루브릭으로 평가. 비판적 듣기 능력을 기르고, 다양한 발표를 접할 수 있어요.
+      </div>
+      <div class="var-item">
+        <strong>자가 평가:</strong> 학습자가 자신의 발표를 루브릭으로 평가하고 반성하기. 메타인지 능력을 높여요.
+      </div>
+    </div>
+
+    <div class="variation-table">
+      <div class="var-header">그룹 활동 변형</div>
+      <div class="var-item">
+        <strong>같은 주제 모둠:</strong> 같은 주제에 관심 있는 학습자들이 모둠을 이루고, 각자 다른 부분을 조사한 뒤 함께 발표.
+      </div>
+      <div class="var-item">
+        <strong>다양한 주제 공유:</strong> 각자 다른 주제를 발표한 후, 전체가 한 개의 큰 컨퍼런스처럼 경험. 다양한 주제와 표현을 배울 수 있어요.
+      </div>
+    </div>
+
+    <div class="variation-table">
+      <div class="var-header">피드백 방식 변형</div>
+      <div class="var-item">
+        <strong>즉시 피드백:</strong> 발표 직후 교사와 동료로부터 바로 피드백 받기. 긍정적인 피드백과 개선점을 함께 듣기.
+      </div>
+      <div class="var-item">
+        <strong>서면 피드백:</strong> 동료가 루브릭과 함께 자유 의견도 적어서 제출. 더 깊이 있고 성찰적인 피드백이 가능해요.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>한국어 교육 활동 설계 · 이 자료는 교실과 온라인 환경에서 자유롭게 사용할 수 있습니다.</p>
+  </footer>
+
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator" id="scrollIndicator">
+    <span id="currentSection">홈</span>
+  </div>
+
+  <script>
+    // Scroll to function
+    function scrollTo_(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Scroll Spy
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    const currentSectionSpan = document.getElementById('currentSection');
+
+    function updateActiveLink() {
+      let currentSection = 'hero';
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach((link) => {
+        link.classList.remove('active');
+      });
+
+      const activeLink = document.querySelector(`.nav-link[onclick*="${currentSection}"]`);
+      if (activeLink) {
+        activeLink.classList.add('active');
+      }
+
+      // Update scroll indicator
+      const sectionNames = {
+        'hero': '홈',
+        'intro': '활동 정보',
+        'design': '설계 근거',
+        'build': '프롬프트 & JSON',
+        'practice': '실습 자료',
+        'check': '체크리스트',
+        'var': '변형 방안'
+      };
+      currentSectionSpan.textContent = sectionNames[currentSection] || '홈';
+    }
+
+    window.addEventListener('scroll', updateActiveLink);
+    updateActiveLink();
+
+    // Tooltip functionality
+    document.querySelectorAll('.tooltip').forEach((tooltip) => {
+      tooltip.addEventListener('mouseenter', function() {
+        this.querySelector('.tooltiptext').style.visibility = 'visible';
+      });
+      tooltip.addEventListener('mouseleave', function() {
+        this.querySelector('.tooltiptext').style.visibility = 'hidden';
+      });
+    });
+
+    // Checkbox state persistence (localStorage)
+    const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      const checkboxId = checkbox.id;
+      const savedState = localStorage.getItem(checkboxId);
+      if (savedState === 'true') {
+        checkbox.checked = true;
+      }
+
+      checkbox.addEventListener('change', () => {
+        localStorage.setItem(checkboxId, checkbox.checked);
+      });
+    });
+
+    // Mobile menu behavior
+    if (window.innerWidth <= 640) {
+      navLinks.forEach((link) => {
+        link.addEventListener('click', function() {
+          // Smooth transition already handled by scrollTo_
+        });
+      });
+    }
+  </script>
+</body>
+</html>

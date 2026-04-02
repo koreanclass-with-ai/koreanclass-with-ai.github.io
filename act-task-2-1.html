@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 계획 세우기 - AI로 조건 속 의사결정 과제 만드는 법</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-light: #f9f9f7;
+            --text-dark: #1a1a1a;
+            --text-muted: #666;
+            --border-color: #d0d0cc;
+            --accent-blue: #2563eb;
+            --accent-orange: #f97316;
+            --accent-brown: #92400e;
+            --accent-green: #15803d;
+            --code-bg: #2d2d2d;
+            --code-text: #e8e8e8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 0.5px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            padding: 0.25rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        nav a.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 3rem 1.5rem;
+            background: white;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: #f0f0ed;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .hero-tag .icon {
+            margin-right: 0.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .hero-chips {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: #f0f0ed;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border: 0.5px solid var(--border-color);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 3rem 0;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        section h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin: 1.5rem 0 1rem;
+            color: var(--text-dark);
+        }
+
+        p, li {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: white;
+            border-left: 3px solid var(--accent-blue);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            border: 0.5px solid var(--border-color);
+            border-left-width: 3px;
+        }
+
+        .info-box strong {
+            font-weight: 500;
+        }
+
+        /* Code/JSON Box */
+        .code-box, .json-box, .prompt-box {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 0.5px solid #444;
+            position: relative;
+        }
+
+        .code-label, .json-label, .prompt-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0.8rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        /* Tooltip */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: var(--text-dark);
+            color: white;
+            text-align: left;
+            border-radius: 4px;
+            padding: 0.8rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            width: 200px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            border: 0.5px solid #444;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-dark) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Destination Cards */
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .destination-card {
+            background: white;
+            border: 0.5px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .destination-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .destination-header {
+            padding: 1.5rem;
+            border-bottom: 3px solid;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .destination-header.jeju {
+            background-color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .destination-header.busan {
+            background-color: var(--accent-orange);
+            border-bottom-color: var(--accent-orange);
+        }
+
+        .destination-header.gyeongju {
+            background-color: var(--accent-brown);
+            border-bottom-color: var(--accent-brown);
+        }
+
+        .destination-header.gangneung {
+            background-color: var(--accent-green);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .destination-content {
+            padding: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .destination-content p {
+            margin-bottom: 0.8rem;
+        }
+
+        .destination-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .destination-value {
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+        }
+
+        /* Role Cards */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .role-card {
+            background: white;
+            border: 0.5px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .role-letter {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            line-height: 50px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .role-name {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+
+        .role-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Plan Table */
+        .plan-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 0.5px solid var(--border-color);
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        .plan-table th, .plan-table td {
+            border: 0.5px solid var(--border-color);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .plan-table th {
+            background: #f0f0ed;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .plan-table td {
+            height: 60px;
+            vertical-align: top;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            border: 0.5px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 1rem;
+            margin-top: 0.3rem;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* List Styles */
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.6rem;
+        }
+
+        /* Variations Table */
+        .variations-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 0.5px solid var(--border-color);
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .variations-table th {
+            background: #f0f0ed;
+            border: 0.5px solid var(--border-color);
+            padding: 1rem;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .variations-table td {
+            border: 0.5px solid var(--border-color);
+            padding: 1rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-chips {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .chip {
+                width: 100%;
+            }
+
+            .destinations-grid, .roles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-table {
+                font-size: 0.85rem;
+            }
+
+            .plan-table th, .plan-table td {
+                padding: 0.6rem;
+            }
+
+            .plan-table td {
+                height: 50px;
+            }
+
+            section h2 {
+                font-size: 1.4rem;
+            }
+
+            section h3 {
+                font-size: 1.1rem;
+            }
+
+            .tooltip {
+                width: 150px;
+                margin-left: -75px;
+            }
+        }
+
+        /* Scroll Spy Active State */
+        .scroll-spy {
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .scroll-spy.active {
+            opacity: 1;
+        }
+
+        /* Strong/Bold */
+        strong {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('intro')" class="nav-link scroll-spy active">소개</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('design')" class="nav-link scroll-spy">설계 근거</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('build')" class="nav-link scroll-spy">과제 만들기</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('practice')" class="nav-link scroll-spy">실제 자료</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('check')" class="nav-link scroll-spy">점검 목록</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('variations')" class="nav-link scroll-spy">변형 아이디어</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-tag"><span class="icon">❹</span>과제 기반 · 문제 해결</span>
+            <h1>여행 계획 세우기</h1>
+            <p class="hero-desc">AI로 조건 속 의사결정 과제 만드는 법</p>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">프롬프트로 여행 계획 과제 자료를 만드는 과정을 안내해요.</p>
+            <div class="hero-chips">
+                <span class="chip">TOPIK 3~4급 · 중급</span>
+                <span class="chip">제작 시간 30~40분</span>
+                <span class="chip">모둠 3~4명</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Intro Section -->
+        <section id="intro">
+            <h2>활동 개요</h2>
+
+            <div class="info-box">
+                <strong>활동 유형:</strong> 문제 해결 (계획 수립)<br>
+                <strong>범주:</strong> ❹ 과제 기반<br>
+                <strong>대상:</strong> 중급 (TOPIK 3~4급)<br>
+                <strong>목표:</strong> 예산·일정·선호도를 고려하여 2박 3일 여행 계획 수립<br>
+                <strong>언어 기능:</strong> 말하기 · 읽기 · 쓰기<br>
+                <strong>규모:</strong> 모둠 3~4명 / 30~40분<br>
+                <strong>배포:</strong> 정보 카드 세트 + 계획표 양식
+            </div>
+
+            <p>여행 계획 세우기는 학습자에게 친숙하면서도 의사결정이 필요한 과제예요. 장소, 교통, 숙소, 음식, 예산을 동시에 고려해야 하니까, 자연스럽게 제안·비교·협상 표현이 사용돼요.</p>
+        </section>
+
+        <!-- Design Rationale Section -->
+        <section id="design">
+            <h2>설계 근거</h2>
+
+            <h3>왜 여행 계획인가?</h3>
+            <p>예산 50만 원, 2박 3일, 모둠원의 서로 다른 선호도라는 제약이 있어서 "정답"이 하나가 아니에요. 모둠원이 각자의 의견을 조율하여 합의에 도달하는 과정 자체가 과제이고, 이 과정에서 통합적 의사소통이 일어나거든요.</p>
+
+            <h3>선호도 갈등이 핵심</h3>
+            <p>4명의 선호도가 서로 다른 게 중요해요. 예를 들어:</p>
+            <ul>
+                <li><strong>A (바다 선호):</strong> 제주도를 원함</li>
+                <li><strong>B (역사 선호):</strong> 경주를 원함</li>
+                <li><strong>C (음식 선호):</strong> 부산을 원함</li>
+                <li><strong>D (예산 중심):</strong> 강릉을 원함</li>
+            </ul>
+            <p>이 갈등 구조가 토론을 유발하고, 자연스럽게 제안·비교·협상 표현이 나와요.</p>
+
+            <h3>예산 내 실현 가능성</h3>
+            <p>모든 여행지의 교통비·숙박료·음식비를 현실적으로 설정했어요. 학습자들이 계산하고 비교할 때 실제로 가능한 선택지들이 나와서, 과제가 의미 있게 느껴져요.</p>
+        </section>
+
+        <!-- Build Section -->
+        <section id="build">
+            <h2>과제 만들기</h2>
+
+            <h3>프롬프트로 생성할 항목</h3>
+            <p>아래 항목들을 AI(예: ChatGPT, Claude)에 프롬프트로 요청하면 쉽게 만들 수 있어요:</p>
+
+            <div class="info-box">
+                <strong>1. 여행지 정보</strong> (4곳: 제주도, 부산, 경주, 강릉)<br>
+                각 여행지당: 특징, 교통비, 숙소 2종(가격 포함), 관광지 3곳, 음식 2가지, 예상 총 비용<br><br>
+                <strong>2. 모둠원 역할 카드</strong> (4장)<br>
+                A(바다), B(역사), C(음식), D(예산) — 각각 선호도와 태도 설정<br><br>
+                <strong>3. 계획표 양식</strong><br>
+                3일 × 시간대 테이블 (아침·낮·저녁·밤)
+            </div>
+
+            <h3>프롬프트 예시</h3>
+
+            <div class="prompt-box">
+                <span class="prompt-label">프롬프트</span>
+                <pre>한국 여행지 4곳(제주도, 부산, 경주, 강릉)을 대상으로 중급(TOPIK 3~4급) 학습자용 여행 계획 과제를 만들어줘.
+
+[요구사항]
+1. 각 여행지마다:
+   - 특징 (1줄)
+   - 서울에서 교통비 (왕복, 기차·버스·비행기 포함)
+   - 숙소 2종 (저가/중가, 가격 포함)
+   - 관광지 3곳 (이름, 설명)
+   - 음식 2가지 (이름, 설명, 예상 비용)
+   - 전체 예상 비용 (1박 2일 기준)
+
+2. 모둠원 역할카드 4장:
+   - A: 바다(해변 관광 선호)
+   - B: 역사(문화유산 선호)
+   - C: 음식(맛있는 음식 중심)
+   - D: 예산(가성비 최우선)
+
+3. 제약조건:
+   - 총 예산: 50만 원 (모둠 전체, 4명)
+   - 기간: 2박 3일
+   - 인원: 4명
+   - 모든 가격은 2024년 기준 실제 가격
+
+출력: JSON 형식으로 주세요.</pre>
+            </div>
+
+            <h3>생성되는 JSON 구조</h3>
+
+            <div class="json-box">
+                <span class="json-label">JSON 응답 예시 (구조)</span>
+                <pre>{
+  "destinations": [
+    {
+      "name": "제주도",
+      "features": "화산 풍경, 검은 모래 해변",
+      "transport": "비행기 왕복 18만원 (항공사별 다름)",
+      "accommodations": [
+        {"type": "게스트하우스", "price": "5만원/박"},
+        {"type": "리조트", "price": "15만원/박"}
+      ],
+      "attractions": [
+        {"name": "한라산", "desc": "...", "time": "3시간"},
+        {"name": "천지연 폭포", "desc": "...", "time": "1시간"},
+        {"name": "성산일출봉", "desc": "...", "time": "1시간 30분"}
+      ],
+      "foods": [
+        {"name": "흑돼지 구이", "price": "2.5만원/인"},
+        {"name": "전복죽", "price": "1.5만원/인"}
+      ],
+      "estimated_cost": "45만원 (저가 숙소 기준)"
+    },
+    ...
+  ],
+  "role_cards": [
+    {
+      "letter": "A",
+      "name": "바다 마니아",
+      "description": "해변, 수상 스포츠, 풍경에 관심 있음. 제주도 강력 추천"
+    },
+    ...
+  ],
+  "plan_template": {
+    "days": 3,
+    "time_slots": ["아침 6~9시", "오전 9~12시", "낮 12~15시", "오후 15~18시", "저녁 18~21시", "밤 21시~"]
+  }
+}</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>팁:</strong> 프롬프트에서 명시적으로 JSON 형식을 요청하면, AI가 구조화된 데이터를 줍니다. 이를 Google Sheets나 Excel에 붙여 넣고 서식을 맞추면 학습 자료가 완성돼요.
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice">
+            <h2>실제 자료 예시</h2>
+
+            <h3>1. 여행지 정보 카드</h3>
+            <p>아래는 4개 여행지의 구체적 정보예요. 각 카드는 선택과 비교를 돕는 핵심 정보만 담았어요.</p>
+
+            <div class="destinations-grid">
+                <div class="destination-card">
+                    <div class="destination-header jeju">제주도</div>
+                    <div class="destination-content">
+                        <p><strong>특징:</strong> 화산 풍경, 검은 모래 해변, 독특한 자연</p>
+
+                        <div class="destination-label">🚌 교통 (왕복)</div>
+                        <div class="destination-value">비행기: 18~25만원 / 카페리: 12만원</div>
+
+                        <div class="destination-label">🏨 숙소</div>
+                        <div class="destination-value">게스트하우스: 5만원/박<br>리조트: 15만원/박</div>
+
+                        <div class="destination-label">🎯 관광지</div>
+                        <div class="destination-value">
+                            • 성산일출봉 (일출 명소)<br>
+                            • 한라산 (등산)<br>
+                            • 천지연 폭포 (자연 풍경)
+                        </div>
+
+                        <div class="destination-label">🍜 음식</div>
+                        <div class="destination-value">
+                            • 흑돼지 구이: 2.5만원/인<br>
+                            • 전복죽: 1.5만원/인
+                        </div>
+
+                        <div class="destination-label">💰 총비용</div>
+                        <div class="destination-value"><strong>약 50만원</strong> (2박3일 4명, 저가 기준)</div>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-header busan">부산</div>
+                    <div class="destination-content">
+                        <p><strong>특징:</strong> 해양도시, 해산물 맛집, 야경</p>
+
+                        <div class="destination-label">🚌 교통 (왕복)</div>
+                        <div class="destination-value">기차: 8~10만원 / 버스: 4~6만원</div>
+
+                        <div class="destination-label">🏨 숙소</div>
+                        <div class="destination-value">게스트하우스: 4.5만원/박<br>호텔: 12만원/박</div>
+
+                        <div class="destination-label">🎯 관광지</div>
+                        <div class="destination-value">
+                            • 해운대 해변 (해수욕)<br>
+                            • 이기대 (트래킹)<br>
+                            • 용두산 타워 (야경)
+                        </div>
+
+                        <div class="destination-label">🍜 음식</div>
+                        <div class="destination-value">
+                            • 회 정식: 3만원/인<br>
+                            • 밀면: 1만원/인
+                        </div>
+
+                        <div class="destination-label">💰 총비용</div>
+                        <div class="destination-value"><strong>약 48만원</strong> (2박3일 4명, 저가 기준)</div>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-header gyeongju">경주</div>
+                    <div class="destination-content">
+                        <p><strong>특징:</strong> 역사 문화유산, 불국사, 석굴암</p>
+
+                        <div class="destination-label">🚌 교통 (왕복)</div>
+                        <div class="destination-value">기차: 10~12만원 / 버스: 6~8만원</div>
+
+                        <div class="destination-label">🏨 숙소</div>
+                        <div class="destination-value">게스트하우스: 4만원/박<br>펜션: 10만원/박</div>
+
+                        <div class="destination-label">🎯 관광지</div>
+                        <div class="destination-value">
+                            • 불국사 (삼국시대 사찰)<br>
+                            • 석굴암 (석조 유산)<br>
+                            • 대릉원 (신라 고분)
+                        </div>
+
+                        <div class="destination-label">🍜 음식</div>
+                        <div class="destination-value">
+                            • 황남빵: 0.8만원/개<br>
+                            • 찐빵: 0.5만원/개
+                        </div>
+
+                        <div class="destination-label">💰 총비용</div>
+                        <div class="destination-value"><strong>약 42만원</strong> (2박3일 4명, 저가 기준)</div>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-header gangneung">강릉</div>
+                    <div class="destination-content">
+                        <p><strong>특징:</strong> 동해 바다, 커피 축제, 아늑한 분위기</p>
+
+                        <div class="destination-label">🚌 교통 (왕복)</div>
+                        <div class="destination-value">기차: 6~8만원 / 버스: 4~5만원</div>
+
+                        <div class="destination-label">🏨 숙소</div>
+                        <div class="destination-value">게스트하우스: 4.5만원/박<br>펜션: 11만원/박</div>
+
+                        <div class="destination-label">🎯 관광지</div>
+                        <div class="destination-value">
+                            • 정동진 (동해 해돋이)<br>
+                            • 경포대 (호수 산책)<br>
+                            • 오죽헌 (역사 유산)
+                        </div>
+
+                        <div class="destination-label">🍜 음식</div>
+                        <div class="destination-value">
+                            • 초당두부: 1.2만원/인<br>
+                            • 가평 송어회: 2.5만원/인
+                        </div>
+
+                        <div class="destination-label">💰 총비용</div>
+                        <div class="destination-value"><strong>약 40만원</strong> (2박3일 4명, 저가 기준)</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2. 모둠원 역할 카드</h3>
+            <p>각 학습자가 맡을 역할이에요. 고정된 선호도를 가지고 토론에 참여하면서 협상 경험을 하게 돼요.</p>
+
+            <div class="roles-grid">
+                <div class="role-card">
+                    <div class="role-letter">A</div>
+                    <div class="role-name">바다 마니아</div>
+                    <div class="role-desc">
+                        해변, 수상 활동, 자연 풍경을 가장 중요하게 생각해요. <strong>제주도 또는 부산</strong>을 강력하게 추천하고, 다른 사람의 제안에 적극적으로 의견을 얘기해요.
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-letter">B</div>
+                    <div class="role-name">역사 덕후</div>
+                    <div class="role-desc">
+                        문화유산, 옛날 건축물, 역사 학습을 가장 중요하게 생각해요. <strong>경주</strong를 가장 추천하며, 불국사, 석굴암 같은 장소를 꼭 방문하길 원해요.
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-letter">C</div>
+                    <div class="role-name">음식 전문가</div>
+                    <div class="role-desc">
+                        그 지역만의 특별한 음식을 경험하는 것을 가장 중요하게 생각해요. 부산 해산물, 제주도 흑돼지, 경주 전통 음식 등을 꼭 먹고 싶어요.
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-letter">D</div>
+                    <div class="role-letter">D</div>
+                    <div class="role-name">예산 담당</div>
+                    <div class="role-desc">
+                        50만 원 예산을 초과하지 않으면서 모두가 만족할 수 있는 계획을 찾는 것을 가장 중요하게 생각해요. 저가 옵션을 추천해요.
+                    </div>
+                </div>
+            </div>
+
+            <h3>3. 빈 계획표 양식</h3>
+            <p>학습자들이 선택한 여행지에 맞게 시간대별로 계획을 세울 양식이에요.</p>
+
+            <table class="plan-table">
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">요일</th>
+                        <th style="width: 18%;">아침<br>(6~9시)</th>
+                        <th style="width: 18%;">오전<br>(9~12시)</th>
+                        <th style="width: 18%;">낮<br>(12~15시)</th>
+                        <th style="width: 18%;">오후<br>(15~18시)</th>
+                        <th style="width: 18%;">저녁<br>(18시~)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 500; background: #f0f0ed;"><strong>첫째 날</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; background: #f0f0ed;"><strong>둘째 날</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; background: #f0f0ed;"><strong>셋째 날</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>계획표 작성 팁:</strong><br>
+                • 모든 일정과 식사, 숙박지를 기록하세요<br>
+                • 교통시간도 고려해서 현실적인 시간을 배정하세요<br>
+                • 총 예산 50만 원을 넘지 않게 확인하세요<br>
+                • 4명의 선호도가 모두 반영되었는지 체크하세요
+            </div>
+        </section>
+
+        <!-- Check Section -->
+        <section id="check">
+            <h2>점검 목록</h2>
+
+            <p>과제를 만들었다면, 다음 항목들을 확인해 보세요:</p>
+
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1"><strong>4곳 여행지 정보가 현실적인가?</strong> — 교통비, 숙박료, 음식값이 2024년 기준 실제 가격에 가까운가?</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2"><strong>모든 조합이 50만 원 예산 내에 실현 가능한가?</strong> — 어느 여행지든 저가 옵션으로는 예산 내 완성이 가능한가?</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3"><strong>4명 역할의 선호도가 충분히 다른가?</strong> — 4명이 의견 충돌을 경험하면서 협상할 수 있는 갈등 구조가 있는가?</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4"><strong>계획표 양식이 직관적인가?</strong> — 학습자들이 쉽게 작성하고 비교할 수 있는 형태인가?</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="check5">
+                    <label for="check5"><strong>모든 자료가 중급(TOPIK 3~4급) 수준의 언어로 되어 있는가?</strong> — 너무 어렵거나 쉽지 않은가?</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="check6">
+                    <label for="check6"><strong>역할 카드가 명확한가?</strong> — 각 학습자가 자신의 역할을 이해하고 일관되게 유지할 수 있는가?</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="check7">
+                    <label for="check7"><strong>과제가 30~40분 안에 완성 가능한 분량인가?</strong> — 너무 많지는 않은가?</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Variations Section -->
+        <section id="variations">
+            <h2>변형 아이디어</h2>
+
+            <p>같은 과제 틀을 다른 주제나 난이도로 변형할 수 있어요:</p>
+
+            <table class="variations-table">
+                <thead>
+                    <tr>
+                        <th>변형 유형</th>
+                        <th>설명</th>
+                        <th>적용 대상</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>주제 변경</strong></td>
+                        <td>파티 계획, 행사 기획, 팀 빌딩, 가족 나들이 등 다른 계획 활동으로 변경</td>
+                        <td>모든 수준</td>
+                    </tr>
+                    <tr>
+                        <td><strong>난이도 낮춤</strong></td>
+                        <td>여행지를 2~3곳으로 줄이거나, 역할을 2~3명으로 축소</td>
+                        <td>초급 (TOPIK 1~2급)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>난이도 높힘</strong></td>
+                        <td>돌발 상황 추가 (날씨 변화, 예산 재편성, 일정 변경 요청)</td>
+                        <td>고급 (TOPIK 5~6급)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>산출물 추가</strong></td>
+                        <td>계획 완성 후 PowerPoint 또는 포스터로 발표 준비</td>
+                        <td>모든 수준</td>
+                    </tr>
+                    <tr>
+                        <td><strong>역할 수 조정</strong></td>
+                        <td>5~6명 수업은 역할 5~6개로 확장 (예: "기술 담당", "일정 조정자")</td>
+                        <td>모든 수준</td>
+                    </tr>
+                    <tr>
+                        <td><strong>반복 활용</strong></td>
+                        <td>같은 틀로 여름/겨울 여행, 국내/해외 여행 등 여러 세션 진행</td>
+                        <td>모든 수준</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>변형 예시 1: 난이도 낮춤 (초급)</h3>
+            <div class="info-box">
+                <strong>대상:</strong> TOPIK 1~2급<br>
+                <strong>변형:</strong> 여행지 2곳, 역할 2명 (선호도 2가지)<br>
+                <strong>예시:</strong> 제주도 vs. 부산, 역할은 "바다 마니아"와 "예산 담당"<br>
+                <strong>효과:</strong> 의사결정이 더 단순해지면서, 언어에 집중할 수 있어요.
+            </div>
+
+            <h3>변형 예시 2: 난이도 높힘 (고급)</h3>
+            <div class="info-box">
+                <strong>대상:</strong> TOPIK 5~6급<br>
+                <strong>변형:</strong> 돌발 상황 추가<br>
+                <strong>예시:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>2일째에 갑자기 한 명이 아파서 움직일 수 없음</li>
+                    <li>예산이 갑자기 5만 원 줄어듦</li>
+                    <li>한 명이 마지막 순간에 새로운 요청 추가</li>
+                </ul>
+                <strong>효과:</strong> 학습자들이 즉시적으로 상황에 대응하면서 더 자연스러운 의사소통이 일어나요.
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // scrollTo_ 함수
+        function scrollTo_(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                updateActiveNav(sectionId);
+            }
+        }
+
+        // 네비게이션 활성화 상태 업데이트
+        function updateActiveNav(sectionId) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`.nav-link[onclick*="'${sectionId}'"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Scroll Spy 기능
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            updateActiveNav(currentSection);
+        });
+
+        // Tooltip 기능 (선택사항 - 추가 정보 표시)
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltips = document.querySelectorAll('.tooltip-container');
+            tooltips.forEach(tooltip => {
+                tooltip.addEventListener('mouseenter', () => {
+                    const tooltipText = tooltip.querySelector('.tooltip');
+                    if (tooltipText) {
+                        tooltipText.style.visibility = 'visible';
+                        tooltipText.style.opacity = '1';
+                    }
+                });
+                tooltip.addEventListener('mouseleave', () => {
+                    const tooltipText = tooltip.querySelector('.tooltip');
+                    if (tooltipText) {
+                        tooltipText.style.visibility = 'hidden';
+                        tooltipText.style.opacity = '0';
+                    }
+                });
+            });
+        });
+
+        // 체크박스 상태 유지 (로컬스토리지)
+        const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+        checkboxes.forEach((checkbox, index) => {
+            const savedState = localStorage.getItem(`checkbox-${index}`);
+            if (savedState === 'true') {
+                checkbox.checked = true;
+            }
+
+            checkbox.addEventListener('change', () => {
+                localStorage.setItem(`checkbox-${index}`, checkbox.checked);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>찬반 토론 대회 | AI로 공식 토론 자료 만드는 법</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: #fff;
+            border-bottom: 0.5px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        nav li {
+            flex: 1;
+            border-right: 0.5px solid #ddd;
+        }
+
+        nav li:last-child {
+            border-right: none;
+        }
+
+        nav button {
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        nav button:hover {
+            background: #f0f0ee;
+            color: #000;
+        }
+
+        nav button.active {
+            background: #e8e8e4;
+            color: #000;
+            border-bottom: 2px solid #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f9f9f7 0%, #efefeb 100%);
+            padding: 60px 20px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: #e8e8e4;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .chip {
+            background: #fff;
+            padding: 8px 12px;
+            border: 0.5px solid #ddd;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 60px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #333;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: #000;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #444;
+        }
+
+        /* Introduction Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-card {
+            background: #fff;
+            padding: 16px;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .info-card-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .rationale-box {
+            background: #fafaf8;
+            padding: 20px;
+            border-left: 4px solid #333;
+            border-radius: 2px;
+            margin: 24px 0;
+            line-height: 1.7;
+        }
+
+        .rationale-box h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .rationale-box p {
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        /* Topic Card */
+        .topic-card {
+            background: #fff;
+            padding: 24px;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+
+        .topic-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #000;
+        }
+
+        .topic-background {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* Timeline/Progress Table */
+        .debate-timeline {
+            background: #fff;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .timeline-row {
+            display: flex;
+            border-bottom: 0.5px solid #ddd;
+        }
+
+        .timeline-row:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-cell {
+            flex: 1;
+            padding: 16px;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .timeline-order {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .timeline-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .timeline-meta {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .timeline-row.pro {
+            background: linear-gradient(90deg, rgba(51, 102, 204, 0.08) 0%, transparent 100%);
+            border-left: 4px solid #3366cc;
+        }
+
+        .timeline-row.con {
+            background: linear-gradient(90deg, rgba(204, 51, 51, 0.08) 0%, transparent 100%);
+            border-left: 4px solid #cc3333;
+        }
+
+        /* Role Distribution */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .role-card {
+            background: #fff;
+            padding: 20px;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            border-top: 3px solid #333;
+        }
+
+        .role-name {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #000;
+        }
+
+        .role-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .role-tips {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.5;
+            padding-top: 12px;
+            border-top: 0.5px solid #ddd;
+        }
+
+        /* Code/JSON Box */
+        .code-box {
+            background: #2a2a28;
+            color: #e0e0dc;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            border: 0.5px solid #444;
+        }
+
+        .code-box .key {
+            color: #a5d6ff;
+        }
+
+        .code-box .string {
+            color: #7ec699;
+        }
+
+        .code-box .number {
+            color: #d4a574;
+        }
+
+        /* Prompt Section */
+        .prompt-box {
+            background: #1a1a18;
+            color: #e0e0dc;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 24px 0;
+            border-left: 4px solid #666;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Key Patterns */
+        .pattern-group {
+            background: #fff;
+            padding: 20px;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        .pattern-type {
+            font-size: 12px;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .pattern-list {
+            list-style: none;
+        }
+
+        .pattern-item {
+            font-size: 13px;
+            padding: 10px 0;
+            color: #444;
+            line-height: 1.5;
+            border-bottom: 0.5px solid #eee;
+        }
+
+        .pattern-item:last-child {
+            border-bottom: none;
+        }
+
+        .pattern-example {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* Rubric */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 0.5px solid #ddd;
+            background: #fff;
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+
+        .rubric-table th,
+        .rubric-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border: 0.5px solid #ddd;
+        }
+
+        .rubric-table th {
+            background: #f0f0ee;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .rubric-table tr:nth-child(even) {
+            background: #fafaf8;
+        }
+
+        .rubric-level {
+            font-weight: 500;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: #fff;
+            padding: 20px;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .checklist-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checklist-checkbox {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin-right: 12px;
+            margin-top: 2px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .checklist-checkbox:checked {
+            background: #333;
+            border-color: #333;
+        }
+
+        .checklist-text {
+            flex: 1;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        /* Variations */
+        .variation-list {
+            list-style: none;
+        }
+
+        .variation-item {
+            background: #fff;
+            padding: 16px;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .variation-title {
+            font-weight: 500;
+            font-size: 13px;
+            color: #000;
+            margin-bottom: 6px;
+        }
+
+        .variation-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Tip Box */
+        .tip-box {
+            background: #fff9f0;
+            padding: 16px;
+            border-left: 4px solid #ff9966;
+            border-radius: 2px;
+            margin: 20px 0;
+        }
+
+        .tip-box strong {
+            color: #cc5522;
+        }
+
+        /* Tooltip */
+        .tooltip-trigger {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #999;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -50px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 11px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .tooltip-trigger:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 16px;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav li {
+                border-right: none;
+                border-bottom: 0.5px solid #ddd;
+            }
+
+            nav li:last-child {
+                border-bottom: none;
+            }
+
+            nav button {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 40px 16px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .hero-desc {
+                font-size: 14px;
+            }
+
+            .hero-chips {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .chip {
+                width: 100%;
+                text-align: center;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            h3 {
+                font-size: 14px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-row {
+                flex-direction: column;
+            }
+
+            .timeline-cell {
+                padding: 12px;
+                border-bottom: 0.5px solid #ddd;
+            }
+
+            .timeline-row:last-child .timeline-cell:last-child {
+                border-bottom: none;
+            }
+
+            .code-box,
+            .prompt-box {
+                font-size: 11px;
+                padding: 16px;
+                overflow-x: auto;
+            }
+
+            .rubric-table {
+                font-size: 12px;
+            }
+
+            .rubric-table th,
+            .rubric-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><button onclick="scrollTo_('intro')" class="nav-btn">개요</button></li>
+            <li><button onclick="scrollTo_('topic')" class="nav-btn">논제</button></li>
+            <li><button onclick="scrollTo_('timeline')" class="nav-btn">진행표</button></li>
+            <li><button onclick="scrollTo_('roles')" class="nav-btn">역할분담</button></li>
+            <li><button onclick="scrollTo_('patterns')" class="nav-btn">토론문형</button></li>
+            <li><button onclick="scrollTo_('rubric')" class="nav-btn">평가루브릭</button></li>
+            <li><button onclick="scrollTo_('check')" class="nav-btn">체크리스트</button></li>
+            <li><button onclick="scrollTo_('variations')" class="nav-btn">변형</button></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-tag">❹ 과제 기반 · 프로젝트</div>
+            <h1>찬반 토론 대회, AI로 공식 토론 자료 만드는 법</h1>
+            <p class="hero-desc">프롬프트로 찬반 토론 대회의 진행표, 워크시트, 루브릭을 만드는 과정을 안내해요.</p>
+            <div class="hero-chips">
+                <div class="chip">TOPIK 5~6급 · 고급</div>
+                <div class="chip">준비 30분 + 토론 25분</div>
+                <div class="chip">찬성 3명 vs 반대 3명</div>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section id="intro">
+            <h2>개요</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-label">활동 유형</div>
+                    <div class="info-card-value">프로젝트 (토론)</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">범주</div>
+                    <div class="info-card-value">❹ 과제 기반</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">대상</div>
+                    <div class="info-card-value">고급 (TOPIK 5~6급)</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">언어 기능</div>
+                    <div class="info-card-value">말하기 · 듣기 · 읽기 · 쓰기</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">규모</div>
+                    <div class="info-card-value">3명 vs 3명 (6명)</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">시간</div>
+                    <div class="info-card-value">준비 30분 + 토론 25분</div>
+                </div>
+            </div>
+
+            <h3>학습 목표</h3>
+            <p>공식 토론 형식에 따라 찬반 입장을 논증하고 반론하기</p>
+
+            <h3>배포물</h3>
+            <p>논제 카드 + 토론 진행표 + 평가 루브릭</p>
+
+            <div class="rationale-box">
+                <h4>설계 근거</h4>
+                <p>3장의 찬반 의견 카드와 설득 시나리오가 "의견 표현"에 초점을 맞추었다면, 이 활동은 "팀 단위의 공식 토론"이에요. 개인의 의견 표현에서 팀 전략으로 확장되거든요. 토론 형식(입론→반론→최종 발언)이 정해져 있어서, 학습자는 그 형식 안에서 자기 역할을 수행해야 해요.</p>
+                <p>토론의 결과물은 "승리"가 아니라 "논증의 과정"이잖아요. 팀원이 역할을 분담하고, 상대의 주장을 듣고 즉석에서 대응하고, 제한 시간 안에 핵심을 전달해야 해요. 이 과정에서 네 기능이 모두 통합되고, 의사소통 능력의 가장 높은 수준이 요구되거든요.</p>
+            </div>
+
+            <div class="tip-box">
+                <strong>중요 팁:</strong> 토론 논제는 "어느 쪽이든 합리적으로 주장할 수 있는 것"이어야 해요. 한쪽이 압도적으로 유리한 논제는 토론이 안 되거든요.
+            </div>
+        </section>
+
+        <!-- Topic Card Section -->
+        <section id="topic">
+            <h2>논제</h2>
+
+            <div class="topic-card">
+                <div class="topic-title">AI가 교사를 대체할 수 있는가?</div>
+                <div class="topic-background">최근 AI 기술의 발전으로 교육 현장에서도 인공지능의 활용이 증가하고 있어요. 개인 맞춤형 학습, 자동 채점, 24시간 학습 지원 등 AI가 할 수 있는 역할이 확대되고 있는 상황이에요. 이런 기술적 발전 속에서 과연 AI가 교사를 완전히 대체할 수 있을까요? 이 논제는 교육의 본질, 기술의 한계, 인간 관계의 가치 등을 고민해 볼 수 있는 좋은 주제랍니다.</div>
+            </div>
+
+            <h3>논제 특징</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px;">✓ 양쪽 입장 모두 합리적으로 주장 가능</li>
+                <li style="margin-bottom: 10px;">✓ 현실적이고 학습자 관심과 근접</li>
+                <li style="margin-bottom: 10px;">✓ 다양한 논점(기술, 윤리, 심리, 경제) 포함</li>
+                <li>✓ 상반된 가치관을 존중하는 태도 함양</li>
+            </ul>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline">
+            <h2>토론 진행표</h2>
+
+            <p>총 18분 동안 7단계로 진행되며, 각 팀은 역할을 명확히 합니다.</p>
+
+            <div class="debate-timeline">
+                <div class="timeline-row pro">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">1단계</div>
+                        <div class="timeline-name">찬성 측 입론</div>
+                        <div class="timeline-meta">3분 · 입론자 1명</div>
+                    </div>
+                </div>
+                <div class="timeline-row con">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">2단계</div>
+                        <div class="timeline-name">반대 측 입론</div>
+                        <div class="timeline-meta">3분 · 입론자 1명</div>
+                    </div>
+                </div>
+                <div class="timeline-row pro">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">3단계</div>
+                        <div class="timeline-name">교차 질의</div>
+                        <div class="timeline-meta">4분 · 양 팀 2분씩 상대방 질문</div>
+                    </div>
+                </div>
+                <div class="timeline-row pro">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">4단계</div>
+                        <div class="timeline-name">찬성 측 반론</div>
+                        <div class="timeline-meta">2분 · 반론자 1명</div>
+                    </div>
+                </div>
+                <div class="timeline-row con">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">5단계</div>
+                        <div class="timeline-name">반대 측 반론</div>
+                        <div class="timeline-meta">2분 · 반론자 1명</div>
+                    </div>
+                </div>
+                <div class="timeline-row pro">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">6단계</div>
+                        <div class="timeline-name">찬성 측 최종 발언</div>
+                        <div class="timeline-meta">2분 · 최종발언자 1명</div>
+                    </div>
+                </div>
+                <div class="timeline-row con">
+                    <div class="timeline-cell">
+                        <div class="timeline-order">7단계</div>
+                        <div class="timeline-name">반대 측 최종 발언</div>
+                        <div class="timeline-meta">2분 · 최종발언자 1명</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>시간 배분 원리</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px;">• <strong>입론(3+3분)</strong>: 양 팀의 기본 입장을 충분히 들을 시간</li>
+                <li style="margin-bottom: 10px;">• <strong>교차질의(4분)</strong>: 상대의 주장을 검증하고 약점을 지적</li>
+                <li style="margin-bottom: 10px;">• <strong>반론(2+2분)</strong>: 입론과 교차질의 내용에 대한 대응</li>
+                <li>• <strong>최종발언(2+2분)</strong>: 자신의 입장을 강화하고 핵심을 재강조</li>
+            </ul>
+        </section>
+
+        <!-- Roles Section -->
+        <section id="roles">
+            <h2>역할 분담 가이드</h2>
+
+            <p>각 팀은 3명이 다음의 역할을 담당합니다. 모든 구성원이 활발하게 참여해야 해요.</p>
+
+            <div class="role-grid">
+                <div class="role-card">
+                    <div class="role-name">입론자 (1명)</div>
+                    <div class="role-description">팀의 기본 주장을 명확하고 설득력 있게 제시합니다. 논점을 체계적으로 구성하고, 근거와 예시를 제시해야 해요.</div>
+                    <div class="role-tips">
+                        <strong>핵심:</strong> 주장-근거-예시 구조 명확히 · 시간 엄수 · 발음 또렷이
+                    </div>
+                </div>
+                <div class="role-card">
+                    <div class="role-name">교차질의자 (겸임)</div>
+                    <div class="role-description">상대 팀의 입론자에게 질문하며 주장의 약점을 드러냅니다. 질문은 예리하되, 존중의 자세를 잃지 않아야 해요.</div>
+                    <div class="role-tips">
+                        <strong>핵심:</strong> 명확한 질문 · 예상 답변 준비 · 논점 추적
+                    </div>
+                </div>
+                <div class="role-card">
+                    <div class="role-name">반론자 & 최종발언자 (1명)</div>
+                    <div class="role-description">교차질의 내용을 정리하고 반박합니다. 상대의 약점을 구체적으로 지적하고, 자신의 입장을 강화하는 발언을 합니다.</div>
+                    <div class="role-tips">
+                        <strong>핵심:</strong> 빠른 대응 · 근거 제시 · 논리적 비판
+                    </div>
+                </div>
+            </div>
+
+            <h3>역할분담 체크리스트</h3>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">각 팀원이 최소 2번 이상 발언하는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">입론자, 반론자, 최종발언자가 다른 사람인가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">교차질의 때 모든 팀원이 참여할 기회가 있는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">각 역할에 맞는 연습을 충분히 했는가?</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Patterns Section -->
+        <section id="patterns">
+            <h2>핵심 토론 문형</h2>
+
+            <p>각 단계별로 자주 사용되는 표현들을 익혀두면, 현장에서 더 자신감 있게 말할 수 있어요.</p>
+
+            <div class="pattern-group">
+                <div class="pattern-type">입론 단계</div>
+                <ul class="pattern-list">
+                    <li class="pattern-item">
+                        저는 이 논제에 대해 [찬성/반대]하는 입장입니다.
+                        <div class="pattern-example">예: 저는 AI가 교사를 완전히 대체할 수 없다는 입장입니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        이 주장의 근거는 크게 세 가지입니다.
+                        <div class="pattern-example">예: 첫째, 기술적 한계 둘째, 인간 관계 셋째, 윤리 문제</div>
+                    </li>
+                    <li class="pattern-item">
+                        구체적인 예를 들면...
+                        <div class="pattern-example">예: 학생이 정서적 지지가 필요할 때, AI는 그것을 제공할 수 없습니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        따라서 [결론]이라고 생각합니다.
+                        <div class="pattern-example">예: 따라서 AI는 교사의 보조 도구일 뿐, 대체 불가능한 존재입니다.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pattern-group">
+                <div class="pattern-type">교차질의 단계</div>
+                <ul class="pattern-list">
+                    <li class="pattern-item">
+                        [상대의 주장]에 대해 질문이 있습니다.
+                        <div class="pattern-example">예: AI가 개인 맞춤형 학습을 제공한다고 하셨는데, 구체적으로 어떤 방식인지요?</div>
+                    </li>
+                    <li class="pattern-item">
+                        그렇다면 [상황]일 경우에는 어떻게 되나요?
+                        <div class="pattern-example">예: 그렇다면 학생이 AI의 권장사항에 동의하지 않는 경우엔 어떻게 되나요?</div>
+                    </li>
+                    <li class="pattern-item">
+                        [근거/통계]에 따르면 [다른 사실]인데, 이를 어떻게 설명하시겠어요?
+                        <div class="pattern-example">예: 그러나 교육 연구에 따르면 학생과 교사의 감정 교감이 학습에 중요한데요.</div>
+                    </li>
+                    <li class="pattern-item">
+                        정리하자면, [상대 주장의 문제점]이라고 봅니다.
+                        <div class="pattern-example">예: 정리하자면, AI가 인간의 정서적 요구를 이해하지 못한다는 점이 한계라고 봅니다.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pattern-group">
+                <div class="pattern-type">반론 단계</div>
+                <ul class="pattern-list">
+                    <li class="pattern-item">
+                        앞의 의견에 대해 반박하겠습니다.
+                        <div class="pattern-example">예: 상대 팀의 의견에 대해 반박하겠습니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        [상대의 근거]는 [문제점] 때문에 설득력이 떨어집니다.
+                        <div class="pattern-example">예: 개인 맞춤형 학습은 현재 기술로는 모든 학생의 복잡한 필요를 충족할 수 없습니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        오히려 [우리의 관점]으로 보면 [강점]이 있습니다.
+                        <div class="pattern-example">예: 오히려 인간 교사의 관점으로 보면 학생의 미묘한 신호를 감지할 수 있다는 강점이 있습니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        실제 사례로 본다면...
+                        <div class="pattern-example">예: 실제 학교에서 AI 튜터를 도입했을 때 학생 만족도가 기대에 미치지 못했습니다.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pattern-group">
+                <div class="pattern-type">최종 발언 단계</div>
+                <ul class="pattern-list">
+                    <li class="pattern-item">
+                        오늘 토론을 통해 명확해진 우리의 입장은...
+                        <div class="pattern-example">예: 오늘 토론을 통해 명확해진 우리의 입장은 AI는 교사의 도구일 뿐, 대체 불가능하다는 것입니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        핵심은 [주요 논점]입니다.
+                        <div class="pattern-example">예: 핵심은 교육의 본질이 지식 전달이 아니라 인간 형성이라는 점입니다.</div>
+                    </li>
+                    <li class="pattern-item">
+                        따라서 우리는 [최종 주장]을 재강조합니다.
+                        <div class="pattern-example">예: 따라서 우리는 AI를 교육 보조 도구로 활용하되, 교사의 역할은 여전히 핵심이라는 주장을 재강조합니다.</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Rubric Section -->
+        <section id="rubric">
+            <h2>평가 루브릭</h2>
+
+            <p>토론의 우수성을 5개 차원으로 평가합니다. 각 차원별로 3단계(우수-보통-기초)로 나뉩니다.</p>
+
+            <table class="rubric-table">
+                <thead>
+                    <tr>
+                        <th>평가 차원</th>
+                        <th>우수 (3점)</th>
+                        <th>보통 (2점)</th>
+                        <th>기초 (1점)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="rubric-level">논증의 명확성</span></td>
+                        <td>주장-근거-예시의 구조가 명확하며, 각 논점이 분명히 드러남</td>
+                        <td>주요 주장은 명확하지만, 근거나 예시가 불충분함</td>
+                        <td>주장이 모호하거나 근거가 부재함</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rubric-level">논리적 일관성</span></td>
+                        <td>입론-반론-최종발언의 내용이 일관되며, 모순이 없음</td>
+                        <td>대체로 일관되지만, 부분적 모순이나 약점이 있음</td>
+                        <td>논리가 뒤바뀌거나 여러 모순이 존재함</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rubric-level">근거와 사례의 적절성</span></td>
+                        <td>통계, 사례, 이론 등 다양한 근거를 사용하며 논제와 직결됨</td>
+                        <td>근거를 사용하지만, 적절성이나 다양성이 부족함</td>
+                        <td>근거가 거의 없거나 논제와 무관함</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rubric-level">상대 주장에 대한 대응</span></td>
+                        <td>상대의 주장을 정확히 이해하고, 구체적으로 반박함</td>
+                        <td>상대의 주장을 어느 정도 반박하지만, 표면적임</td>
+                        <td>상대의 주장을 무시하거나 엉뚱한 대응을 함</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rubric-level">언어 사용과 발표력</span></td>
+                        <td>발음이 분명하고, 적절한 어휘와 문법을 사용하며, 자신감 있게 말함</td>
+                        <td>발음이 대체로 명확하고, 문법적 오류가 적으나, 말하기가 숨차거나 서툼</td>
+                        <td>발음이 부정확하거나, 언어 오류가 많으며, 자신감이 부족함</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>점수 계산</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px;">• 개인 평가: 각 차원의 점수 합 (최대 15점)</li>
+                <li style="margin-bottom: 10px;">• 팀 평가: 3명의 평가 점수 합 (최대 45점)</li>
+                <li>• 총점: 개인 점수를 팀 점수와 함께 기록하여, 개인과 팀의 성과를 모두 인정</li>
+            </ul>
+        </section>
+
+        <!-- Check Section -->
+        <section id="check">
+            <h2>활동 준비 체크리스트</h2>
+
+            <p>토론을 성공적으로 진행하기 위해 다음을 확인하세요.</p>
+
+            <div class="checklist">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 14px; font-weight: 500;">논제</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">논제가 명확하고, 양쪽 입장 모두 합리적으로 주장할 수 있는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">논제가 학습자의 관심과 수준에 맞는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">배경 정보가 충분히 제공되었는가?</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 14px; font-weight: 500;">시간 배분</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">준비 시간(30분)이 충분한가? (입론 구성, 예상 반박 준비)</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">토론 시간(25분)이 타당한가? (시간 초과 시 타이머 준비)</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">각 단계의 시간 배분이 합리적인가?</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 14px; font-weight: 500;">역할 분담</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">각 팀이 3명씩 명확하게 구성되어 있는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">입론자, 반론자, 최종발언자가 모두 다른 사람인가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">교차질의에서 모든 팀원이 참여할 기회가 있는가?</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 14px; font-weight: 500;">핵심 문형</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">입론, 교차질의, 반론, 최종발언의 문형을 미리 학습했는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">각 단계별 주요 표현을 카드나 자료로 준비했는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">학습자가 충분히 연습할 수 있는 시간을 마련했는가?</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 14px; font-weight: 500;">평가</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">루브릭이 명확하고, 학습자에게 미리 공유했는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">평가자(교사 또는 동료)가 각 학습자의 점수를 기록할 양식을 준비했는가?</span>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-checkbox">
+                    <span class="checklist-text">토론 후 피드백을 줄 계획이 있는가?</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Variations Section -->
+        <section id="variations">
+            <h2>변형 및 확장</h2>
+
+            <p>논제, 난이도, 규모 등을 조정하여 다양한 상황에 활용할 수 있어요.</p>
+
+            <h3>논제 변형</h3>
+            <ul class="variation-list">
+                <li class="variation-item">
+                    <div class="variation-title">원격 수업 vs 대면 수업</div>
+                    <div class="variation-desc">코로나 이후 교육 형태의 변화를 주제로 한 토론. 유연성, 접근성, 사회성 발달 등을 다룰 수 있어요.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">SNS 실명제 도입</div>
+                    <div class="variation-desc">온라인 폭력 방지와 표현의 자유라는 상반된 가치를 고민하는 주제.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">동물 실험의 필요성</div>
+                    <div class="variation-desc">과학 발전과 윤리, 생명 존중이라는 가치 충돌을 논하는 주제.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">게임 중독 규제</div>
+                    <div class="variation-desc">개인의 자유와 사회적 책임, 중독의 의료화 등을 다루는 현실적 주제.</div>
+                </li>
+            </ul>
+
+            <h3>난이도 조정</h3>
+            <ul class="variation-list">
+                <li class="variation-item">
+                    <div class="variation-title">쉬운 버전: 자유 토론</div>
+                    <div class="variation-desc">형식을 단순화하여, 시간 제한 없이 입론만 하고 자유롭게 토론. 초급-중급 학습자에게 적합.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">어려운 버전: 3당 토론</div>
+                    <div class="variation-desc">찬성, 반대, 중립 세 입장으로 확장. 더 복잡한 사고와 협상 능력을 요구함.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">장시간 버전: 국제 대회식</div>
+                    <div class="variation-desc">각 단계별 시간을 2배로 늘리고, 준비 시간을 1시간으로 확대. 심화된 논의 가능.</div>
+                </li>
+            </ul>
+
+            <h3>규모 조정</h3>
+            <ul class="variation-list">
+                <li class="variation-item">
+                    <div class="variation-title">소규모 (2명 vs 2명)</div>
+                    <div class="variation-desc">각 팀 2명으로 축소. 준비 시간을 20분으로 단축하고, 각 단계 시간을 30초씩 감소.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">대규모 (다중 팀 토너먼트)</div>
+                    <div class="variation-desc">4팀 이상이 참여하는 토너먼트 형식. 우승팀 결정 후, 최종 대회 개최.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">개인 토론</div>
+                    <div class="variation-desc">팀 형식을 버리고 개인 vs 개인 토론. 모든 역할을 한 명이 수행하도록 조정.</div>
+                </li>
+            </ul>
+
+            <h3>확장 활동</h3>
+            <ul class="variation-list">
+                <li class="variation-item">
+                    <div class="variation-title">토론 → 논설문 작성</div>
+                    <div class="variation-desc">토론 후 자신의 입장을 논설문(500~1000자)으로 작성. 읽기와 쓰기 통합 활동.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">토론 녹화 및 분석</div>
+                    <div class="variation-desc">토론을 영상으로 녹화하고, 자신의 발음, 문법, 논리를 재검토. 자기 평가 능력 발달.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">다중 언어 토론</div>
+                    <div class="variation-desc">같은 논제로 모국어 토론과 한국어 토론을 비교. 언어 특성과 표현력 차이 인식.</div>
+                </li>
+                <li class="variation-item">
+                    <div class="variation-title">패널 토론</div>
+                    <div class="variation-desc">진행자를 두고, 여러 패널이 한 주제를 다각도로 토론. 공식 방송 형식 체험.</div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Build Section -->
+        <section id="build">
+            <h2>AI 프롬프트 예시</h2>
+
+            <p>다음의 프롬프트를 ChatGPT, Claude 등에 입력하면, 토론 자료를 자동으로 생성할 수 있어요.</p>
+
+            <div class="prompt-box">당신은 한국어 교육 전문가입니다. 다음 요건에 맞는 찬반 토론 대회 패키지를 만들어 주세요.
+
+【요건】
+- 대상: TOPIK 5~6급 고급 학습자
+- 논제: "AI가 교사를 대체할 수 있는가"
+- 토론 형식: 7단계 (찬성입론 3분→반대입론 3분→교차질의 4분→찬성반론 2분→반대반론 2분→찬성최종 2분→반대최종 2분, 총 18분)
+- 역할 분담: 각 팀 3명 (입론자, 교차질의자, 반론자/최종발언자)
+- 준비 시간: 30분
+
+【생성 항목】
+1. 논제 소개: 배경 정보 포함
+2. 토론 진행표: 단계별 시간, 역할, 팀 구성
+3. 준비 워크시트:
+   - 우리팀 주장 3가지
+   - 상대팀 예상 반론 3가지
+   - 우리의 대응 전략 3가지
+4. 핵심 토론 문형:
+   - 입론 시 사용할 표현
+   - 교차질의 때 사용할 질문 형식
+   - 반론 때 사용할 표현
+   - 최종 발언 때 사용할 표현
+5. 평가 루브릭: 5개 차원 × 3단계 (우수/보통/기초)
+
+【출력 형식】
+JSON 형식으로, 다음 구조를 따르세요:
+{
+  "topic": "논제",
+  "background": "배경 정보",
+  "format": [{"order": 순서, "name": "단계명", "duration": "시간", "role": "역할", "team": "팀"}],
+  "prep_worksheet": {
+    "our_arguments": ["주장1", "주장2", "주장3"],
+    "expected_counterarguments": ["반박1", "반박2", "반박3"],
+    "counter_strategies": ["대응1", "대응2", "대응3"]
+  },
+  "key_patterns": {
+    "opening": ["표현1", "표현2"],
+    "cross_examination": ["질문1", "질문2"],
+    "rebuttal": ["반박 표현1", "반박 표현2"],
+    "closing": ["종결 표현1", "종결 표현2"]
+  },
+  "rubric": {"차원": {"level": "단계", "criteria": "평가 기준"}}
+}
+            </div>
+
+            <h3>JSON 응답 예시</h3>
+
+            <div class="code-box">
+{
+  <span class="key">"topic"</span>: <span class="string">"AI가 교사를 대체할 수 있는가"</span>,
+  <span class="key">"background"</span>: <span class="string">"최근 AI 기술의 발전으로 교육 현장에서도 인공지능의 활용이 증가하고 있습니다. 개인 맞춤형 학습, 자동 채점, 24시간 학습 지원 등 AI가 할 수 있는 역할이 확대되고 있는 상황입니다."</span>,
+  <span class="key">"format"</span>: [
+    { <span class="key">"order"</span>: <span class="number">1</span>, <span class="key">"name"</span>: <span class="string">"찬성 입론"</span>, <span class="key">"duration"</span>: <span class="string">"3분"</span>, <span class="key">"role"</span>: <span class="string">"입론자"</span> },
+    { <span class="key">"order"</span>: <span class="number">2</span>, <span class="key">"name"</span>: <span class="string">"반대 입론"</span>, <span class="key">"duration"</span>: <span class="string">"3분"</span>, <span class="key">"role"</span>: <span class="string">"입론자"</span> }
+  ],
+  <span class="key">"prep_worksheet"</span>: {
+    <span class="key">"our_arguments"</span>: [
+      <span class="string">"AI는 24시간 맞춤형 학습을 제공할 수 있어 교육 접근성을 높인다"</span>,
+      <span class="string">"AI는 인간의 편견 없이 객관적으로 학생의 진도를 평가할 수 있다"</span>,
+      <span class="string">"AI는 반복적인 과제 채점과 기초 개념 설명에 매우 효율적이다"</span>
+    ],
+    <span class="key">"expected_counterarguments"</span>: [
+      <span class="string">"교육은 단순 지식 전달이 아니라 인성 발달과 정서적 지지가 필요하다"</span>,
+      <span class="string">"AI는 상황에 따른 유연한 대응과 학생의 감정 변화에 민감하게 대응할 수 없다"</span>,
+      <span class="string">"현재 AI 기술은 여전히 한계가 있으며, 모든 학생의 개별 특성을 완벽하게 반영할 수 없다"</span>
+    ]
+  }
+}
+            </div>
+        </section>
+
+        <!-- Practice Demo Section -->
+        <section id="practice">
+            <h2>실제 토론 워크시트 예시</h2>
+
+            <p>다음은 실제 토론 준비 때 사용할 수 있는 워크시트 예시입니다.</p>
+
+            <h3>찬성 팀 워크시트</h3>
+
+            <div class="topic-card">
+                <div class="topic-title">우리의 입론 (3분 동안 할 말)</div>
+                <div style="margin-top: 16px;">
+                    <p><strong>도입:</strong> "저는 AI가 교사를 대체할 수 있다는 입장입니다."</p>
+                    <p><strong>주장 1:</strong> AI는 개인 맞춤형 학습을 제공할 수 있다.</p>
+                    <p style="margin-left: 20px; font-size: 13px; color: #666;">→ 예시: 학생이 어느 부분을 모르는지 즉시 파악하고, 그에 맞는 설명과 문제를 제시</p>
+                    <p><strong>주장 2:</strong> AI는 24시간 언제든지 학습을 지원할 수 있다.</p>
+                    <p style="margin-left: 20px; font-size: 13px; color: #666;">→ 예시: 학생이 밤 11시에 질문해도 즉시 답변, 시간 제약 없음</p>
+                    <p><strong>주장 3:</strong> AI는 객관적으로 학생의 학습 결과를 평가할 수 있다.</p>
+                    <p style="margin-left: 20px; font-size: 13px; color: #666;">→ 예시: 인간 교사의 편견 없이 공정하게 채점과 피드백 제공</p>
+                    <p><strong>결론:</strong> "따라서 기술이 발전하면 AI가 충분히 교사의 역할을 할 수 있습니다."</p>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">상대팀 반박 예상 & 우리의 대응</div>
+                <div style="margin-top: 16px;">
+                    <p><strong>상대가 할 말 1:</strong> "교육은 지식 전달이 아니라 인성 발달이 중요하다"</p>
+                    <p style="margin-left: 20px; font-size: 13px; color: #666;"><strong>→ 우리의 대응:</strong> 인성 발달도 AI를 통해 윤리 교육, 성찰 일지 작성 등으로 가능하다</p>
+
+                    <p style="margin-top: 16px;"><strong>상대가 할 말 2:</strong> "AI는 학생의 정서적 필요를 이해할 수 없다"</p>
+                    <p style="margin-left: 20px; font-size: 13px; color: #666;"><strong>→ 우리의 대응:</strong> 현대 AI는 감정 인식 기술을 갖추고 있으며, 학생의 심리 상태를 감지해 맞춤형 조언을 할 수 있다</p>
+
+                    <p style="margin-top: 16px;"><strong>상대가 할 말 3:</strong> "현재 기술로는 모든 학생을 충족할 수 없다"</p>
+                    <p style="margin-left: 20px; font-size: 13px; color: #666;"><strong>→ 우리의 대응:</strong> 기술은 지속적으로 발전하고 있으며, 10년 후에는 대체가 충분히 가능할 것이다</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Scroll spy and navigation
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('section');
+
+        function scrollTo_(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                updateActiveNav();
+            }
+        }
+
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navButtons.forEach(btn => {
+                btn.classList.remove('active');
+                const btnId = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                if (btnId === current) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        window.addEventListener('load', updateActiveNav);
+
+        // Tooltip functionality
+        const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
+        tooltipTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseover', function() {
+                const tooltip = this.querySelector('.tooltip');
+                if (tooltip) {
+                    tooltip.style.visibility = 'visible';
+                    tooltip.style.opacity = '1';
+                }
+            });
+
+            trigger.addEventListener('mouseout', function() {
+                const tooltip = this.querySelector('.tooltip');
+                if (tooltip) {
+                    tooltip.style.visibility = 'hidden';
+                    tooltip.style.opacity = '0';
+                }
+            });
+        });
+
+        // Checkbox persistence in localStorage
+        const checkboxes = document.querySelectorAll('.checklist-checkbox');
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.id = `checkbox-${index}`;
+            const savedState = localStorage.getItem(checkbox.id);
+            if (savedState === 'true') {
+                checkbox.checked = true;
+            }
+
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(this.id, this.checked);
+            });
+        });
+
+        // Initialize
+        console.log('교과 활동 페이지 로드됨: 찬반 토론 대회');
+    </script>
+</body>
+</html>

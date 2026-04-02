@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1장. 교수 활동의 범위와 기능 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* ── 네비 ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+
+/* ── 글 헤더 ── */
+.article-header{
+  padding:120px 0 40px;
+  text-align:center;
+  border-bottom:0.5px solid var(--border);
+}
+.article-header .part-label{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  color:var(--blue);margin-bottom:8px;
+}
+.article-header h1{
+  font-size:clamp(28px,4.5vw,42px);
+  font-weight:900;line-height:1.25;
+  letter-spacing:-0.02em;
+  max-width:640px;margin:0 auto 12px;
+}
+.article-header .ch-question{
+  font-size:16px;color:var(--text-sub);
+  font-style:italic;
+}
+
+/* ── 목차 사이드바 (스티키) ── */
+.layout{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:48px;
+  max-width:1000px;
+  margin:0 auto;
+  padding:40px 32px 80px;
+}
+.toc{
+  position:sticky;top:80px;
+  align-self:start;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+  padding-right:16px;
+}
+.toc-label{font-size:11px;font-weight:700;color:var(--text-light);letter-spacing:0.06em;margin-bottom:12px;}
+.toc a{
+  display:block;
+  font-size:12px;font-weight:500;
+  color:var(--text-sub);
+  text-decoration:none;
+  padding:6px 0;
+  border-left:2px solid transparent;
+  padding-left:12px;
+  transition:all .15s;
+  line-height:1.4;
+}
+.toc a:hover{color:var(--text);}
+.toc a.active{color:var(--text);font-weight:700;border-left-color:var(--blue);}
+
+/* ── 본문 ── */
+.article{max-width:680px;}
+.article h2{
+  font-size:22px;font-weight:800;
+  letter-spacing:-0.01em;
+  margin:48px 0 16px;
+  padding-top:24px;
+}
+.article h3{
+  font-size:17px;font-weight:700;
+  margin:32px 0 12px;
+  color:var(--text);
+}
+.article p{
+  font-size:15px;
+  margin-bottom:16px;
+  line-height:1.85;
+  color:#333;
+}
+.article ul,.article ol{
+  margin:12px 0 20px 20px;
+  font-size:15px;line-height:1.85;
+  color:#333;
+}
+.article li{margin-bottom:6px;}
+.article table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;
+  font-size:14px;
+}
+.article th,.article td{
+  padding:10px 14px;
+  border:0.5px solid var(--border);
+  text-align:left;
+}
+.article th{background:var(--bg-alt);font-weight:700;font-size:13px;}
+.article blockquote{
+  border-left:3px solid var(--blue);
+  padding:12px 20px;
+  margin:20px 0;
+  background:var(--blue-light);
+  border-radius:0 8px 8px 0;
+  font-size:14px;
+  color:#444;
+}
+
+/* 더 읽을거리 박스 */
+.further-reading{
+  background:var(--card);
+  border:0.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  margin:40px 0;
+}
+.further-reading h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.further-reading ul{margin:0;padding-left:18px;font-size:13px;color:var(--text-sub);}
+.further-reading li{margin-bottom:4px;}
+
+/* 이전/다음 네비 */
+.ch-nav{
+  display:flex;justify-content:space-between;
+  padding:32px 0;
+  border-top:0.5px solid var(--border);
+  margin-top:48px;
+}
+.ch-nav a{
+  text-decoration:none;color:var(--text-sub);
+  font-size:13px;font-weight:600;
+  transition:color .2s;
+}
+.ch-nav a:hover{color:var(--blue);}
+.ch-nav .next{margin-left:auto;}
+
+/* ── 모바일 ── */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;gap:0;}
+  .toc{display:none;}
+  .article-header h1{font-size:28px;}
+}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html">활동</a><a href="demo.html">데모</a><a href="column.html" class="active">칼럼</a><a href="faq.html">FAQ</a></div></div></nav>
+
+<header class="article-header">
+  <div class="part-label">I부 — 교수 활동 개괄</div>
+  <h1>1장. 교수 활동의 범위와 기능</h1>
+  <div class="ch-question">교수 활동이란 무엇이며, 어디까지를 활동이라 부르는가?</div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-label">목차</div>
+    <!-- 절 목차 자동 생성: 본문의 h2 id를 참조 -->
+        <a href="#sec-1-1">1.1 교수 활동의 개념</a>
+    <a href="#sec-1-2">1.2 교수 활동의 기능과 역할</a>
+  </aside>
+
+  <article class="article">
+    <!-- 본문: docx 내용을 여기에 변환하여 삽입 -->
+    <h2 id="sec-1-1">1.1 교수 활동의 개념</h2>
+<h3>1.1. 활동의 정의</h3>
+<p>언어 교육에서 '활동(activity)'이라는 용어는 매우 빈번하게 사용되지만, 그 정의는 연구자에 따라 상당한 편차를 보인다. 이는 활동이라는 개념 자체가 교수법적 전통, 이론적 입장, 그리고 교실 현장의 관행에 따라 다르게 해석되어 왔기 때문이다. 여기서는 주요 정의들을 검토하고 이들 간의 공통점과 차이점을 정리한 뒤, 이 책에서 사용하는 활동의 개념을 명확히 한다.</p>
+<p>Nunan(2004)은 교실 내 과업을 "학습자가 목표 언어를 이해하고, 조작하고, 산출하며, 상호작용하는 데 관여하는 교실 내 작업"으로 정의한 바 있다. 이 정의는 두 가지 점에서 주목할 만하다. 첫째, 이해와 산출뿐만 아니라 조작(manipulating)과 상호작용까지 포함함으로써, 기계적 반복 연습에서부터 자유로운 의사소통까지 넓은 범위의 교실 활동을 아우른다. 둘째, '교실 내 작업'이라는 한정을 통해 교실 밖의 자연적 언어 사용과 교실 안의 교수적 활동을 구분한다.</p>
+<p>한편, Ellis(2003)는 보다 제한적인 관점을 취한다. 그는 '과제(task)'를 의미에 주된 초점을 두는 활동으로 한정하면서, 형태에 주된 초점을 두는 연습(exercise)과 명시적으로 구분하였다. 이 구분에 따르면, 빈칸 채우기나 문형 대입 연습은 '과제'가 아닌 '연습'에 해당하며, '과제'는 의미 중심적 활동에 한정된다.</p>
+<p>Richards & Rodgers(2014)는 보다 포괄적인 관점에서 활동을 "교수-학습 과정에서 학습자가 수행하도록 요구되는 모든 형태의 교실 행위"로 규정하면서, 연습과 과제를 모두 활동의 하위 범주로 포함시킨다. 이 관점에서 활동은 가장 상위의 포괄적 용어이며, 연습과 과제는 활동의 양극에 위치하는 것으로 이해된다.</p>
+<p>한국어 교육 분야에서도 유사한 논의가 이루어져 왔다. 김정숙(2003)은 과제를 의미 중심의 교실 활동으로 정의하면서 형태 중심의 연습과 구분하였고, 민현식(2005)은 현장에서 '활동'이라는 용어가 연습, 과제, 프로젝트 등 다양한 수준의 교실 행위를 무분별하게 지칭하는 경향이 있음을 지적한 바 있다.</p>
+<p>이상의 논의를 종합하면, 활동의 정의를 둘러싼 주요 쟁점은 세 가지로 정리된다. 첫째, 형태 중심의 기계적 연습을 '활동'의 범주에 포함시킬 것인가. 둘째, 활동의 범위를 교실 내로 한정할 것인가. 셋째, '결과물'이나 '의미 전달'이 활동의 필수 조건인가.</p>
+<p>여기서는 Richards & Rodgers(2014)의 포괄적 정의를 기본으로 채택하되, 교수 현장의 실천적 목적에 맞게 조정하여 사용한다. 즉, <b>'활동'은 학습자가 목표 언어인 한국어를 이해하거나 산출하도록 유도하는, 교수적 의도를 가지고 설계된 교실 내 작업</b>을 가리키며, 형태 중심의 기계적 연습에서부터 의미 중심의 과제에 이르는 모든 유형을 포함한다.</p>
+<p>이처럼 포괄적 정의를 채택한 이유는 실용적이다. 현실의 한국어 교실에서 교사가 사용하는 자료는 문법 빈칸 채우기에서부터 모둠 토론에 이르기까지 넓은 스펙트럼에 걸쳐 있으며, 이 중 어느 하나를 '활동'의 범주에서 배제하는 것은 교수 현장의 실상에 부합하지 않는다.</p>
+<p>다만, 활동의 유형에 따라 그 교수적 기능과 설계 전략이 상이하므로, 활동을 하위 유형으로 분류하여 각 유형의 특성을 정밀하게 기술하는 것이 필수적이다. 이에 대한 논의는 3장 '활동의 분류'에서 상세히 다룬다.</p>
+<h3>1.2. 활동, 연습, 과제의 구분</h3>
+<p>언어 교육 문헌에서 가장 빈번하게 혼용되는 세 용어가 연습(exercise), 활동(activity), 과제(task)이다. 이 세 용어의 관계를 명확히 하는 것은 이후의 논의를 위한 전제 조건이 된다.</p>
+<p>가장 널리 받아들여지는 구분은 다음과 같다. 연습은 특정 언어 형태의 반복적 사용을 목적으로 하며, 학습자가 산출해야 할 언어가 사전에 통제된다. 과제는 의미의 전달에 초점을 두며, 학습자가 사용하는 언어의 범위가 열려 있고, 과제 수행의 결과물이 존재한다. 활동은 이 둘을 포괄하는 상위 개념으로 사용되거나, 둘의 중간 지점에 위치하는 것으로 사용된다.</p>
+<p>이를 보다 근본적으로 바라보면, 연습은 학습자의 주의를 <b>언어 체계(language system)</b>에 집중시키는 활동인 반면, 과제는 학습자의 주의를 <b>언어 사용(language use)</b>에 집중시키는 활동이다. 이 구분은 활동의 외형적 형태가 아닌, 학습자의 인지적 초점이 어디에 놓이는가를 기준으로 한다는 점에서 주목할 만하다(Widdowson, 1998).</p>
+<p>한국어 교육에서 이 용어들의 사용을 살펴보면, '연습'은 주로 문형 반복이나 대치 연습과 같은 통제된 형태의 활동을 지칭하는 데 사용되어 왔고, '과제'는 의사소통적 과업의 의미로, '활동'은 이 둘을 모두 포함하는 포괄적 용어로 사용되는 경향이 있다. 다만, 현장에서는 이 세 용어가 엄격하게 구분되지 않고 혼용되는 경우가 많다.</p>
+<p>연습과 과제의 특성을 대조하면 다음과 같다.</p>
+<p>연습(exercise)           과제(task)</p>
+<p>인지적 초점                 언어 형태(form)          의미(meaning) 학습자의 주의 방향          규칙의 정확한 적용       메시지의 효과적 전달 정답의 성격                 단일 정답(closed)        복수 정답 가능(open) 학습자 산출의 예측 가능성   높음 (통제됨)            낮음 (자유로움) 결과물의 존재               불필요                   필요 의미 협상의 발생            거의 없음                빈번함 실세계와의 관련성           낮음 (교실 내 연습)      높음 (실세계 과업 반영) 대표적 예                   빈칸 채우기, 문형 변환   역할극, 프로젝트, 토론</p>
+<p>이 표에서 드러나듯이, 연습과 과제는 여러 차원에서 대조적이다. 그러나 이러한 이분법적 구분은 이론적 논의에서는 유용하지만, 실제 교실에서는 양극 사이에 다양한 중간 형태가 존재한다. 예를 들어, 상황 맥락이 주어진 빈칸 채우기(예: "카페에서 친구에게 \_\_\_을 추천해 주세요")는 형태에 초점을 두면서도 의미 맥락을 부여한다는 점에서, 순수한 연습과 순수한 과제의 중간에 위치한다.</p>
+<p>Littlewood(2004)는 이러한 중간 형태의 존재를 인정하여, 교실 활동을 이분법이 아닌 <b>연속체(continuum)</b>로 이해할 것을 제안하였다. 이 연속체의 한쪽 끝에는 형태에만 초점을 두는 기계적 연습이, 다른 쪽 끝에는 의미에만 초점을 두는 자유로운 의사소통이 위치하며, 대부분의 교실 활동은 이 양극 사이 어딘가에 놓인다. 이 연속체적 관점은 2장에서 보다 상세히 다루며, 3장의 분류 체계로 연결된다.</p>
+<h3>1.3. 용어 사용의 원칙</h3>
+<p>위의 논의를 바탕으로, 이 책에서는 다음과 같은 용어 사용 원칙을 설정한다.</p>
+<p>첫째, <b>'활동(activity)'을 가장 포괄적인 상위 용어</b>로 사용한다. 형태 중심의 기계적 연습에서부터 과제 기반의 자유로운 의사소통 활동에 이르는 모든 유형의 교실 내 언어 학습 과업을 아우른다.</p>
+<p>둘째, <b>'연습(exercise)'은 형태 학습 중심 활동</b> 중에서도 특히 기계적이고 통제된 유형을 가리킨다. 빈칸 채우기, 문형 대입, 동사 활용 연습 등이 이에 해당한다.</p>
+<p>셋째, <b>'과제(task)'는 의미 전달에 초점</b>을 두며 결과물이 존재하는 활동을 가리킨다. 역할극, 프로젝트, 토론 등이 이에 해당한다.</p>
+<p>넷째, 3장에서 제시하는 <b>네 범주</b>(형태 학습 중심 활동, 의미 구성 중심 활동, 의사소통 기능 중심 활동, 과제 기반 활동)에서는 모두 '활동'이라는 용어를 사용한다. 이는 네 범주가 모두 '활동'이라는 상위 개념의 하위 유형임을 드러내기 위한 선택이다.</p>
+<p>이러한 용어 사용은 이 책에 한정되는 것이며, 언어 교육 분야의 모든 연구자가 이 정의에 동의하는 것은 아님을 밝혀 둔다.</p>
+<h2 id="sec-1-2">1.2 교수 활동의 기능과 역할</h2>
+<h3>2.1. 수업에서 활동의 위치</h3>
+<p>활동은 수업(lesson)을 구성하는 기본 단위이다. 하나의 수업은 일반적으로 도입, 전개, 마무리의 단계로 구성되며, 각 단계에서 서로 다른 유형의 활동이 배치된다. 도입 단계에서는 배경지식을 활성화하고 동기를 유발하는 활동이, 전개 단계에서는 목표 문법이나 기능의 제시와 연습을 위한 활동이, 마무리 단계에서는 학습 내용의 통합적 사용을 촉진하는 활동이 배치되는 것이 일반적이다.</p>
+<p>이때 중요한 것은 활동의 <b>배열(sequencing)</b>이다. 활동들이 수업 내에서 어떤 순서로 배치되느냐에 따라 학습의 효과가 크게 달라질 수 있다. 형태 중심 활동에서 시작하여 점차 의미 중심 활동으로 이행하는 배열이 널리 권장되고 있으며, 이는 정확성에서 유창성으로의 발달이라는 제2언어 습득의 일반적 원리에 근거한다. 활동의 배열에 대한 보다 상세한 논의는 6장 '수업 설계의 원리'에서 다룬다.</p>
+<p>활동은 또한 단원(unit)과 교육과정(curriculum)이라는 더 큰 틀 안에서 이해되어야 한다. 하나의 단원은 여러 차시의 수업으로 구성되며, 단원의 목표를 달성하기 위해 다양한 유형의 활동이 체계적으로 배치된다. 교육과정 수준에서는 학기 전체에 걸쳐 활동의 유형과 난이도가 점진적으로 확장되도록 설계된다.</p>
+<h3>2.2. 활동의 교수적 기능</h3>
+<p>활동은 수업 안에서 여러 교수적 기능을 수행한다. 개별 활동이 어떤 기능을 담당하는가를 명확히 인식하는 것은 활동 선택과 배열의 기본 전제가 된다. 활동이 수행하는 주요 교수적 기능은 다음과 같이 정리할 수 있다.</p>
+<p><b>입력 제공.</b> 학습자가 목표 언어에 노출되도록 하는 기능이다. 듣기 텍스트를 제시하거나, 읽기 자료를 배포하거나, 교사가 모델 발화를 들려주는 활동이 이에 해당한다. Krashen(1985)이 강조한 '이해 가능한 입력(comprehensible input)'의 제공이 이 기능의 이론적 토대이다.</p>
+<p><b>출력 유도.</b> 학습자가 목표 언어를 산출하도록 이끄는 기능이다. 말하기나 쓰기를 요구하는 활동이 이에 해당한다. Swain(1995)의 출력 가설에 따르면, 학습자는 자신의 언어를 산출하는 과정에서 자신의 중간언어와 목표 언어 사이의 차이를 인식하게 되며, 이 인식이 습득을 촉진한다.</p>
+<p><b>상호작용 촉진.</b> 학습자 간, 또는 학습자와 교사 간의 의미 협상(negotiation of meaning)을 유발하는 기능이다. Long(1996)의 상호작용 가설에 따르면, 의사소통 과정에서 발생하는 이해 점검, 확인 요청, 명료화 요청 등의 협상 행위가 습득에 기여한다. 정보 차(information gap) 활동이나 모둠 토론이 대표적이다.</p>
+<p><b>형태 주의 집중.</b> 학습자의 주의를 특정 언어 형태로 이끄는 기능이다. 빈칸 채우기, 문형 변환, 오류 수정 활동 등이 이에 해당한다. 형태 초점 교수(focus on form)의 원리에 따르면, 의미 중심의 수업 안에서도 특정 형태에 대한 주의 집중이 필요한 순간이 있으며, 이를 위해 형태 학습 활동이 의도적으로 배치된다(Long, 1991).</p>
+<p><b>자동화 촉진.</b> 알고 있는 지식을 즉각적으로 사용할 수 있도록 반복 연습의 기회를 제공하는 기능이다. DeKeyser(2007)의 기능 연습 이론에 따르면, 선언적 지식(규칙을 아는 것)이 절차적 지식(규칙을 자동으로 사용하는 것)으로 전환되기 위해서는 충분한 양의 반복 연습이 필요하다. 패턴 드릴, 게임형 퀴즈, 시간 제한 활동 등이 이 기능을 수행한다.</p>
+<p><b>정의적 지원.</b> 학습자의 동기, 자신감, 불안을 조절하는 기능이다. 게임형 활동이 학습의 재미를 높이고, 모둠 활동이 발화의 부담을 줄이며, 성취감을 주는 활동이 학습 지속 동기를 강화한다. 이 기능은 앞의 다섯 가지에 비해 간접적이지만, 특히 초급 단계에서 학습자의 정의적 장벽을 낮추는 데 중요한 역할을 한다.</p>
+<p>하나의 활동이 위 기능 중 하나만을 수행하는 경우는 드물다. 예를 들어, 정보 차 활동은 출력 유도, 상호작용 촉진, 그리고 (맥락 안에서) 형태 주의 집중의 기능을 동시에 수행할 수 있다. 활동을 선택할 때 중요한 것은 해당 수업 단계에서 <b>어떤 기능이 우선적으로 필요한가</b>를 판단하고, 그 기능에 가장 적합한 활동 유형을 배치하는 것이다.</p>
+<h3>2.3. 분석 수준: 활동, 기능, 수업</h3>
+<p>교수 설계에서 활동을 다룰 때는 세 가지 분석 수준을 구분할 필요가 있다.</p>
+<p>분석 수준   개념             정의</p>
+<p>미시        활동(activity)   개별 실행 단위. 하나의 교수 목표를 가진 교실 내 작업 중시        기능(function)   활동을 조직하는 목표 축. 언어 기능과 의사소통 기능의 두 층위로 구분 거시        수업(lesson)     활동의 순차적 조직. 도입→전개→마무리의 구조 속에 여러 활동이 배열</p>
+<p>미시 수준에서는 개별 활동의 설계가 핵심이다. 빈칸 채우기 한 세트, 롤플레이 카드 한 벌, 읽기 텍스트 한 편이 각각 하나의 활동 단위에 해당한다. 3장에서 활동을 유형별로 분류하고, 4장에서 각 유형의 설계 원리를 다루는 것은 이 미시 수준에 대한 논의이다.</p>
+<p>중시 수준에서는 활동들이 어떤 목표 축을 중심으로 조직되는가가 핵심이다. 여기서 '기능'이라는 용어는 두 가지 차원으로 사용된다.</p>
+<p>구분            의미                         대표 항목                                역할</p>
+<p>언어 기능       입력·출력 양식에 따른 기능   말하기, 듣기, 읽기, 쓰기                 활동을 채널과 수행 양식에 따라 조직 의사소통 기능   사회적 목적에 따른 기능      요청하기, 거절하기, 설명하기, 설득하기   활동을 화용적 목표에 따라 조직</p>
+<p>이 두 기능 축은 서로 대립하는 것이 아니라, 활동을 조직하는 서로 다른 기준으로 작동한다. 5장에서 이 두 축을 상세히 다루며, 활동들이 기능을 중심으로 어떻게 묶이는지를 논의한다.</p>
+<p>거시 수준에서는 활동들이 수업이라는 시간적 흐름 안에서 어떻게 배열되는가가 핵심이다. 도입에 어떤 활동을 놓고, 전개에서 어떤 순서로 활동을 배치하며, 마무리에서 어떤 활동으로 수업을 종결하는가. 이에 대한 논의는 6장에서 다룬다.</p>
+<p>이 세 수준은 위계적이다. 미시 수준의 활동이 단단하게 설계되어야 하고, 그 활동들이 중시 수준에서 기능별로 합리적으로 조직되어야 하며, 조직된 활동들이 거시 수준에서 수업의 흐름에 맞게 배열되어야 한다. 이론편의 구성은 이 위계를 따른다. 3\~4장이 미시 수준(활동의 분류와 설계)을, 5장이 중시 수준(기능별 조직)을, 6장이 거시 수준(수업 설계)을 다루며, 7장은 이 세 수준 모두에 걸치는 평가의 문제를 다룬다.</p>
+<div class="further-reading"><h4>더 읽을거리</h4><ul>
+<ul><li>Nunan, D. (2004). <em>Task-Based Language Teaching</em>. Cambridge</li></ul>
+<blockquote>University Press. --- 활동과 과제의 정의, 과제 기반 교수법의 원리.</blockquote>
+<ul><li>Ellis, R. (2003). <em>Task-based Language Learning and Teaching</em>.</li></ul>
+<blockquote>Oxford University Press. --- 과제의 엄밀한 정의와 연습과의 구분.</blockquote>
+<ul><li>Richards, J. C. & Rodgers, T. S. (2014). *Approaches and Methods in</li></ul>
+<blockquote>Language Teaching* (3rd ed.). Cambridge University Press. ---<br>교수법 변천과 활동 개념의 변화.</blockquote>
+<ul><li>Widdowson, H. G. (1998). Skills, abilities, and contexts of reality.</li></ul>
+<blockquote><em>Annual Review of Applied Linguistics</em>, 18, 323--333. --- 언어<br>체계 vs 언어 사용이라는 구분의 이론적 근거.</blockquote>
+<ul><li>DeKeyser, R. (2007). <em>Practice in a Second Language</em>. Cambridge</li></ul>
+<blockquote>University Press. --- 반복 연습과 자동화의 관계.</blockquote>
+<ul><li>Littlewood, W. (2004). The task-based approach: Some questions and</li></ul>
+<blockquote>suggestions. <em>ELT Journal</em>, 58(4), 319--326. --- 연속체적 관점의<br>제안.</blockquote>
+<ul><li>Long, M. H. (1996). The role of the linguistic environment in second</li></ul>
+<blockquote>language acquisition. In W. C. Ritchie & T. K. Bhatia (Eds.),<br><em>Handbook of Second Language Acquisition</em>. Academic Press. ---<br>상호작용 가설.</blockquote>
+<ul><li>Swain, M. (1995). Three functions of output in second language</li></ul>
+<blockquote>learning. In G. Cook & B. Seidlhofer (Eds.), *Principle and<br>Practice in Applied Linguistics*. Oxford University Press. ---<br>출력 가설.</blockquote>
+</ul></div>
+
+    <!-- 더 읽을거리 (있는 경우) -->
+    <!--
+    <div class="further-reading">
+      <h4>더 읽을거리</h4>
+      <ul>
+        <li>참고문헌 1</li>
+        <li>참고문헌 2</li>
+      </ul>
+    </div>
+    -->
+
+    <!-- 이전/다음 -->
+    <div class="ch-nav">
+      <a href="column.html" class="prev">← 칼럼 목록</a>
+      <a href="column-ch2.html" class="next">2장. 언어 교수 이론과 활동 →</a>
+    </div>
+  </article>
+</div>
+
+<footer><div style="max-width:1100px;margin:0 auto;padding:0 32px;">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+// 스크롤 스파이 — 현재 읽는 절에 active 표시
+const headings = document.querySelectorAll('.article h2[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+
+headings.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

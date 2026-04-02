@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사과하기 시나리오 · AI로 상황별 사과 연습 자료 만드는 법</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #2d2d2d;
+            line-height: 1.6;
+        }
+
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(249, 249, 247, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 0.5px solid #d0ccc8;
+            padding: 16px 20px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-weight: 500;
+            font-size: 14px;
+            color: #555;
+            margin-right: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            color: #777;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2d2d2d;
+            border-bottom-color: #2d2d2d;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f9f9f7 0%, #faf8f5 100%);
+            padding: 60px 20px;
+            border-bottom: 0.5px solid #d0ccc8;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #f0e8e0;
+            color: #8b6f47;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            border: 0.5px solid #ddd0c4;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .chips {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: #fff;
+            border: 0.5px solid #d0ccc8;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #555;
+            font-weight: 400;
+        }
+
+        /* Main Section */
+        .section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            border-bottom: 0.5px solid #d0ccc8;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 32px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #2d2d2d;
+            margin-bottom: 16px;
+            margin-top: 24px;
+        }
+
+        /* Overview Table */
+        .overview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+            border: 0.5px solid #d0ccc8;
+        }
+
+        .overview-table th {
+            background: #f9f9f7;
+            padding: 12px;
+            text-align: left;
+            font-weight: 500;
+            border-bottom: 0.5px solid #d0ccc8;
+            border-right: 0.5px solid #d0ccc8;
+            font-size: 13px;
+            width: 30%;
+        }
+
+        .overview-table td {
+            padding: 12px;
+            border-bottom: 0.5px solid #d0ccc8;
+            border-right: 0.5px solid #d0ccc8;
+            font-size: 14px;
+        }
+
+        .overview-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .overview-table td:last-child,
+        .overview-table th:last-child {
+            border-right: none;
+        }
+
+        /* Basis Section */
+        .basis-container {
+            background: #fff;
+            border: 0.5px solid #d0ccc8;
+            padding: 24px;
+            border-radius: 4px;
+            margin-bottom: 32px;
+        }
+
+        .basis-container p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .basis-container p strong {
+            font-weight: 500;
+            color: #2d2d2d;
+        }
+
+        /* Prompt Box */
+        .prompt-box {
+            background: #2d2d2d;
+            color: #e8e8e8;
+            padding: 24px;
+            border-radius: 4px;
+            margin-bottom: 32px;
+            border: 0.5px solid #444;
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .prompt-box .dots {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff6b6b; }
+        .dot-yellow { background: #ffd93d; }
+        .dot-green { background: #6bcf7f; }
+
+        .prompt-code {
+            margin-top: 12px;
+        }
+
+        .prompt-code .hash {
+            color: #888;
+        }
+
+        /* JSON Body */
+        .json-body {
+            background: #2d2d2d;
+            color: #e8e8e8;
+            padding: 24px;
+            border-radius: 4px;
+            margin-bottom: 32px;
+            border: 0.5px solid #444;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .json-body .dots {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .json-key { color: #64b5f6; }
+        .json-string { color: #81c784; }
+        .json-number { color: #ffb74d; }
+
+        /* Caution Box */
+        .caution-box {
+            background: #fffef0;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 24px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .caution-box strong {
+            font-weight: 500;
+            color: #b8860b;
+        }
+
+        /* Act Box (Quiz) */
+        .act-box {
+            background: #fff;
+            border: 0.5px solid #d0ccc8;
+            border-radius: 4px;
+            padding: 0;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        .act-header {
+            background: #4a90e2;
+            color: #fff;
+            padding: 16px 20px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .act-content {
+            padding: 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e8e8e8;
+            border-radius: 3px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4a90e2;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-question {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d2d2d;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .scenario-box {
+            background: #f9f9f7;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 0.5px solid #d0ccc8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .scenario-label {
+            font-weight: 500;
+            color: #8b6f47;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .quiz-option:hover {
+            background: #f5f5f5;
+            border-color: #b0b0b0;
+        }
+
+        .quiz-option.selected-correct {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .quiz-option.selected-incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .feedback-box {
+            background: #f0f4ff;
+            border-left: 4px solid #4a90e2;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-correct {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .feedback-incorrect {
+            background: #ffebee;
+            border-left-color: #f44336;
+            color: #c62828;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            color: #2d2d2d;
+            padding: 20px;
+            background: #f9f9f7;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .score-display.show {
+            display: block;
+        }
+
+        /* Check List */
+        .check-list {
+            list-style: none;
+            margin: 24px 0;
+        }
+
+        .check-list li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .check-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Variation Table */
+        .var-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border: 0.5px solid #d0ccc8;
+        }
+
+        .var-table th {
+            background: #f9f9f7;
+            padding: 12px;
+            text-align: left;
+            font-weight: 500;
+            border-bottom: 0.5px solid #d0ccc8;
+            border-right: 0.5px solid #d0ccc8;
+            font-size: 13px;
+        }
+
+        .var-table td {
+            padding: 12px;
+            border-bottom: 0.5px solid #d0ccc8;
+            border-right: 0.5px solid #d0ccc8;
+            font-size: 13px;
+        }
+
+        .var-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .var-table td:last-child,
+        .var-table th:last-child {
+            border-right: none;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted #999;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            background-color: #2d2d2d;
+            color: #e8e8e8;
+            text-align: center;
+            border-radius: 4px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2d2d2d transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero-desc {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                font-size: 11px;
+            }
+
+            .nav-links a {
+                padding: 6px 0;
+            }
+
+            .section {
+                padding: 40px 20px;
+            }
+
+            .section h2 {
+                font-size: 22px;
+            }
+
+            .overview-table th,
+            .overview-table td {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .quiz-option {
+                font-size: 13px;
+                padding: 12px;
+            }
+
+            .prompt-box,
+            .json-body {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navigation -->
+    <nav class="sticky-nav">
+        <div class="nav-container">
+            <div class="nav-title">사과하기 시나리오</div>
+            <ul class="nav-links">
+                <li><a onclick="scrollTo_('overview')">개요</a></li>
+                <li><a onclick="scrollTo_('basis')">설계 근거</a></li>
+                <li><a onclick="scrollTo_('build')">제작 과정</a></li>
+                <li><a onclick="scrollTo_('practice')">연습</a></li>
+                <li><a onclick="scrollTo_('check')">체크리스트</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="tag">❸ 기능 중심 · 대인 관계</div>
+            <h1>사과하기 시나리오</h1>
+            <p class="hero-desc">AI로 상황별 사과 연습 자료 만드는 법 · 프롬프트로 심각도와 관계에 따른 사과 시나리오를 만드는 과정을 안내해요.</p>
+            <div class="chips">
+                <div class="chip">TOPIK 3급 · 중급</div>
+                <div class="chip">제작 시간 15분</div>
+                <div class="chip">6개 시나리오</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Section -->
+    <div class="section" id="overview">
+        <h2>개요</h2>
+
+        <table class="overview-table">
+            <tr>
+                <th>활동 유형</th>
+                <td>시나리오 기반 표현 연습</td>
+            </tr>
+            <tr>
+                <th>범주</th>
+                <td>❸ 기능 중심</td>
+            </tr>
+            <tr>
+                <th>대상</th>
+                <td>중급 (TOPIK 3급)</td>
+            </tr>
+            <tr>
+                <th>목표</th>
+                <td>상황의 심각도와 화자 관계에 맞는 사과 전략 사용</td>
+            </tr>
+            <tr>
+                <th>언어 기능</th>
+                <td>말하기 · 쓰기</td>
+            </tr>
+            <tr>
+                <th>규모</th>
+                <td>6개 시나리오 / 15분</td>
+            </tr>
+            <tr>
+                <th>배포</th>
+                <td>웹 기반 또는 인쇄용</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Basis Section -->
+    <div class="section" id="basis">
+        <h2>설계 근거</h2>
+
+        <div class="basis-container">
+            <p>사과는 단순히 "미안합니다"를 말하는 게 아니에요. 상황의 심각도에 따라 사과의 강도와 전략이 달라져야 하거든요. 시나리오는 "무엇이 잘못되었는가"와 "상대방이 누구인가"를 동시에 제시해서, 학습자가 적절한 사과 전략을 선택하도록 유도해요.</p>
+
+            <p>사과에서 핵심은 <strong>"얼마나 심각한 잘못인가"에 따라 사과의 구성 요소(인정, 설명, 보상 제안, 재발 방지 약속)를 조합하는 거예요.</strong> 작은 실수에 과도한 사과를 하면 어색하고, 큰 잘못에 가벼운 사과를 하면 부적절하잖아요. 시나리오를 심각도 순으로 배치하면 이 "조절"을 체계적으로 연습할 수 있어요.</p>
+        </div>
+    </div>
+
+    <!-- Build Section -->
+    <div class="section" id="build">
+        <h2>제작 과정</h2>
+
+        <h3>Step 1: 프롬프트 작성</h3>
+        <div class="prompt-box">
+            <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+            </div>
+            <div class="prompt-code">
+                <div><span class="hash">#</span> 역할 (Role)</div>
+                <div>한국어 교육 전문가 (화용론 전공)</div>
+                <div>&nbsp;</div>
+                <div><span class="hash">#</span> 과제 (Task)</div>
+                <div>TOPIK 3급 학습자를 위한 사과하기 시나리오 생성</div>
+                <div>&nbsp;</div>
+                <div><span class="hash">#</span> 조건 (Constraints)</div>
+                <div>- 시나리오 6개, 심각도 3단계 × 관계 2종류</div>
+                <div>  경미+친구, 경미+직장, 중간+친구, 중간+직장, 심각+친구, 심각+직장</div>
+                <div>- 각 시나리오: 상황 설명, 적절한 사과 전략 구성 요소, 모범 사과문, 부적절한 사과문(비교용)</div>
+                <div>&nbsp;</div>
+                <div><span class="hash">#</span> 출력 (Output)</div>
+                <div>JSON 형식</div>
+            </div>
+        </div>
+
+        <div class="caution-box">
+            <strong>📌 주의:</strong> "부적절한 사과문"을 포함시키는 이유는, 학습자가 "과도한 사과도 부적절할 수 있다"는 걸 인식하게 하기 위해서예요. 한국어 학습자는 "정중할수록 좋다"고 생각하는 경향이 있는데, 상황에 비해 과도한 사과는 오히려 관계를 불편하게 만들거든요.
+        </div>
+
+        <h3>Step 2: JSON 응답 예시</h3>
+        <div class="json-body">
+            <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+            </div>
+            <div style="margin-top: 16px;">
+                <div>{</div>
+                <div>&nbsp;&nbsp;<span class="json-key">"scenarios"</span>: [</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;{</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-number">1</span>,</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"severity"</span>: <span class="json-string">"경미"</span>,</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"relationship"</span>: <span class="json-string">"친구"</span>,</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"situation"</span>: <span class="json-string">"카페에서 만나기로 했는데 5분 늦었습니다."</span>,</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"strategy"</span>: [<span class="json-string">"사과 표현"</span>, <span class="json-string">"간단한 이유"</span>],</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"good_example"</span>: <span class="json-string">"미안, 버스가 늦게 와서. 오래 기다렸어?"</span>,</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"bad_example"</span>: <span class="json-string">"정말 죄송합니다. 다시는 이런 일이 없도록 하겠습니다."</span>,</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"bad_reason"</span>: <span class="json-string">"친구에게 5분 늦은 것에 과도하게 격식적인 사과는 어색하다."</span></div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;},</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="json-key">"id"</span>: <span class="json-number">2</span>, <span class="json-string">"..."</span>: <span class="json-string">"..."</span> }</div>
+                <div>&nbsp;&nbsp;]</div>
+                <div>}</div>
+            </div>
+        </div>
+
+        <h3>JSON 항목 설명</h3>
+        <div class="basis-container">
+            <p><strong>scenarios:</strong> 사과 시나리오 목록이에요.</p>
+            <p><strong>severity:</strong> 심각도 단계예요. 경미/중간/심각 3단계가 있어요.</p>
+            <p><strong>relationship:</strong> 화자 관계예요. 친구와 직장으로 나뉘어요.</p>
+            <p><strong>strategy:</strong> 적절한 사과 전략 구성 요소예요.</p>
+            <p><strong>good_example:</strong> 모범 사과문이에요. 상황에 맞는 적절한 사과 표현이죠.</p>
+            <p><strong>bad_example:</strong> 부적절한 사과문이에요. 왜 부적절한지 비교용으로 들어가요.</p>
+            <p><strong>bad_reason:</strong> 부적절한 사과문이 왜 상황에 맞지 않는지 설명해요.</p>
+        </div>
+    </div>
+
+    <!-- Practice Section -->
+    <div class="section" id="practice">
+        <h2>연습</h2>
+        <p style="margin-bottom: 24px; color: #555;">아래 시나리오를 읽고, 상황에 맞는 사과 표현을 선택해보세요. 심각도와 관계에 맞는 적절한 사과가 무엇인지 판단하는 연습이에요.</p>
+
+        <!-- Quiz 1 -->
+        <div class="act-box">
+            <div class="act-header">
+                ❶ 연습 1: 경미한 상황 + 친구
+            </div>
+            <div class="act-content">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33%;"></div>
+                </div>
+
+                <div class="quiz-question">어떤 사과 표현이 더 자연스러울까요?</div>
+
+                <div class="scenario-box">
+                    <div class="scenario-label">시나리오</div>
+                    <div>카페에서 만나기로 했는데 5분 늦었습니다. 친구와의 약속이에요.</div>
+                </div>
+
+                <div class="quiz-options" id="quiz1">
+                    <div class="quiz-option" data-correct="true" onclick="checkAnswer(this, 'quiz1')">
+                        ✓ 미안, 버스가 늦게 와서. 오래 기다렸어?
+                    </div>
+                    <div class="quiz-option" data-correct="false" onclick="checkAnswer(this, 'quiz1')">
+                        ✗ 정말 죄송합니다. 다시는 이런 일이 없도록 하겠습니다.
+                    </div>
+                </div>
+
+                <div class="feedback-box" id="feedback1">
+                    <strong>설명:</strong> 친구에게 5분 늦은 것은 작은 실수예요. 첫 번째 표현처럼 "미안"이라는 간단한 사과와 이유를 함께 말하는 게 자연스러워요. 두 번째 표현은 너무 격식적이고 과도해서 오히려 어색할 수 있어요.
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="act-box">
+            <div class="act-header">
+                ❷ 연습 2: 중간 정도의 상황 + 직장
+            </div>
+            <div class="act-content">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 66%;"></div>
+                </div>
+
+                <div class="quiz-question">어떤 사과 표현이 더 적절할까요?</div>
+
+                <div class="scenario-box">
+                    <div class="scenario-label">시나리오</div>
+                    <div>중요한 회의에 교통 체증으로 30분을 지각했습니다. 직장 상사와의 회의예요.</div>
+                </div>
+
+                <div class="quiz-options" id="quiz2">
+                    <div class="quiz-option" data-correct="false" onclick="checkAnswer(this, 'quiz2')">
+                        ✗ 아, 좀 늦었네요.
+                    </div>
+                    <div class="quiz-option" data-correct="true" onclick="checkAnswer(this, 'quiz2')">
+                        ✓ 죄송합니다. 교통 사고가 있어서 늦었습니다. 다시는 이런 일이 없도록 하겠습니다.
+                    </div>
+                </div>
+
+                <div class="feedback-box" id="feedback2">
+                    <strong>설명:</strong> 직장의 중요한 회의에 30분을 지각한 것은 사소한 일이 아니에요. 따라서 첫 번째처럼 "아, 좀 늦었네요"라고 가볍게 넘기면 상대방에게 불성실해 보여요. 두 번째처럼 "죄송합니다" + 구체적인 이유 + 재발 방지 약속을 포함해서 진지한 사과를 해야 해요.
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="act-box">
+            <div class="act-header">
+                ❸ 연습 3: 심각한 상황 + 친구
+            </div>
+            <div class="act-content">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+
+                <div class="quiz-question">어떤 사과 표현이 더 적절할까요?</div>
+
+                <div class="scenario-box">
+                    <div class="scenario-label">시나리오</div>
+                    <div>친구와 약속한 날 전혀 연락 없이 약속을 까먹었습니다. 친구에게 정말 미안한 상황이에요.</div>
+                </div>
+
+                <div class="quiz-options" id="quiz3">
+                    <div class="quiz-option" data-correct="false" onclick="checkAnswer(this, 'quiz3')">
+                        ✗ 아 미안, 깜빡했어.
+                    </div>
+                    <div class="quiz-option" data-correct="true" onclick="checkAnswer(this, 'quiz3')">
+                        ✓ 정말 미안해. 내가 완전히 잊어버렸어. 진짜 할 말이 없다. 다음에 내가 꼭 사줄게.
+                    </div>
+                </div>
+
+                <div class="feedback-box" id="feedback3">
+                    <strong>설명:</strong> 중요한 약속을 완전히 깜빡한 것은 심각한 실수예요. 비록 친구 사이지만 첫 번째처럼 "아 미안, 깜빡했어"라고 너무 가볍게 사과하면 상대 친구가 상할 거예요. 두 번째처럼 "정말 미안해" (강한 사과) + 진지한 표현 + 보상 제안 (내가 사줄게)을 함께 하는 게 자연스러워요.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Check Section -->
+    <div class="section" id="check">
+        <h2>체크리스트</h2>
+
+        <h3>시나리오 검증</h3>
+        <ul class="check-list">
+            <li>6개 시나리오의 심각도가 순차적으로 올라가나요? (경미 → 중간 → 심각)</li>
+            <li>모범 사과문이 화자 관계(친구 vs 직장)에 맞는 높임법을 사용하나요?</li>
+            <li>부적절한 사과문이 "왜 부적절한지"가 명확하게 설명 가능한가요?</li>
+        </ul>
+
+        <h3>변형 및 확장</h3>
+        <table class="var-table">
+            <tr>
+                <th>변형 유형</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td><strong>기능 교체</strong></td>
+                <td>사과 → 감사 표현 / 심각도 대신 "감사의 정도"로 배열</td>
+            </tr>
+            <tr>
+                <td><strong>난이도 ↑</strong></td>
+                <td>모범 사과문 없이 학습자가 직접 작성 / 전략 구성 요소만 체크</td>
+            </tr>
+            <tr>
+                <td><strong>문화 비교</strong></td>
+                <td>한국식 사과 vs 학습자 모국의 사과 / "우리나라에서는 어떻게 사과하나?" 토론</td>
+            </tr>
+        </table>
+
+        <h3>추가 학습 자료</h3>
+        <div class="basis-container">
+            <p><strong>🎯 심화 포인트:</strong> 사과의 각 구성 요소(인정, 설명, 보상, 재발 방지)가 심각도에 따라 어떻게 조합되는지 명시적으로 지도하면 학습자의 이해도가 높아져요.</p>
+            <p><strong>💬 토론 활동:</strong> 각 시나리오마다 "당신이라면 어떻게 사과했을까?"라고 물어본 다음, 다양한 답변들을 모아서 "왜 이 사과가 더 나을까?"를 비교 분석하는 활동도 좋아요.</p>
+        </div>
+    </div>
+
+    <script>
+        function scrollTo_(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function checkAnswer(element, quizId) {
+            const isCorrect = element.getAttribute('data-correct') === 'true';
+            const container = document.getElementById(quizId);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedbackBox = document.getElementById(`feedback${quizId.replace('quiz', '')}`);
+
+            // Mark all options
+            options.forEach(option => {
+                const correct = option.getAttribute('data-correct') === 'true';
+                if (correct) {
+                    option.classList.add('selected-correct');
+                } else if (option === element && !correct) {
+                    option.classList.add('selected-incorrect');
+                }
+                option.style.pointerEvents = 'none';
+                option.style.opacity = correct ? '1' : '0.6';
+            });
+
+            // Show feedback
+            feedbackBox.classList.add('show');
+            if (isCorrect) {
+                feedbackBox.classList.add('feedback-correct');
+                feedbackBox.classList.remove('feedback-incorrect');
+            } else {
+                feedbackBox.classList.add('feedback-incorrect');
+                feedbackBox.classList.remove('feedback-correct');
+            }
+        }
+    </script>
+</body>
+</html>

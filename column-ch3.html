@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3장. 활동의 분류 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* ── 네비 ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+
+/* ── 글 헤더 ── */
+.article-header{
+  padding:120px 0 40px;
+  text-align:center;
+  border-bottom:0.5px solid var(--border);
+}
+.article-header .part-label{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  color:var(--blue);margin-bottom:8px;
+}
+.article-header h1{
+  font-size:clamp(28px,4.5vw,42px);
+  font-weight:900;line-height:1.25;
+  letter-spacing:-0.02em;
+  max-width:640px;margin:0 auto 12px;
+}
+.article-header .ch-question{
+  font-size:16px;color:var(--text-sub);
+  font-style:italic;
+}
+
+/* ── 목차 사이드바 (스티키) ── */
+.layout{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:48px;
+  max-width:1000px;
+  margin:0 auto;
+  padding:40px 32px 80px;
+}
+.toc{
+  position:sticky;top:80px;
+  align-self:start;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+  padding-right:16px;
+}
+.toc-label{font-size:11px;font-weight:700;color:var(--text-light);letter-spacing:0.06em;margin-bottom:12px;}
+.toc a{
+  display:block;
+  font-size:12px;font-weight:500;
+  color:var(--text-sub);
+  text-decoration:none;
+  padding:6px 0;
+  border-left:2px solid transparent;
+  padding-left:12px;
+  transition:all .15s;
+  line-height:1.4;
+}
+.toc a:hover{color:var(--text);}
+.toc a.active{color:var(--text);font-weight:700;border-left-color:var(--blue);}
+
+/* ── 본문 ── */
+.article{max-width:680px;}
+.article h2{
+  font-size:22px;font-weight:800;
+  letter-spacing:-0.01em;
+  margin:48px 0 16px;
+  padding-top:24px;
+}
+.article h3{
+  font-size:17px;font-weight:700;
+  margin:32px 0 12px;
+  color:var(--text);
+}
+.article p{
+  font-size:15px;
+  margin-bottom:16px;
+  line-height:1.85;
+  color:#333;
+}
+.article ul,.article ol{
+  margin:12px 0 20px 20px;
+  font-size:15px;line-height:1.85;
+  color:#333;
+}
+.article li{margin-bottom:6px;}
+.article table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;
+  font-size:14px;
+}
+.article th,.article td{
+  padding:10px 14px;
+  border:0.5px solid var(--border);
+  text-align:left;
+}
+.article th{background:var(--bg-alt);font-weight:700;font-size:13px;}
+.article blockquote{
+  border-left:3px solid var(--blue);
+  padding:12px 20px;
+  margin:20px 0;
+  background:var(--blue-light);
+  border-radius:0 8px 8px 0;
+  font-size:14px;
+  color:#444;
+}
+
+/* 더 읽을거리 박스 */
+.further-reading{
+  background:var(--card);
+  border:0.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  margin:40px 0;
+}
+.further-reading h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.further-reading ul{margin:0;padding-left:18px;font-size:13px;color:var(--text-sub);}
+.further-reading li{margin-bottom:4px;}
+
+/* 이전/다음 네비 */
+.ch-nav{
+  display:flex;justify-content:space-between;
+  padding:32px 0;
+  border-top:0.5px solid var(--border);
+  margin-top:48px;
+}
+.ch-nav a{
+  text-decoration:none;color:var(--text-sub);
+  font-size:13px;font-weight:600;
+  transition:color .2s;
+}
+.ch-nav a:hover{color:var(--blue);}
+.ch-nav .next{margin-left:auto;}
+
+/* ── 모바일 ── */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;gap:0;}
+  .toc{display:none;}
+  .article-header h1{font-size:28px;}
+}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">기본도구</a><a href="activity.html">활동</a><a href="demo.html">데모</a><a href="column.html" class="active">칼럼</a><a href="faq.html">FAQ</a></div></div></nav>
+
+<header class="article-header">
+  <div class="part-label">II부 — 활동의 분류와 설계</div>
+  <h1>3장. 활동의 분류</h1>
+  <div class="ch-question">활동에는 어떤 종류가 있고, 무엇을 기준으로 나누는가?</div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-label">목차</div>
+    <!-- 절 목차 자동 생성: 본문의 h2 id를 참조 -->
+        <a href="#sec-3-1">3.1 네 범주 분류 체계</a>
+    <a href="#sec-3-2">3.2 형태 학습 중심 활동</a>
+    <a href="#sec-3-3">3.3 의미 구성 중심 활동</a>
+    <a href="#sec-3-4">3.4 의사소통 기능 중심 활동</a>
+    <a href="#sec-3-5">3.5 과제 기반 활동</a>
+    <a href="#sec-3-6">3.6 네 범주의 교수적 관계</a>
+  </aside>
+
+  <article class="article">
+    <!-- 본문: docx 내용을 여기에 변환하여 삽입 -->
+    <h2 id="sec-3-1">3.1 네 범주 분류 체계</h2>
+<h3>1.1. 연속체에서 네 범주로의 재구성</h3>
+<p>2장에서 살펴본 Littlewood(2004)의 의사소통 연속체는 교실 활동을 형태 중심에서 의미 중심으로 이행하는 하나의 스펙트럼 위에 배치한다는 점에서 강력한 이론적 틀이다. 그러나 다섯 단계 사이의 경계가 모호하고, 특히 의사소통 기능 중심 활동의 위치가 불분명하다는 한계도 가진다.</p>
+<p>이 책에서는 Littlewood의 연속체를 기본 틀로 수용하되, 위의 한계를 보완하여 다섯 단계를 <b>네 개의 범주</b>로 재구성한다. 재구성의 핵심은 두 가지이다. 첫째, Littlewood의 ①(비의사소통적 학습)과 ②(전의사소통적 연습)를 하나의 범주로 통합한다. 교실 현장에서 이 두 단계의 구분은 실제적 의미가 크지 않으며, 둘 다 형태에 초점을 둔다는 공통점을 가진다. 둘째, 연속체 위에서 독립적 위치를 갖지 못했던 의사소통 기능 중심 활동을 별도의 범주로 설정한다.</p>
+<h3>1.2. 네 범주의 개관</h3>
+<p>재구성된 네 범주와 Littlewood 연속체의 대응 관계는 다음과 같다.</p>
+<p>범주                        Littlewood 대응   핵심 초점                        학습자에게 주는 것</p>
+<p>❶ 형태 학습 중심 활동       ①+②               언어 형태의 정확한 사용          정확성, 형태 인식 ❷ 의미 구성 중심 활동       ②\~③              형태를 의미 있는 맥락에서 사용   형태-의미 연결 ❸ 의사소통 기능 중심 활동   ③\~④              실제 상황에서 기능 수행          화용적 적절성 ❹ 과제 기반 활동            ④+⑤               언어를 도구로 과제 완수          통합적 의사소통 능력</p>
+<p>이 네 범주는 상호 배타적이라기보다, 연속체 위에서 중첩적으로 분포하는 것으로 이해해야 한다. 하나의 활동이 두 범주의 성격을 동시에 가질 수 있으며, 교사가 운영 방식을 조정함으로써 범주 간 이동이 가능하다. 예를 들어, 상황 카드를 보고 문장을 완성하는 활동은 카드의 내용과 학습자에게 주어지는 자유도에 따라 ❶이 될 수도 있고 ❷가 될 수도 있다.</p>
+<p>이하에서는 각 범주의 특성을 교수적 역할, 주요 특성, 하위 활동 유형의 순서로 기술한다.</p>
+<h2 id="sec-3-2">3.2 형태 학습 중심 활동</h2>
+<h3>2.1. 교수적 역할과 주요 특성</h3>
+<p>형태 학습 중심 활동은 학습자의 주의를 특정 언어 형태의 정확한 사용에 집중시키는 활동이다. 이 범주의 교수적 역할은 학습자가 알고 있는 문법 규칙을 반복 연습을 통해 <b>자동화</b>하는 데 있다. 문법 설명을 듣고 '아는' 것과, 실제 대화에서 생각 없이 '쓰는' 것 사이에는 상당한 거리가 있다. 이 거리를 좁히는 것이 형태 연습의 핵심 기능이다(DeKeyser, 2007).</p>
+<p>이 범주의 활동이 가지는 주요 특성은 다음과 같다.</p>
+<p><b>통제된 환경.</b> 학습자가 산출해야 할 언어의 범위가 사전에 제한된다. 빈칸 채우기에서 선택지가 주어지거나, 대입 연습에서 교체할 요소가 지정되는 식이다. 이러한 통제는 학습자가 목표 형태에만 주의를 집중할 수 있도록 인지적 부담을 줄여 주는 역할을 한다.</p>
+<p><b>정답이 존재하는 구조.</b> 대부분의 형태 학습 활동에는 단일하고 명확한 정답이 있다. 이 특성은 자동 채점을 가능하게 하며, 학습자가 즉각적으로 자신의 수행을 평가할 수 있도록 한다.</p>
+<p><b>반복과 자동화의 지향.</b> 형태 학습 활동은 본질적으로 반복을 전제한다. 같은 문법 항목을 다양한 어휘와 맥락에서 반복적으로 사용하게 함으로써, 선언적 지식의 절차적 지식으로의 전환을 촉진한다.</p>
+<p><b>즉각적 피드백과의 친화성.</b> 정답이 존재하는 구조이므로, 학습자의 응답에 대해 즉각적인 정오 판정과 해설을 제공하는 것이 가능하다. 이러한 즉각적 피드백은 학습의 효율성을 높이는 것으로 알려져 있다.</p>
+<h3>2.2. 하위 활동 유형</h3>
+<p>이 범주에 속하는 활동 유형은 다음 네 가지이다.</p>
+<p><b>빈칸·완성형 자료.</b> 문장 속 빈칸에 적절한 형태를 넣는 활동이다. 가장 전형적인 형태 학습 활동으로, 조사, 어미, 접속 표현 등의 연습에 널리 사용된다. 선택형(주어진 보기에서 고르기)과 산출형(직접 작성하기)의 두 가지 변형이 있으며, 각각의 인지적 처리 과정이 다르다. 이에 대한 상세한 논의는 4장에서 다룬다.</p>
+<p><b>변환·대입형 자료.</b> 주어진 문장의 특정 요소를 교체하거나 형태를 변환하는 활동이다. 시제 변환(현재→과거), 높임법 전환(해요체→하십시오체), 문장 유형 변환(평서문→의문문) 등이 대표적이다. 고정된 문장 구조 안에서 어휘만 교체하는 대입 연습(substitution drill)도 이 유형에 포함된다.</p>
+<p><b>매칭형 자료.</b> 둘 이상의 요소를 연결하는 활동이다. 문법-상황 매칭(예: '-아서'와 적절한 상황 연결), 어휘-이미지 매칭, 대화의 앞뒤 연결 등이 있다. 매칭 활동은 형태와 의미의 연결을 촉진한다는 점에서 ❷ 의미 구성 활동과의 경계에 위치하기도 한다.</p>
+<p><b>게임·퀴즈형 자료.</b> 빈칸 채우기나 매칭과 같은 기본 구조에 시간 제한, 점수, 경쟁 요소 등 게임화(gamification) 요소를 더한 활동이다. 크로스워드 퍼즐, 보드게임, 타이머 퀴즈 등이 이에 해당한다. 게임화 요소는 학습의 동기를 높이고 반복 연습에 대한 저항감을 줄이는 데 기여한다.</p>
+<h2 id="sec-3-3">3.3 의미 구성 중심 활동</h2>
+<h3>3.1. 교수적 역할과 주요 특성</h3>
+<p>의미 구성 중심 활동은 학습자가 언어 형태를 의미 있는 맥락 안에서 사용하도록 유도하는 활동이다. ❶ 형태 학습 활동과 구별되는 핵심적 차이는 <b>맥락의 역할</b>에 있다. 형태 학습 활동에서 맥락은 부수적이거나 부재하지만, 의미 구성 활동에서 맥락은 활동의 핵심이다. 이 범주의 궁극적 교수 목적은 '이 문법을 쓸 수 있는가'가 아니라 '언제, 왜 이 문법을 쓰는가'에 대한 이해를 촉진하는 것이다(VanPatten, 1996).</p>
+<p>주요 특성은 다음과 같다.</p>
+<p><b>맥락에 기반한 의미 선택.</b> 학습자는 주어진 맥락(그림, 상황, 텍스트)에 기반하여 적절한 언어 형태를 선택한다. 형태 학습 활동에서 정답이 규칙에 의해 결정되었다면, 의미 구성 활동에서 정답은 맥락에 의해 결정된다.</p>
+<p><b>제한된 범위 안에서의 자유.</b> 학습자의 언어 사용이 완전히 자유롭지는 않지만, 형태 학습 활동에 비해 선택의 폭이 넓다. 예를 들어, 그림을 보고 상황을 묘사하는 활동에서 학습자는 특정 문법을 사용해야 하지만, 어떤 어휘를 선택하고 어떤 내용을 강조할지에 대해서는 자율성을 가진다.</p>
+<p><b>시각·텍스트 자료의 적극적 활용.</b> 그림, 사진, 차트, 그래프, 뉴스 기사 등 다양한 자료가 의미의 원천으로 사용된다. 이러한 자료는 학습자에게 언어 사용의 목적과 맥락을 부여하는 역할을 한다.</p>
+<p><b>형태-의미 연결의 촉진.</b> 이 범주의 활동은 학습자가 특정 형태가 특정 의미 맥락과 결합하는 양상을 경험하게 한다. VanPatten(1996)의 입력 처리 이론에 따르면, 학습자가 형태와 의미의 연결(form-meaning connection)을 인식하는 것이 습득의 핵심 과정이며, 의미 구성 활동은 이 과정을 의도적으로 촉진한다.</p>
+<h3>3.2. 하위 활동 유형</h3>
+<p>이 범주에 속하는 활동 유형은 다음 네 가지이다.</p>
+<p><b>시각 자료 기반 활동.</b> 그림, 사진, 차트, 그래프 등 시각 자료를 보고 언어로 표현하는 활동이다. 상황 묘사, 그래프 해석, 그림 비교, 그림 보고 이야기 만들기 등이 이에 해당한다. 시각 자료는 학습자에게 표현의 내용을 제공하면서도, 표현의 형식에 대해서는 선택의 여지를 남긴다.</p>
+<p><b>텍스트 기반 활동.</b> 읽기 텍스트나 듣기 자료를 기반으로 의미를 구성하는 활동이다. 레벨별 읽기 자료, 듣기 후 내용 파악 활동, 텍스트 요약 활동 등이 포함된다. 텍스트의 난이도 조절이 핵심적인 설계 변인이 되며, 이에 대해서는 4장에서 다룬다.</p>
+<p><b>맥락·상황 기반 활동.</b> 주어진 상황 카드나 맥락 설명을 보고 적절한 언어를 사용하는 활동이다. 예를 들어, "친구가 아프다"는 상황을 제시하고 적절한 위로의 표현을 선택하거나 완성하게 하는 활동이 이에 해당한다. 상황의 복잡도에 따라 ❸ 의사소통 기능 중심 활동과의 경계에 위치하기도 한다.</p>
+<p><b>상호작용 기반 활동.</b> 두 명 이상의 학습자가 서로 다른 정보를 가지고 소통하면서 의미를 구성하는 활동이다. 정보 차(information gap) 활동이 대표적이며, 직소(jigsaw) 읽기, 서베이, 인터뷰 활동 등이 포함된다. 상호작용 기반 활동은 Long(1996)의 상호작용 가설에서 강조하는 의미 협상을 자연스럽게 유발한다.</p>
+<h2 id="sec-3-4">3.4 의사소통 기능 중심 활동</h2>
+<h3>4.1. 교수적 역할과 주요 특성</h3>
+<p>의사소통 기능 중심 활동은 '거절하기', '요청하기', '설명하기'와 같은 <b>의사소통 기능(communicative function)</b>의 수행에 초점을 맞춘 활동이다. 이 범주가 독립적으로 설정된 이유는, 의사소통 기능의 수행에는 <b>화용적 적절성</b>이라는 고유한 차원이 개입하기 때문이다.</p>
+<p>화용론에서는 이를 두 차원으로 나눈다. 어떤 표현 형식을 쓸 것인가(언어적 차원)와, 그 표현이 사회적 맥락에서 적절한가(사회적 차원)이다. 예를 들어, "아니요, 괜찮습니다"와 "미안한데 그건 좀 어려울 것 같아요"는 둘 다 문법적으로 올바른 거절 표현이지만, 사용되는 상황(상사에게 vs 친구에게)에 따라 적절성이 달라진다. 이 두 차원 모두를 다루는 것이 이 범주의 교수 목표이다.</p>
+<p>주요 특성은 다음과 같다.</p>
+<p><b>사회적 맥락의 설정.</b> 모든 의사소통 기능 활동에는 화자 간의 관계, 상황의 공식성, 요청이나 거절의 부담도 등 사회적 맥락이 명시적으로 설정된다. 이 맥락이 학습자의 언어 선택을 제약하는 핵심 변인이 된다.</p>
+<p><b>적절성 판단의 필요.</b> 형태 학습 활동에서 판단 기준이 '정확한가'였다면, 이 범주에서는 '적절한가'가 추가된다. 문법적으로 올바르지만 화용적으로 부적절한 표현(예: 상사에게 반말로 거절하기)을 판별하고 수정하는 것이 학습의 핵심 내용이다.</p>
+<p><b>사회언어학적 변수의 조작.</b> 같은 의사소통 기능(예: 거절하기)이라도 화자의 관계(친구 vs 상사), 상황의 공식성(일상 대화 vs 회의), 부담의 크기(작은 부탁 vs 큰 부탁)에 따라 사용되는 표현이 달라진다. 이러한 변수를 조작함으로써 다양한 수준의 연습이 가능해진다. 변수 조작을 통한 난이도 조절은 4장에서 상세히 다룬다.</p>
+<h3>4.2. 하위 활동 유형</h3>
+<p>이 범주에 속하는 활동 유형은 다음 세 가지이다.</p>
+<p><b>대인 관계 기능 활동.</b> 거절하기, 사과하기, 요청하기, 위로하기, 칭찬하기, 감사하기 등 대인 관계의 유지와 조절에 관여하는 기능을 다루는 활동이다. 이 기능들은 체면(face)과 공손성(politeness)이 핵심적으로 작용하며, 한국어 교육에서 가장 많은 주의를 요하는 영역이기도 하다. 한국어의 높임법 체계와 밀접하게 연결되어 있다는 점이 영어 교육과 구별되는 특성이다.</p>
+<p><b>정보 전달 기능 활동.</b> 길 안내하기, 순서 설명하기, 비교·대조하기, 묘사하기 등 정보를 효과적으로 전달하는 데 필요한 기능을 다루는 활동이다. 이 기능들은 화용적 적절성보다는 전달의 명확성과 조직성이 핵심이 되며, 담화 구조와 연결 표현의 사용이 중요하다.</p>
+<p><b>의견 표현 기능 활동.</b> 의견 말하기, 근거 들기, 동의하기, 반박하기, 설득하기 등 자신의 생각을 표현하고 논증하는 데 필요한 기능을 다루는 활동이다. 중·고급 단계에서 비중이 높아지며, ❹ 과제 기반 활동(토론, 발표)의 전 단계로서 기능한다.</p>
+<h2 id="sec-3-5">3.5 과제 기반 활동</h2>
+<h3>5.1. 교수적 역할과 주요 특성</h3>
+<p>과제 기반 활동은 학습자가 언어를 의사소통의 도구로 사용하여 주어진 과제를 완수하도록 요구하는 활동이다. 네 범주 중에서 학습자에게 가장 높은 수준의 자율성을 부여하며, 가장 실제적인 언어 사용 환경을 제공한다.</p>
+<p>2장에서 살펴본 바와 같이, TBLT에서 과제는 수업의 조직 원리로 기능한다. 그러나 이 책에서 과제 기반 활동은 TBLT의 틀에 한정되지 않는다. PPP 모형의 마무리 단계에서 사용되는 통합적 과제도, 단원 마무리의 프로젝트 활동도 모두 이 범주에 포함된다.</p>
+<p>주요 특성은 다음과 같다.</p>
+<p><b>결과물의 존재.</b> 과제 기반 활동에는 과제 수행의 결과물이 존재한다. 역할극의 대화, 프로젝트의 발표 자료, 토론의 결론, 문제 해결의 답 등이 이에 해당한다. 결과물의 존재는 학습자에게 활동의 목적을 명확히 하고, 언어 사용에 실제적인 동기를 부여한다.</p>
+<p><b>복합적 기능의 통합적 사용.</b> 과제를 수행하는 과정에서 학습자는 말하기, 듣기, 읽기, 쓰기의 여러 기능을 통합적으로 사용하게 된다. 또한, 요청하기, 설명하기, 동의하기, 반박하기 등 여러 의사소통 기능을 하나의 과제 안에서 복합적으로 수행한다.</p>
+<p><b>예측 불가능한 언어 사용과 의미 협상.</b> 과제 기반 활동에서 학습자가 사용하는 언어는 사전에 통제되지 않는다. 학습자는 과제를 완수하기 위해 필요한 언어를 스스로 선택하고 조합하며, 이 과정에서 의미 협상이 자연스럽게 발생한다. 이러한 예측 불가능성이 실제 의사소통 환경과의 유사성을 높인다.</p>
+<p><b>실세계 관련성.</b> 과제의 내용이 실세계의 과업(약국에서 증상 설명하기, 여행 계획 세우기, 하우스 메이트 규칙 정하기)을 반영한다. 이는 학습자가 교실 밖에서 실제로 수행해야 할 과업에 대비하는 데 기여한다.</p>
+<h3>5.2. 하위 활동 유형</h3>
+<p>이 범주에 속하는 활동 유형은 다음 세 가지이다.</p>
+<p><b>역할극·시뮬레이션.</b> 학습자가 특정 역할을 맡아 주어진 상황에서 과제를 수행하는 활동이다. 역할극(role play)은 비교적 구조화된 형태로, 역할 카드와 상황 설명이 제공된다. 시뮬레이션(simulation)은 보다 개방적인 형태로, 실세계 상황을 교실에 재현하여 학습자가 자유롭게 대처하도록 한다. 약국에서 증상 설명하기, 식당에서 주문하기, 교환·환불하기 등이 대표적이다.</p>
+<p><b>문제 해결형 과제.</b> 학습자가 주어진 문제를 해결하기 위해 정보를 수집하고 논의하는 활동이다. 여행 계획 세우기, 예산 배분하기, 규칙 정하기 등 집단적 의사 결정을 요구하는 과제가 이에 해당한다. 문제 해결 과정에서 비판적 사고와 협력이 자연스럽게 촉진된다.</p>
+<p><b>프로젝트형 과제.</b> 일정 기간에 걸쳐 학습자가 주제를 탐구하고 결과물을 산출하는 활동이다. 자유 주제 발표, 조사 보고, 찬반 토론 대회 등이 이에 해당한다. 다른 유형에 비해 준비 시간이 길고, 산출물의 질에 대한 평가가 수반된다.</p>
+<h2 id="sec-3-6">3.6 네 범주의 교수적 관계</h2>
+<h3>6.1. 범주 간 배열의 원리</h3>
+<p>네 범주는 상호 보완적이다. 수업 안에서 ❶→❷→❸→❹로 이행하는 배열이 가능하며, 이는 많은 한국어 교재의 단원 구성에서 실제로 관찰되는 패턴이다.</p>
+<p>예를 들어, '-아/어야 하다'를 다루는 수업에서 다음과 같은 배열이 가능하다.</p>
+<p>단계   범주          활동 예시</p>
+<ol><li>❶ 형태 학습   '-아/어야 하다' 빈칸 채우기</li><li>❷ 의미 구성   상황 카드 보고 "\~해야 해요" 문장 만들기</li><li>❸ 기능 중심   친구에게 조언하기 롤플레이</li><li>❹ 과제 기반   "건강한 대학 생활 규칙 만들기" 모둠 과제</li></ol>
+<p>이 배열은 정확성에서 유창성으로, 통제에서 자율로, 형태 초점에서 의미 초점으로의 점진적 이행을 반영한다. 다만, 이 순서가 유일한 배열은 아니다. 수업의 목표와 학습자의 수준에 따라 ❸에서 시작하여 ❶로 돌아가는 역방향 배열도 가능하며, 특정 범주를 생략하는 배열도 있을 수 있다. 활동 배열에 대한 보다 상세한 논의는 6장에서 다룬다.</p>
+<h3>6.2. 범주별 평가 기준</h3>
+<p>각 범주는 서로 다른 평가 기준과 결합된다. 이는 활동을 설계할 때 "이 활동에서 학습자의 어떤 능력을 평가할 것인가"를 판단하는 데 핵심적인 기준이 된다.</p>
+<p>범주          핵심 평가 기준            평가 예시</p>
+<p>❶ 형태 학습   정확성                    문법 문항의 정답률 ❷ 의미 구성   형태-의미 연결의 적절성   맥락에 맞는 형태 선택 ❸ 기능 중심   화용적 적절성             상황에 맞는 표현 사용 ❹ 과제 기반   과제 완수도와 유창성      과제 결과물의 질, 발화의 유창성</p>
+<p>7장에서 각 범주의 평가 기준을 구체화하고, 평가 도구(루브릭, 체크리스트 등)의 설계 원리를 다룬다.</p>
+<h3>6.3. 14개 활동 유형 전체 조망</h3>
+<p>네 범주 아래에 이 책에서 다루는 세부 활동 유형은 총 14개이다. 국내 주요 한국어 교재의 활동 구성, 현장 교사의 수업 관행, 그리고 다양한 배포 형태(웹앱, 워크시트, 카드 등)로의 전환 가능성을 기준으로 선정하였다.</p>
+<p>범주          \#   활동 유형           핵심 키워드</p>
+<p>❶ 형태 학습   1    빈칸·완성형         정확성, 반복, 자동 채점 2    변환·대입형         산출, 규칙 적용 3    매칭형              연결, 게임성 4    게임·퀴즈형         동기 유발, 경쟁 ❷ 의미 구성   5    시각 자료 기반      그림, 차트 6    텍스트 기반         읽기, 듣기 7    맥락·상황 기반      상황 카드 8    상호작용 기반       정보 차, 협력 ❸ 기능 중심   9    대인 관계 기능      거절, 사과, 요청 10   정보 전달 기능      설명, 비교, 묘사 11   의견 표현 기능      주장, 논증, 설득 ❹ 과제 기반   12   역할극·시뮬레이션   역할, 실세계 재현 13   문제 해결형 과제    비판적 사고 14   프로젝트형 과제     발표, 토론</p>
+<p>이 14개 유형은 실제편에서 각각 구체적인 자료 제작 사례와 함께 다루어진다. 다음 장(4장)에서는 이 유형들을 실제로 설계할 때 부딪히는 판단의 문제 --- 빈칸 채우기를 선택형으로 할 것인가 입력형으로 할 것인가, 롤플레이에서 화자의 관계를 어떻게 설정할 것인가 --- 를 이론적 근거와 함께 다룬다.</p>
+<div class="further-reading"><h4>더 읽을거리</h4><ul>
+<ul><li>Littlewood, W. (2004). The task-based approach: Some questions and</li></ul>
+<blockquote>suggestions. <em>ELT Journal</em>, 58(4), 319--326.</blockquote>
+<ul><li>Ellis, R. (2003). <em>Task-based Language Learning and Teaching</em>.</li></ul>
+<blockquote>Oxford University Press.</blockquote>
+<ul><li>DeKeyser, R. (2007). <em>Practice in a Second Language</em>. Cambridge</li></ul>
+<blockquote>University Press.</blockquote>
+<ul><li>VanPatten, B. (1996). <em>Input Processing and Grammar Instruction</em>.</li></ul>
+<blockquote>Ablex.</blockquote>
+<ul><li>Long, M. H. (1996). The role of the linguistic environment in second</li></ul>
+<blockquote>language acquisition. In W. C. Ritchie & T. K. Bhatia (Eds.),<br><em>Handbook of Second Language Acquisition</em>. Academic Press.</blockquote>
+<ul><li>Kasper, G. & Rose, K. (2002). *Pragmatic Development in a Second</li></ul>
+<blockquote>Language*. Blackwell.</blockquote>
+<ul><li>강현화 (2007). 한국어 교재의 문법 활동 유형 분석. *외국어로서의</li></ul>
+<blockquote>한국어교육*, 32.</blockquote>
+</ul></div>
+
+    <!-- 더 읽을거리 (있는 경우) -->
+    <!--
+    <div class="further-reading">
+      <h4>더 읽을거리</h4>
+      <ul>
+        <li>참고문헌 1</li>
+        <li>참고문헌 2</li>
+      </ul>
+    </div>
+    -->
+
+    <!-- 이전/다음 -->
+    <div class="ch-nav">
+      <a href="column-ch2.html" class="prev">← 2장. 언어 교수 이론과 활동</a>
+      <a href="column-ch4.html" class="next">4장. 활동의 설계 원리 →</a>
+    </div>
+  </article>
+</div>
+
+<footer><div style="max-width:1100px;margin:0 auto;padding:0 32px;">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+// 스크롤 스파이 — 현재 읽는 절에 active 표시
+const headings = document.querySelectorAll('.article h2[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+
+headings.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

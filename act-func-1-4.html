@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>위로·격려하기 대화 | AI 교육 활동</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f9f9f7;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: white;
+      border-bottom: 0.5px solid #ddd;
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      z-index: 100;
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        padding: 0.75rem 1rem;
+        gap: 1rem;
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+      }
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #666;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #333;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 4rem 2rem;
+      background: white;
+      border-bottom: 0.5px solid #ddd;
+      text-align: center;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: #f0f0ed;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 1rem 0;
+      line-height: 1.3;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 1rem 0 2rem 0;
+      line-height: 1.6;
+    }
+
+    .hero-chips {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .chip {
+      background: white;
+      border: 0.5px solid #ddd;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 2rem 1rem;
+      }
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+
+    /* Intro Section */
+    section {
+      padding: 3rem 2rem;
+      background: white;
+      border-bottom: 0.5px solid #ddd;
+    }
+
+    section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    table th,
+    table td {
+      border: 0.5px solid #ddd;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    table th {
+      background: #f0f0ed;
+      font-weight: 500;
+    }
+
+    table tr:hover {
+      background: #fafaf8;
+    }
+
+    .design-basis {
+      background: white;
+      border: 0.5px solid #ddd;
+      padding: 2rem;
+      border-radius: 4px;
+      margin-top: 2rem;
+    }
+
+    .design-basis h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .design-basis p {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+    }
+
+    @media (max-width: 640px) {
+      section {
+        padding: 1.5rem 1rem;
+      }
+      section h2 {
+        font-size: 1.3rem;
+      }
+      table th,
+      table td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+      }
+      .design-basis {
+        padding: 1rem;
+      }
+    }
+
+    /* Prompt/JSON Section */
+    .prompt-box {
+      background: #2d2d2d;
+      color: #e0e0e0;
+      padding: 2rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      margin: 2rem 0;
+      border: 0.5px solid #444;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .prompt-box-header {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-red {
+      background: #ff5f56;
+    }
+
+    .dot-yellow {
+      background: #ffbd2e;
+    }
+
+    .dot-green {
+      background: #27c93f;
+    }
+
+    .json-box {
+      background: #1e1e1e;
+      color: #ce9178;
+      padding: 2rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      margin: 2rem 0;
+      border: 0.5px solid #3e3e3e;
+      line-height: 1.5;
+      overflow-x: auto;
+    }
+
+    .json-key {
+      color: #9cdcfe;
+    }
+
+    .json-string {
+      color: #ce9178;
+    }
+
+    .json-number {
+      color: #b5cea8;
+    }
+
+    @media (max-width: 640px) {
+      .prompt-box,
+      .json-box {
+        padding: 1rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Practice/Quiz Section */
+    .act-box {
+      background: white;
+      border: 0.5px solid #ddd;
+      border-radius: 4px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .act-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 0.5px solid #ddd;
+    }
+
+    .act-box-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .act-box-meta {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    .instruction {
+      background: #f9f9f7;
+      padding: 1rem;
+      border-left: 3px solid #333;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    .quiz-item {
+      margin-bottom: 2.5rem;
+    }
+
+    .quiz-item h4 {
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .quiz-dialogue {
+      background: #f9f9f7;
+      padding: 1rem;
+      border-left: 3px solid #666;
+      margin-bottom: 1rem;
+      border-radius: 2px;
+      font-style: italic;
+      color: #555;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border: 0.5px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    .choice:hover {
+      background: #fafaf8;
+      border-color: #999;
+    }
+
+    .choice input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .choice-label {
+      flex: 1;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .choice-feedback {
+      color: #999;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .choice.selected .choice-feedback {
+      display: block;
+    }
+
+    .choice.correct {
+      background: #e8f5e9;
+      border-color: #27c93f;
+    }
+
+    .choice.incorrect {
+      background: #ffebee;
+      border-color: #ff5f56;
+    }
+
+    .choice.correct .choice-feedback {
+      color: #27c93f;
+      font-weight: 500;
+    }
+
+    .choice.incorrect .choice-feedback {
+      color: #ff5f56;
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      .act-box {
+        padding: 1rem;
+      }
+      .act-box-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .choice {
+        padding: 0.75rem;
+        gap: 0.75rem;
+      }
+    }
+
+    /* Check/Variation Section */
+    .checklist {
+      background: white;
+      border: 0.5px solid #ddd;
+      border-radius: 4px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .checklist h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 2px;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checklist-item label {
+      cursor: pointer;
+      user-select: none;
+      flex: 1;
+    }
+
+    .variation-table-wrapper {
+      margin-top: 2rem;
+    }
+
+    .variation-table-wrapper h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .variation-table-wrapper table {
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .checklist {
+        padding: 1rem;
+      }
+      .checklist-item {
+        gap: 0.75rem;
+        padding: 0.5rem;
+      }
+    }
+
+    /* Footer */
+    footer {
+      background: white;
+      padding: 2rem;
+      border-top: 0.5px solid #ddd;
+      text-align: center;
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      footer {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a onclick="scrollTo_('intro')">소개</a>
+    <a onclick="scrollTo_('build')">프롬프트 & JSON</a>
+    <a onclick="scrollTo_('practice')">연습 활동</a>
+    <a onclick="scrollTo_('check')">검증 & 변형</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-tag">❸ 기능 중심 · 대인 관계</div>
+    <h1>위로·격려하기 대화</h1>
+    <p>AI로 공감 표현 연습 자료 만드는 법</p>
+    <p style="font-size: 1rem; color: #999;">프롬프트로 상대의 감정에 공감하고 위로하는 대화 완성 활동을 만드는 과정을 안내해요.</p>
+    <div class="hero-chips">
+      <span class="chip">TOPIK 3급 · 중급</span>
+      <span class="chip">제작 시간 10분</span>
+      <span class="chip">5개 시나리오</span>
+    </div>
+  </section>
+
+  <!-- Intro Section -->
+  <section id="intro">
+    <h2>활동 개요</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <tr>
+          <th>항목</th>
+          <th>내용</th>
+        </tr>
+        <tr>
+          <td><strong>활동 유형</strong></td>
+          <td>대화문 완성</td>
+        </tr>
+        <tr>
+          <td><strong>범주</strong></td>
+          <td>❸ 기능 중심</td>
+        </tr>
+        <tr>
+          <td><strong>대상</strong></td>
+          <td>중급 (TOPIK 3급)</td>
+        </tr>
+        <tr>
+          <td><strong>목표</strong></td>
+          <td>상대의 상황에 공감하고 적절한 위로·격려 표현 사용</td>
+        </tr>
+        <tr>
+          <td><strong>언어 기능</strong></td>
+          <td>읽기 · 말하기</td>
+        </tr>
+        <tr>
+          <td><strong>규모</strong></td>
+          <td>5개 시나리오 / 10분</td>
+        </tr>
+        <tr>
+          <td><strong>배포</strong></td>
+          <td>웹 기반 또는 인쇄용</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="design-basis">
+      <h3>설계 근거</h3>
+      <p>위로 상황에서 가장 중요한 건 "먼저 상대의 감정을 인정하는 것"이에요. 대화문에서 상대의 고민을 먼저 읽은 후 빈칸에 위로 표현을 채우는 형식은, 학습자가 "상대가 무엇 때문에 힘들어하는가"를 파악한 뒤 반응하는 순서를 자연스럽게 연습시켜 줘요.</p>
+      <p>위로는 상대의 발화에 대한 반응이잖아요. 상대가 무슨 말을 했는지에 따라 적절한 위로가 달라지거든요. 대화문 완성은 상대의 발화를 먼저 제시하고 학습자의 반응을 요구해서, "듣고 → 공감하고 → 반응하는" 위로의 순서를 구조적으로 연습시켜요.</p>
+    </div>
+  </section>
+
+  <!-- Build Section -->
+  <section id="build">
+    <h2>프롬프트 & JSON 구조</h2>
+
+    <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">프롬프트</h3>
+    <div class="prompt-box">
+      <div class="prompt-box-header">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <pre># 역할 (Role)
+한국어 교육 전문가
+
+# 과제 (Task)
+TOPIK 3급 학습자를 위한 위로·격려 대화 완성 활동 생성
+
+# 조건 (Constraints)
+- 시나리오 5개: 시험 실패, 직장 스트레스, 이별, 건강 문제, 취업 실패
+- 각 시나리오: A의 고민 발화(2~3턴) + B의 빈칸(학습자가 채움)
+- 모범 답안 3개씩 (공감, 격려, 조언)
+- 부적절한 답안 1개씩 (비교용)
+
+# 출력 (Output)
+JSON 형식</pre>
+    </div>
+
+    <h3 style="margin: 2rem 0 1rem 0; font-size: 1.1rem;">JSON 구조 & 설명</h3>
+    <div class="json-box">
+<pre>{
+  <span class="json-key">"scenarios"</span>: [
+    {
+      <span class="json-key">"id"</span>: <span class="json-number">1</span>,
+      <span class="json-key">"topic"</span>: <span class="json-string">"시험 실패"</span>,
+      <span class="json-key">"dialogue_A"</span>: [
+        <span class="json-string">"시험을 못 봤어요."</span>,
+        <span class="json-string">"많이 공부했는데... 너무 속상해요."</span>
+      ],
+      <span class="json-key">"blank_position"</span>: <span class="json-string">"B의 첫 반응"</span>,
+      <span class="json-key">"good_answers"</span>: [
+        {
+          <span class="json-key">"text"</span>: <span class="json-string">"많이 속상하겠다. 열심히 했는데..."</span>,
+          <span class="json-key">"strategy"</span>: <span class="json-string">"공감"</span>
+        },
+        {
+          <span class="json-key">"text"</span>: <span class="json-string">"다음에 더 잘할 수 있을 거야. 힘내!"</span>,
+          <span class="json-key">"strategy"</span>: <span class="json-string">"격려"</span>
+        },
+        {
+          <span class="json-key">"text"</span>: <span class="json-string">"뭐가 제일 어려웠어? 같이 공부할까?"</span>,
+          <span class="json-key">"strategy"</span>: <span class="json-string">"구체적 도움 제안"</span>
+        }
+      ],
+      <span class="json-key">"bad_answer"</span>: {
+        <span class="json-key">"text"</span>: <span class="json-string">"그래? 나는 잘 봤는데."</span>,
+        <span class="json-key">"reason"</span>: <span class="json-string">"상대의 감정을 무시하고 자신의 경험으로 전환하여 부적절하다."</span>
+      }
+    }
+  ]
+}</pre>
+    </div>
+
+    <div style="background: #f9f9f7; padding: 1.5rem; border-radius: 4px; margin-top: 2rem;">
+      <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem;">JSON 필드 설명</h3>
+      <ul style="list-style: none;">
+        <li style="margin-bottom: 0.8rem;"><strong>scenarios</strong>: 위로 시나리오 목록이에요.</li>
+        <li style="margin-bottom: 0.8rem;"><strong>dialogue_A</strong>: A의 고민 발화예요. 2~3턴으로 구성돼요.</li>
+        <li style="margin-bottom: 0.8rem;"><strong>good_answers</strong>: 모범 답안 3개예요. 공감, 격려, 조언 전략이 있어요.</li>
+        <li style="margin-bottom: 0.8rem;"><strong>bad_answer</strong>: 부적절한 답안이에요. 왜 부적절한지도 함께 설명해요.</li>
+        <li style="margin-bottom: 0;"><strong>strategy</strong>: 위로 전략 유형이에요. 학습자가 다양한 반응을 배울 수 있어요.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Practice Section -->
+  <section id="practice">
+    <h2>연습 활동: 부적절한 위로 고르기</h2>
+
+    <div class="act-box">
+      <div class="act-box-header">
+        <div>
+          <div class="act-box-title">위로 표현 선택 활동</div>
+          <div class="act-box-meta">TOPIK 3급 · 대인 관계 · 3문항</div>
+        </div>
+      </div>
+
+      <div class="instruction">부적절한 위로를 고르세요. 상대의 감정을 무시하거나 공감하지 못한 답을 찾아요.</div>
+
+      <!-- Q1 -->
+      <div class="quiz-item">
+        <h4>Q1. 시험 실패</h4>
+        <div class="quiz-dialogue">A: "시험을 못 봤어요. 많이 공부했는데... 너무 속상해요."</div>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="q1" value="1">
+            <div class="choice-label">
+              많이 속상하겠다. 열심히 했는데...
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q1" value="2">
+            <div class="choice-label">
+              다음에 더 잘할 수 있을 거야. 힘내!
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q1" value="3">
+            <div class="choice-label">
+              그래? 나는 잘 봤는데.
+              <div class="choice-feedback">부적절함 — 상대의 감정을 무시하고 자신의 경험으로 전환</div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q1" value="4">
+            <div class="choice-label">
+              뭐가 제일 어려웠어? 같이 공부할까?
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-item">
+        <h4>Q2. 직장 스트레스</h4>
+        <div class="quiz-dialogue">A: "요즘 회사에서 일이 너무 많아요. 매일 야근이에요."</div>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="q2" value="1">
+            <div class="choice-label">
+              진짜 힘들겠다. 많이 지쳤지?
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q2" value="2">
+            <div class="choice-label">
+              그래도 돈 많이 벌잖아.
+              <div class="choice-feedback">부적절함 — 상대의 감정을 무시하고 현실적인 이득만 강조</div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q2" value="3">
+            <div class="choice-label">
+              쉴 수 있을 때 푹 쉬어. 건강이 제일 중요해.
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q2" value="4">
+            <div class="choice-label">
+              뭐 도와줄 거 없어?
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-item">
+        <h4>Q3. 취업 실패</h4>
+        <div class="quiz-dialogue">A: "취업 시험에 또 떨어졌어요. 이번이 세 번째예요."</div>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="q3" value="1">
+            <div class="choice-label">
+              세 번이나 도전한 거 자체가 대단해.
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q3" value="2">
+            <div class="choice-label">
+              많이 힘들지? 잠깐 쉬어도 괜찮아.
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q3" value="3">
+            <div class="choice-label">
+              다른 데도 알아볼까? 같이 찾아볼게.
+              <div class="choice-feedback"></div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="q3" value="4">
+            <div class="choice-label">
+              세 번이나? 다른 거 알아보는 게 낫지 않아?
+              <div class="choice-feedback">부적절함 — 상대의 노력을 폄하하고 포기를 유도</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Check & Variation Section -->
+  <section id="check">
+    <h2>검증 & 변형</h2>
+
+    <div class="checklist">
+      <h3>체크리스트</h3>
+      <div class="checklist-item">
+        <input type="checkbox" id="check1">
+        <label for="check1">A의 고민이 자연스러운 일상 상황인가요?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check2">
+        <label for="check2">모범 답안이 다양한 위로 전략(공감, 격려, 조언)을 보여주나요?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check3">
+        <label for="check3">부적절한 답안이 "왜 부적절한지"가 학습자에게 명확한가요?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check4">
+        <label for="check4">모든 시나리오가 TOPIK 3급 수준의 어휘와 표현을 사용하나요?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check5">
+        <label for="check5">활동이 10분 안에 완료 가능한 분량인가요?</label>
+      </div>
+    </div>
+
+    <div class="variation-table-wrapper">
+      <h3>활동 변형 아이디어</h3>
+      <div class="table-wrapper">
+        <table>
+          <tr>
+            <th>변형 유형</th>
+            <th>내용</th>
+            <th>예시</th>
+          </tr>
+          <tr>
+            <td><strong>기능 교체</strong></td>
+            <td>위로 → 축하하기</td>
+            <td>합격, 승진, 결혼 등 기쁜 소식에 반응하기</td>
+          </tr>
+          <tr>
+            <td><strong>인터랙션 형태</strong></td>
+            <td>대화 완성 → 짝 활동</td>
+            <td>A가 고민을 말하면 B가 즉석으로 위로하기</td>
+          </tr>
+          <tr>
+            <td><strong>언어 기능</strong></td>
+            <td>말하기 → 쓰기</td>
+            <td>카톡으로 위로 메시지 쓰기</td>
+          </tr>
+          <tr>
+            <td><strong>난이도 조정</strong></td>
+            <td>선택형 → 단답형</td>
+            <td>모범 답안 없이 학습자가 직접 위로 표현 작성</td>
+          </tr>
+          <tr>
+            <td><strong>시나리오 추가</strong></td>
+            <td>5개 → 더 많은 상황</td>
+            <td>학생 신분의 어려움, 친구 관계 갈등 등</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>한국어 교육 활동 | AI 기반 교안 생성 도구 | 2026</p>
+  </footer>
+
+  <script>
+    function scrollTo_(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Quiz interaction
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const questionGroup = this.name;
+        const selectedValue = this.value;
+        const correctAnswers = {
+          'q1': '3',
+          'q2': '2',
+          'q3': '4'
+        };
+        const correctAnswer = correctAnswers[questionGroup];
+
+        document.querySelectorAll(`input[name="${questionGroup}"]`).forEach(r => {
+          const choice = r.closest('.choice');
+          choice.classList.remove('correct', 'incorrect');
+        });
+
+        const selectedChoice = this.closest('.choice');
+        if (selectedValue === correctAnswer) {
+          selectedChoice.classList.add('correct');
+        } else {
+          selectedChoice.classList.add('incorrect');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

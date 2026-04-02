@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>길 안내하기 - AI로 지도 기반 방향 설명 자료 만드는 법</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #ffffff;
+            border-bottom: 0.5px solid #ddd;
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #222;
+            font-weight: 500;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: #ffffff;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: #666;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #222;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .chips {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background-color: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #555;
+            border: 0.5px solid #ddd;
+        }
+
+        /* Section Headers */
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        /* Card Sections */
+        .card {
+            background-color: #ffffff;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+
+        table thead {
+            background-color: #f5f5f3;
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 500;
+            border: 0.5px solid #ddd;
+            font-size: 14px;
+        }
+
+        table td {
+            padding: 12px;
+            border: 0.5px solid #ddd;
+            font-size: 14px;
+        }
+
+        /* Design Rationale */
+        .rationale {
+            background-color: #fafaf8;
+            border-left: 3px solid #999;
+            padding: 16px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        /* Code Blocks */
+        .prompt-box {
+            background-color: #2b2b2b;
+            color: #e8e8e8;
+            padding: 20px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .prompt-box::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #999;
+        }
+
+        .prompt-box.red::before {
+            color: #ff5f5f;
+        }
+
+        .prompt-box.json {
+            background-color: #1e1e1e;
+        }
+
+        .prompt-box.json::before {
+            content: '● ● ●';
+            color: #4CAF50;
+        }
+
+        /* Demo Map */
+        .demo-container {
+            background-color: #ffffff;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .demo-note {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background-color: #ddd;
+            padding: 2px;
+            margin: 20px 0;
+            border: 0.5px solid #999;
+        }
+
+        .map-cell {
+            background-color: #ffffff;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .map-cell.landmark {
+            background-color: #e8f4f8;
+            color: #1a4d66;
+            border: 1px solid #a8d8e8;
+        }
+
+        .map-cell.route-path {
+            background-color: #ffe8cc;
+            border: 1px solid #ffb366;
+        }
+
+        .map-cell.start {
+            background-color: #b3e5b3;
+            border: 2px solid #4CAF50;
+            font-weight: 700;
+        }
+
+        .map-cell.end {
+            background-color: #ffcccc;
+            border: 2px solid #ff5f5f;
+            font-weight: 700;
+        }
+
+        .directions {
+            background-color: #f5f5f3;
+            border-left: 3px solid #ff9900;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .directions ol {
+            margin-left: 24px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .directions li {
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        /* Checklist */
+        .checklist {
+            background-color: #ffffff;
+            border: 0.5px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .checklist ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #555;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        /* Variations Table */
+        .variations-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .variations-table td {
+            padding: 12px;
+            border: 0.5px solid #ddd;
+            font-size: 13px;
+        }
+
+        .variations-table .var-category {
+            background-color: #f5f5f3;
+            font-weight: 500;
+            width: 120px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .hero {
+                padding: 24px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            h3 {
+                font-size: 16px;
+            }
+
+            nav ul {
+                gap: 12px;
+                flex-direction: column;
+            }
+
+            nav a {
+                font-size: 13px;
+            }
+
+            .chips {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .chip {
+                width: 100%;
+                text-align: center;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+
+            .map-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .map-cell {
+                font-size: 11px;
+                min-height: 50px;
+                padding: 8px;
+            }
+
+            .prompt-box {
+                font-size: 12px;
+                padding: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+        }
+
+        /* Utility Classes */
+        .text-muted {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .accent {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .strong {
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 12px;
+            border-top: 0.5px solid #ddd;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('hero')">개요</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('intro')">활동 설계</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('build')">프롬프트</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('practice')">실습</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollTo_('check')">점검</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <span class="tag">❸ 기능 중심 · 정보 전달</span>
+            <h1>길 안내하기</h1>
+            <p>AI로 지도 기반 방향 설명 자료 만드는 법</p>
+            <p style="font-size: 14px; color: #777; margin-top: 12px;">
+                프롬프트로 지도 기반 길 안내 활동 자료를 만드는 과정을 안내해요.
+            </p>
+            <div class="chips" style="margin-top: 24px;">
+                <span class="chip">TOPIK 2급 · 초중급</span>
+                <span class="chip">제작 시간 10분</span>
+                <span class="chip">지도 2개 × 경로 2개</span>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section id="intro">
+            <h2>활동 설계</h2>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>내용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>활동 유형</td>
+                            <td>정보 전달 (방향 설명)</td>
+                        </tr>
+                        <tr>
+                            <td>범주</td>
+                            <td>❸ 기능 중심</td>
+                        </tr>
+                        <tr>
+                            <td>대상</td>
+                            <td>초중급 (TOPIK 2급)</td>
+                        </tr>
+                        <tr>
+                            <td>목표</td>
+                            <td>지도를 보고 위치·방향 표현을 사용하여 길을 안내</td>
+                        </tr>
+                        <tr>
+                            <td>언어 기능</td>
+                            <td>말하기</td>
+                        </tr>
+                        <tr>
+                            <td>규모</td>
+                            <td>지도 2개 × 경로 2개 / 10분</td>
+                        </tr>
+                        <tr>
+                            <td>배포</td>
+                            <td>인쇄용 지도 + 역할 카드</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>설계 근거</h3>
+            <div class="rationale">
+                <p style="margin-bottom: 12px;">
+                    길 안내는 방향, 위치, 거리를 말로 전달하는 활동이에요. 지도는 이 세 가지를 시각적으로 제공하니까, 학습자는 보이는 것을 말로 옮기기만 하면 돼요. 내용(어디로 가는가)은 지도가 제공하고, 형식(어떻게 말하는가)은 학습자가 선택하는 거예요.
+                </p>
+                <p>
+                    길 안내는 순서가 중요하잖아요. "먼저 직진하세요, 그다음에 오른쪽으로 가세요"처럼 단계별로 설명해야 하거든요. 지도 위에 경로가 표시되어 있으면 학습자가 순서를 놓치지 않고 단계별로 설명할 수 있어요.
+                </p>
+            </div>
+        </section>
+
+        <!-- Build Section -->
+        <section id="build">
+            <h2>프롬프트 구성</h2>
+
+            <h3>프롬프트</h3>
+            <div class="prompt-box red">
+# 역할 (Role)
+한국어 교육 전문가
+
+# 과제 (Task)
+TOPIK 2급 학습자를 위한 길 안내 활동 자료 생성
+
+# 조건 (Constraints)
+- 지도 2개 (동네 지도 스타일, 단순화된 격자형)
+- 각 지도에 경로 2개 (쉬운 경로 + 어려운 경로)
+- 목표 표현: 직진하다, 오른쪽/왼쪽으로 돌다, ~이/가 있다, ~옆에/앞에/뒤에, -(으)면 ~이/가 보이다
+- 건물: 은행, 편의점, 학교, 병원, 카페 등
+- 각 경로: 모범 설명문(3~5단계), 핵심 표현 목록
+
+# 출력 (Output)
+JSON 형식
+            </div>
+
+            <h3>응답 구조 (JSON)</h3>
+            <div class="prompt-box json">
+{
+  "maps": [
+    {
+      "id": 1,
+      "landmarks": [
+        {"name": "지하철역", "position": "A1"},
+        {"name": "은행", "position": "B2"},
+        {"name": "카페", "position": "C3"}
+      ],
+      "routes": [
+        {
+          "from": "지하철역",
+          "to": "카페",
+          "difficulty": "쉬움",
+          "steps": [
+            "지하철역에서 나오세요.",
+            "오른쪽으로 가세요.",
+            "직진하면 은행이 보여요.",
+            "은행 옆에 카페가 있어요."
+          ]
+        }
+      ]
+    }
+  ]
+}
+            </div>
+
+            <h3>응답 구조 설명</h3>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>키</th>
+                            <th>설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="strong">maps</span></td>
+                            <td>지도 목록이에요. 여러 지도의 정보를 담아요.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="strong">landmarks</span></td>
+                            <td>지도 위의 건물이에요. 이름과 위치가 들어가요.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="strong">routes</span></td>
+                            <td>경로 정보예요. 출발~도착, 난이도, 단계별 설명이 있어요.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="strong">steps</span></td>
+                            <td>단계별 길 안내 설명문이에요. 각 단계는 한 문장씩 구성돼요.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="strong">difficulty</span></td>
+                            <td>경로의 난이도예요. '쉬움' 또는 '어려움'으로 나뉘어요.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice">
+            <h2>실습 예시</h2>
+
+            <div class="demo-container">
+                <p class="demo-note">
+                    이 활동은 웹앱 데모 대신 완성된 자료의 모습을 보여줍니다.
+                </p>
+
+                <h3 style="margin-top: 0;">지도 1: 동네 중심가</h3>
+
+                <div class="map-grid">
+                    <div class="map-cell">빈 공간</div>
+                    <div class="map-cell start">🚇 지하철역</div>
+                    <div class="map-cell">도로</div>
+                    <div class="map-cell landmark">📰 편의점</div>
+
+                    <div class="map-cell">도로</div>
+                    <div class="map-cell route-path">경로</div>
+                    <div class="map-cell landmark">🏥 병원</div>
+                    <div class="map-cell">도로</div>
+
+                    <div class="map-cell landmark">🏦 은행</div>
+                    <div class="map-cell route-path">경로</div>
+                    <div class="map-cell">도로</div>
+                    <div class="map-cell end">☕ 카페</div>
+
+                    <div class="map-cell">도로</div>
+                    <div class="map-cell">도로</div>
+                    <div class="map-cell landmark">🏫 학교</div>
+                    <div class="map-cell">도로</div>
+                </div>
+
+                <h4 style="margin-top: 24px; margin-bottom: 12px;">경로 1 (쉬움): 지하철역 → 카페</h4>
+                <div class="directions">
+                    <ol>
+                        <li>지하철역에서 나오세요.</li>
+                        <li>앞으로 직진하세요.</li>
+                        <li>직진하면 은행이 보여요.</li>
+                        <li>은행 옆에 카페가 있어요.</li>
+                    </ol>
+                </div>
+
+                <p style="font-size: 13px; color: #777; margin: 16px 0;">
+                    <strong>핵심 표현:</strong> 직진하다 · ~이/가 있다 · ~옆에 · -(으)면 ~이/가 보이다
+                </p>
+
+                <h4 style="margin-top: 24px; margin-bottom: 12px;">경로 2 (어려움): 지하철역 → 학교</h4>
+                <div class="directions">
+                    <ol>
+                        <li>지하철역에서 나오세요.</li>
+                        <li>앞으로 직진하세요.</li>
+                        <li>병원이 보이면 오른쪽으로 꺾으세요.</li>
+                        <li>다시 직진하세요.</li>
+                        <li>왼쪽에 학교가 있어요.</li>
+                    </ol>
+                </div>
+
+                <p style="font-size: 13px; color: #777; margin: 16px 0;">
+                    <strong>핵심 표현:</strong> 직진하다 · 오른쪽으로 꺾다 · 왼쪽 · -(으)면 · ~이/가 있다
+                </p>
+            </div>
+        </section>
+
+        <!-- Check Section -->
+        <section id="check">
+            <h2>점검 항목</h2>
+
+            <h3>체크리스트</h3>
+            <div class="checklist">
+                <ul>
+                    <li>지도가 단순하고 경로가 명확한가요?</li>
+                    <li>모범 설명에 사용된 표현이 TOPIK 2급 수준인가요?</li>
+                    <li>건물 명칭이 초급 학습자에게 친숙한가요?</li>
+                </ul>
+            </div>
+
+            <h3>활동 확장 방안</h3>
+            <div class="card">
+                <table class="variations-table">
+                    <tbody>
+                        <tr>
+                            <td class="var-category">난이도 ↑</td>
+                            <td>
+                                경로를 복잡하게 하기 (회전 2회 이상, 교차로 통과) / 건물 수 늘리기 / 거리 표현 추가 ("100미터 가세요")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="var-category">인터랙션</td>
+                            <td>
+                                개인 활동 → 정보 차 짝 활동 (A만 지도를 보고 B에게 구두로 안내 / 그다음 역할 바꾸기)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="var-category">언어 기능</td>
+                            <td>
+                                말하기 → 쓰기 (길 안내 이메일 작성) / 말하기 + 듣기 (음성 녹음 후 학습자가 지도에 따라 움직이기)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="var-category">과제</td>
+                            <td>
+                                AI를 사용해 다양한 지도 스타일 생성 / 학습자가 직접 프롬프트 수정해 새로운 경로 만들기
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>한국어 교육 · AI 활용 · 기능 중심 활동</p>
+    </footer>
+
+    <!-- Scroll Function -->
+    <script>
+        function scrollTo_(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    </script>
+</body>
+</html>
