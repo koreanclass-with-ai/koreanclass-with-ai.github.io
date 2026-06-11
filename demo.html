@@ -64,6 +64,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   background:var(--bg-alt);color:var(--text-sub);
   align-self:flex-start;
 }
+.demo-actions{display:flex;gap:6px;margin-top:12px;}
+.demo-actions a{flex:1;text-align:center;font-size:11.5px;font-weight:700;border-radius:8px;padding:8px 4px;text-decoration:none;}
+.da-use{background:var(--text);color:#fff;}
+.da-how{background:var(--green-light);color:var(--green);}
+.find-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.find-link{font-size:12.5px;color:var(--green);background:var(--green-light);border-radius:8px;padding:6px 14px;text-decoration:none;font-weight:600;}
+.sec-head{font-size:18px;font-weight:800;margin:48px 0 4px;}
+.sec-desc{font-size:13px;color:var(--text-sub);margin-bottom:20px;}
 
 /* ── 업데이트 예정 ── */
 .coming{
@@ -90,16 +98,61 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
   <div class="container">
     <div class="section-tag">Demo</div>
     <h1>체험하기</h1>
-    <p>직접 사용해볼 수 있는 한국어 학습 도구와 게임 모음입니다.</p>
+    <p>완성된 앱·게임이에요. <b>카드를 누르면 바로 체험</b>할 수 있어요 — 마음에 들면 링크를 복사해 학생에게 주세요.</p>
+    <div class="find-bar">
+      <a class="find-link" href="activity.html">🍳 만드는 법이 궁금하면 → 활동 설계</a>
+    </div>
   </div>
 </header>
 
 <div class="container">
 
+  <h2 class="sec-head reveal">활동 완성본</h2>
+  <p class="sec-desc reveal">수업에 바로 쓸 수 있는 완성본이에요. 직접 만들고 싶으면 [만드는 법]을 누르세요.</p>
+  <div class="demo-grid" style="margin-top:0;">
+    <!-- TODO: 단독 실행 앱 파일(apps/*)이 생기면 '바로 체험' 목적지 교체. 허브 페이지가 생기면 '만드는 법' 목적지를 허브로 교체 -->
+    <div class="demo-card reveal">
+      <a href="act-form-1-1.html#practice" style="text-decoration:none;color:inherit;"><div class="demo-thumb t1" style="font-size:24px;font-weight:700;color:var(--blue);">에 vs 에서</div></a>
+      <div class="demo-info">
+        <h3>에/에서 빈칸 퀴즈</h3>
+        <p>장소 조사를 골라 넣고 즉각 피드백 — 초급 · 자동채점</p>
+        <span class="demo-badge">📱 웹앱</span>
+        <div class="demo-actions">
+          <a class="da-use" href="act-form-1-1.html#practice">▶ 바로 체험</a>
+          <a class="da-how" href="act-form-fill-choice.html">🍳 만드는 법 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="demo-card reveal">
+      <a href="act-meaning-dictogloss.html#practice" style="text-decoration:none;color:inherit;"><div class="demo-thumb t2" style="font-size:24px;font-weight:700;color:var(--green);">🔊 → ✍️</div></a>
+      <div class="demo-info">
+        <h3>딕토글로스 — 듣고 재구성</h3>
+        <p>듣고 자기 말로 다시 쓰고 모범답안과 비교 — 중급</p>
+        <span class="demo-badge">📱 웹앱</span>
+        <div class="demo-actions">
+          <a class="da-use" href="act-meaning-dictogloss.html#practice">▶ 바로 체험</a>
+          <a class="da-how" href="act-meaning-dictogloss.html">🍳 만드는 법 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="demo-card reveal">
+      <a href="act-form-order--word-drag.html#practice" style="text-decoration:none;color:inherit;"><div class="demo-thumb t3" style="font-size:18px;font-weight:700;color:var(--amber);">저는 / 어제 / 친구를</div></a>
+      <div class="demo-info">
+        <h3>어절 순서 배열 — 문장 만들기</h3>
+        <p>흩어진 어절 카드를 순서대로 놓아 문장 완성 — 초급</p>
+        <span class="demo-badge">📱 웹앱</span>
+        <div class="demo-actions">
+          <a class="da-use" href="act-form-order--word-drag.html#practice">▶ 바로 체험</a>
+          <a class="da-how" href="act-form-order--word-drag.html">🍳 만드는 법 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="coming reveal">
     <div class="coming-icon">🚧</div>
-    <h3>계속 업데이트됩니다</h3>
-    <p>새로운 학습 도구와 게임이 추가될 예정이에요.<br>궁금한 점이나 요청은 홈에서 메시지를 보내주세요.</p>
+    <h3>학습 게임이 추가될 예정이에요</h3>
+    <p>퀴즈 게임화 · 단어 퍼즐 · 아케이드형 게임 · 말하기 진행 도구 —<br>새 완성본이 나올 때마다 이 진열대에 올라와요.</p>
   </div>
 </div>
 

@@ -247,7 +247,7 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
         </h1>
         <p>프롬프트 하나로 빈칸 퀴즈, 드래그앤드롭, 대화 시뮬레이션까지. 자료 만드는 시간을 줄이고 수업 설계에 집중하세요.</p>
         <div class="hero-btns">
-          <a href="#showcase" class="btn-primary">만들 수 있는 것 보기 →</a>
+          <a href="activity.html" class="btn-primary">만들 수 있는 것 보기 →</a>
           <a href="#steps" class="btn-secondary">어떻게 만드나요?</a>
         </div>
       </div>
@@ -298,7 +298,7 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
       <p>문법 연습부터 대화 시뮬레이션까지</p>
     </div>
     <div class="showcase-grid stagger">
-      <div class="sc-card reveal" style="--i:0">
+      <div class="sc-card reveal" style="--i:0;cursor:pointer;" onclick="if(!event.target.closest('.mp-btn,.chat-choice,.drag-chip,.match-word,a'))location.href='act-form-fill-choice.html'">
         <div class="sc-thumb">
           <div class="mini-phone">
             <div class="mp-bar"></div>
@@ -313,9 +313,11 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
           <span class="sc-tag" style="background:var(--blue-light);color:var(--blue);">문법 연습</span>
           <h3>빈칸 채우기 퀴즈</h3>
           <p>조사·어미를 골라 넣고 즉각 피드백을 받는 활동</p>
+          <a href="act-form-fill-choice.html" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;">만드는 법 보기 →</a>
         </div>
       </div>
-      <div class="sc-card reveal" style="--i:1">
+      <!-- TODO: 허브 페이지로 교체 (순서 배열 허브가 생기면 목적지 교체) -->
+      <div class="sc-card reveal" style="--i:1;cursor:pointer;" onclick="if(!event.target.closest('.mp-btn,.chat-choice,.drag-chip,.match-word,a'))location.href='act-form-order--word-drag.html'">
         <div class="sc-thumb">
           <div class="mini-drag-demo">
             <div class="drag-slots">
@@ -331,9 +333,11 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
           <span class="sc-tag" style="background:var(--green-light);color:var(--green);">문법 연습</span>
           <h3>어순 배열 드래그앤드롭</h3>
           <p>흩어진 단어를 드래그해서 올바른 문장 완성</p>
+          <a href="act-form-order--word-drag.html" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--green);text-decoration:none;">만드는 법 보기 →</a>
         </div>
       </div>
-      <div class="sc-card reveal" style="--i:2">
+      <!-- TODO: 허브 페이지로 교체 (카드 매칭 허브가 생기면 목적지 교체) -->
+      <div class="sc-card reveal" style="--i:2;cursor:pointer;" onclick="if(!event.target.closest('.mp-btn,.chat-choice,.drag-chip,.match-word,a'))location.href='act-form-3-2.html'">
         <div class="sc-thumb">
           <div class="mini-match-demo">
             <div style="font-size:10px;color:var(--text-light);text-align:center;margin-bottom:10px;">짝을 맞추세요</div>
@@ -346,9 +350,11 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
           <span class="sc-tag" style="background:var(--amber-light);color:var(--amber);">어휘 학습</span>
           <h3>단어 카드 매칭</h3>
           <p>뜻과 단어를 연결하는 카드 매칭 게임</p>
+          <a href="act-form-3-2.html" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--amber);text-decoration:none;">만드는 법 보기 →</a>
         </div>
       </div>
-      <div class="sc-card reveal" style="--i:3">
+      <!-- TODO: 허브 페이지로 교체 (대화 시뮬레이션 허브가 생기면 목적지 교체) -->
+      <div class="sc-card reveal" style="--i:3;cursor:pointer;" onclick="if(!event.target.closest('.mp-btn,.chat-choice,.drag-chip,.match-word,a'))location.href='act-task-1-2.html'">
         <div class="sc-thumb">
           <div class="mini-chat">
             <div style="font-size:10px;color:var(--text-light);text-align:center;margin-bottom:8px;">☕ 카페 주문 연습</div>
@@ -363,6 +369,7 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
           <span class="sc-tag" style="background:#FFF0F5;color:#C0392B;">말하기 연습</span>
           <h3>대화 시뮬레이션</h3>
           <p>실제 상황을 모사한 선택지형 대화 연습</p>
+          <a href="act-task-1-2.html" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#C0392B;text-decoration:none;">만드는 법 보기 →</a>
         </div>
       </div>
     </div>
@@ -383,7 +390,7 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
             <div class="step-body">
               <h3>STEP 1</h3>
               <h4>AI에게 자료 맡기기</h4>
-              <p>원하는 활동을 말로 설명하면, AI가 문항·지문·보기를 자동으로 만들어 줘요.</p>
+              <p>원하는 활동을 말로 설명하면, AI가 문항·지문·보기를 자동으로 만들어 줘요. <a href="guide-prompt.html" style="font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;white-space:nowrap;">프롬프트 쓰는 법 →</a></p>
             </div>
           </div>
           <div class="step-item">
@@ -391,7 +398,7 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
             <div class="step-body">
               <h3>STEP 2</h3>
               <h4>결과 확인하고 다듬기</h4>
-              <p>AI가 만든 결과를 살펴보고, 수업 맥락에 맞게 수정하면 돼요.</p>
+              <p>AI가 만든 결과를 살펴보고, 수업 맥락에 맞게 수정하면 돼요. <a href="guide.html" style="font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;white-space:nowrap;">도구 안내 →</a></p>
             </div>
           </div>
           <div class="step-item">
@@ -399,7 +406,7 @@ footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);b
             <div class="step-body">
               <h3>STEP 3</h3>
               <h4>링크 하나로 전달하기</h4>
-              <p>완성된 자료는 링크 하나로 공유할 수 있어요. 학생은 클릭만 하면 바로 참여해요.</p>
+              <p>완성된 자료는 링크 하나로 공유할 수 있어요. 학생은 클릭만 하면 바로 참여해요. <a href="guide-deploy.html" style="font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;white-space:nowrap;">배포 가이드 →</a></p>
             </div>
           </div>
         </div>

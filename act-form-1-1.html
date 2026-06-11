@@ -68,7 +68,81 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
 .layer-desc{font-size:13px;color:#555;line-height:1.7;}
 
 /* ── 스티키 네비 ── */
+.axis-card{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px;}
+.axis-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;background:#fff;border:0.5px solid #d8d6d0;color:#1a1a1a;}
+.axis-badge .ax-label{font-size:10px;font-weight:500;color:#aaa;letter-spacing:0.03em;}
 .sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}
+.stage-flow{display:flex;align-items:stretch;gap:0;margin:20px 0;flex-wrap:nowrap;}
+.stage-step{flex:1 1 0;min-width:0;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:10px 5px;text-align:center;}
+.stage-step.highlight{border-color:#3C3489;background:#EEEDFE;}
+.stage-step.stage-opt{border-style:dashed;border-color:#ccc;background:transparent;opacity:0.75;}
+.stage-step.stage-opt .st-phase{color:#bbb;}
+.stage-opt-arrow{color:#ccc;}
+.stage-step .st-phase{font-size:10px;font-weight:700;color:#aaa;letter-spacing:0.02em;margin-bottom:4px;}
+.stage-step.highlight .st-phase{color:#3C3489;}
+.stage-step .st-name{font-size:12px;font-weight:700;margin-bottom:3px;white-space:nowrap;}
+.stage-step .st-desc{font-size:10px;color:#888;line-height:1.3;}
+.stage-arrow{display:flex;align-items:center;color:#ccc;font-size:11px;padding:0 3px;flex-shrink:0;}
+.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.usage-item{background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px;}
+.usage-item .ui-icon{font-size:18px;margin-bottom:8px;}
+.usage-item .ui-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.usage-item .ui-desc{font-size:12px;color:#888;line-height:1.5;}
+@media(max-width:560px){.usage-grid{grid-template-columns:1fr;}.stage-arrow{padding:0 1px;}.stage-step{padding:8px 2px;}.stage-step .st-name{font-size:10px;}.stage-step .st-desc{display:none;}}
+.step-head{display:flex;align-items:center;gap:12px;margin:28px 0 14px;}
+.step-badge{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.step-head .step-h{font-size:17px;font-weight:700;}
+.step-head .step-sub{font-size:12px;color:#aaa;margin-top:2px;}
+.accordion{border:0.5px solid rgba(0,0,0,0.1);border-radius:10px;margin:12px 0;overflow:hidden;background:#fff;}
+.acc-head{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;user-select:none;font-size:13px;font-weight:500;color:#555;background:#fafaf8;}
+.acc-head:hover{background:#f4f4f0;}
+.acc-head .acc-arrow{margin-left:auto;font-size:11px;color:#bbb;transition:transform .2s;}
+.accordion.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:16px;border-top:0.5px solid rgba(0,0,0,0.07);}
+.accordion.open .acc-body{display:block;}
+.deepdive{background:#F4F1EA;border:0.5px solid #D8D0BC;border-radius:10px;margin:20px 0;overflow:hidden;}
+.deepdive .acc-head{background:#EFEADF;color:#7a6a3a;font-weight:700;}
+.deepdive .acc-head:hover{background:#e8e1d2;}
+/* 코드 발췌 (호버 설명) */
+.code-box{background:#1e1e2e;border-radius:12px;overflow:hidden;margin:12px 0;}
+.code-bar{background:#181825;padding:8px 14px;display:flex;align-items:center;gap:6px;}
+.code-dot{width:11px;height:11px;border-radius:50%;}
+.code-fname{color:#9399b2;font-size:12px;margin-left:6px;font-family:'D2Coding','Consolas',monospace;}
+.code-body{padding:16px;font-family:'D2Coding','Consolas','Courier New',monospace;font-size:13px;line-height:1.7;color:#cdd6f4;overflow-x:auto;white-space:pre;}
+.ck{color:#89b4fa;cursor:help;border-radius:3px;padding:0 2px;transition:background .15s;position:relative;}
+.ck:hover{background:rgba(137,180,250,0.25);}
+.cs{color:#a6e3a1;}
+.cc{color:#6c7086;font-style:italic;}
+.cp{color:#f9e2af;}
+.code-hint{font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:5px;}
+/* 전체 코드 3구역 */
+.fullcode .code-body{font-size:12px;line-height:1.65;}
+.zone{display:block;border-left:3px solid transparent;padding:8px 10px;margin:0 -10px;border-radius:4px;}
+.zone-design{background:rgba(203,166,247,0.08);border-left-color:#cba6f7;}
+.zone-data{background:rgba(166,227,161,0.08);border-left-color:#a6e3a1;}
+.zone-logic{background:rgba(137,180,250,0.08);border-left-color:#89b4fa;}
+.zone-label{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-bottom:6px;font-family:'Noto Sans KR',sans-serif;}
+.zl-design{background:#cba6f7;color:#1e1e2e;}
+.zl-data{background:#a6e3a1;color:#1e1e2e;}
+.zl-logic{background:#89b4fa;color:#1e1e2e;}
+.zone-note{font-size:11px;color:#9399b2;font-family:'Noto Sans KR',sans-serif;margin-bottom:8px;font-style:normal;}
+.method-card{display:flex;gap:14px;border:0.5px solid rgba(0,0,0,0.1);border-radius:12px;padding:18px;margin:14px 0;background:#fff;}
+.method-num{flex-shrink:0;font-size:13px;font-weight:700;color:#1a1a1a;background:#f0efed;border-radius:8px;padding:6px 12px;height:fit-content;}
+.method-body{flex:1;min-width:0;}
+.method-title{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.method-tag{font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;}
+.method-tag.easy{background:#EAF3DE;color:#27500A;}
+.method-tag.pro{background:#E6F1FB;color:#0C447C;}
+@media(max-width:560px){.method-card{flex-direction:column;gap:10px;}}
+.prompt-bar{display:flex;align-items:center;justify-content:space-between;}
+.copy-btn{font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;color:#cdd6f4;background:#252b36;border:1px solid #3c4454;border-radius:8px;padding:4px 10px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{background:#303847;color:#fff;}
+.copy-btn.copied{background:#EAF3DE;color:#3B6D11;border-color:#639922;}
+.finish-box{background:#fff;border:0.5px solid #dbe7d3;border-radius:10px;padding:14px 16px;margin:14px 0;}
+.finish-title{font-size:13px;font-weight:700;color:#3B6D11;margin-bottom:8px;}
+.finish-list{list-style:none;display:grid;gap:6px;}
+.finish-list li{font-size:13px;color:#555;line-height:1.65;padding-left:18px;position:relative;}
+.finish-list li::before{content:"✓";position:absolute;left:0;color:#639922;font-weight:700;}
 
 /* ── JSON ── */
 .json-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#cdd6f4;white-space:pre-wrap;background:#1e1e2e;}
@@ -144,15 +218,19 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
 <body>
 <div class="wrap">
 
+<a href="act-form-fill-choice.html" style="display:inline-block;font-size:13px;color:#888;text-decoration:none;margin-bottom:14px;">← 빈칸 채우기 — 선택형 (활동 목록)으로</a>
+
 <!-- ══ 히어로 ══ -->
 <div class="hero">
-  <div class="tag">❶ 형태 학습 · 빈칸 채우기</div>
+  <div class="tag">❶ 형태 학습 · 빈칸 채우기 — 선택형 · 장소 조사 에/에서</div>
   <h1 class="hero-title">장소의 '에'와 '에서',<br>AI로 10분 만에 연습 앱 만드는 법</h1>
   <p class="hero-desc">프롬프트 하나로 문항을 뽑고, 코드 생성 도구로 자동채점 앱까지 만드는 과정을 단계별로 안내해요.</p>
-  <div class="meta">
-    <span class="chip">TOPIK 1급 · 초급</span>
-    <span class="chip">제작 시간 10분</span>
-    <span class="chip">웹 기반 자동채점</span>
+  <div class="axis-card">
+    <span class="axis-badge ax-format"><span class="ax-label">문항형식</span> 선택형</span>
+    <span class="axis-badge ax-media"><span class="ax-label">자료유형</span> 텍스트</span>
+    <span class="axis-badge ax-interaction"><span class="ax-label">상호작용</span> 개인</span>
+    <span class="axis-badge ax-language"><span class="ax-label">언어영역</span> 문법</span>
+    <span class="axis-badge ax-level"><span class="ax-label">난이도</span> 초급</span>
   </div>
 </div>
 
@@ -160,6 +238,7 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
 <div class="sticky-nav">
   <div class="nav" id="main-nav">
     <a href="#intro" data-section="intro">설계 의도</a>
+    <a href="#usage" data-section="usage">수업 활용</a>
     <a href="#build" data-section="build">제작 과정</a>
     <a href="#practice" data-section="practice">연습 문제</a>
     <a href="#check" data-section="check">점검·응용</a>
@@ -174,7 +253,7 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
   <table class="overview-table">
     <tr><td>활동 유형</td><td>빈칸 채우기 (선택형)</td></tr>
     <tr><td>범주</td><td>❶ 형태 학습</td></tr>
-    <tr><td>대상</td><td>초급 (TOPIK 1급)</td></tr>
+    <tr><td>대상</td><td>초급</td></tr>
     <tr><td>목표 문법</td><td>장소 조사 '에' vs '에서' 구분</td></tr>
     <tr><td>규모</td><td>10문항 / 5–10분</td></tr>
     <tr><td>배포 형태</td><td>웹 기반 자동채점 (링크/QR코드 공유)</td></tr>
@@ -182,112 +261,198 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
 
   <p class="prose">'에'와 '에서'는 초급에서 가장 많이 헷갈리는 조사 중 하나예요. 설명은 이해했는데 막상 문장에서 고르려면 헷갈리는 거, 선생님들도 잘 아시죠?</p>
   <p class="prose"><b>선택형으로 만든 이유</b>가 있어요. 초급 학습자는 한글 입력 자체가 부담이에요. 선택지를 두 개로 줄이면 "에/에서 중 뭐가 맞지?"라는 판단에만 집중할 수 있어요.</p>
-  <p class="prose">문항마다 해설이 다르게 나오는 것도 포인트예요. "'공부하다'는 행동 동사예요. 행동이 일어나는 장소에는 '에서'를 써요." 이런 식으로요. 이게 자동채점 웹앱의 가장 큰 장점이에요.</p>
+  <p class="prose">문항마다 해설이 다르게 나오는 것도 포인트예요. "'공부하다'는 무언가를 하는 말이에요. 하는 곳에는 '에서'를 써요." 이런 식으로요 — 학생 화면이니 문법 용어 대신 쉬운 말로요. 이게 자동채점 웹앱의 가장 큰 장점이에요.</p>
+</div>
+
+<!-- ══ USAGE ══ -->
+<div class="section" id="usage">
+  <div class="section-tag">USAGE</div>
+  <div class="section-title">📍 수업 어디에서 쓰면 좋을까요?</div>
+  <p class="prose">이 활동은 <b>문법을 설명한 직후, 확인 연습</b> 단계에 가장 잘 맞아요. 학습자가 '에/에서' 규칙을 들은 뒤 스스로 적용해 보는 자리예요.</p>
+
+  <div class="stage-flow">
+    <div class="stage-step"><div class="st-phase">1</div><div class="st-name">도입</div><div class="st-desc">동기 유발·주제 환기</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">2</div><div class="st-name">제시</div><div class="st-desc">에/에서 규칙 설명</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step highlight"><div class="st-phase">3</div><div class="st-name">연습 ★</div><div class="st-desc">이 활동으로 적용</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">4</div><div class="st-name">활동</div><div class="st-desc">직접 문장 만들기</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">5</div><div class="st-name">마무리</div><div class="st-desc">오답 함께 점검</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">6</div><div class="st-name">과제</div><div class="st-desc">집에서 복습</div></div>
+  </div>
+  <p class="prose" style="font-size:13px;color:#aaa;margin-top:-4px;">이 활동은 주로 <b style="color:#888;">3단계 연습</b>에 쓰지만, 집에서 푸는 <b style="color:#888;">과제</b>로 내보내도 좋아요. 단계는 수업에 따라 유연하게 조절하세요.</p>
+
+  <div class="usage-grid">
+    <div class="usage-item"><div class="ui-icon">⏱</div><div class="ui-title">수업 중 5분 연습</div><div class="ui-desc">설명 직후 "각자 풀어보세요"로 5분. 학습자가 자기 속도로 풀고 즉시 피드백을 받아요.</div></div>
+    <div class="usage-item"><div class="ui-icon">🏠</div><div class="ui-title">복습 숙제</div><div class="ui-desc">링크를 공유해 집에서 풀게 해요. 자동채점이라 따로 검사할 필요가 없어요.</div></div>
+    <div class="usage-item"><div class="ui-icon">🔁</div><div class="ui-title">단원 마무리 복습</div><div class="ui-desc">며칠 뒤 다시 풀게 해 기억을 다져요. 문항 순서가 섞여 나와 반복해도 지루하지 않아요.</div></div>
+    <div class="usage-item"><div class="ui-icon">📊</div><div class="ui-title">수준 확인</div><div class="ui-desc">학습자가 어느 부분을 헷갈리는지 손들기나 화면 공유로 빠르게 파악해요.</div></div>
+  </div>
+
+  <div class="tip">이 활동은 정확성을 다지는 <b>형태 학습</b> 단계예요. 자유로운 말하기로 넘어가기 전, 형태에 익숙해지는 디딤돌로 쓰면 좋아요.</div>
 </div>
 
 <!-- ══ BUILD ══ -->
 <div class="section" id="build">
   <div class="section-tag">BUILD</div>
-  <div class="section-title">🤖 Step 1. AI한테 재료를 만들어 달라고 하세요</div>
-  <p class="prose">Claude, ChatGPT, Gemini 아무거나 열고 아래 프롬프트를 그대로 붙여넣으세요.</p>
+  <div class="section-title">🛠 따라 만들기 — 4단계</div>
+  <p class="prose">요즘은 Claude나 ChatGPT 같은 대화형 AI에 바로 부탁하면, 작동하는 웹앱까지 한 번에 만들어줘요. 코드를 몰라도 괜찮아요. 아래 4단계만 따라오세요.</p>
+  <a class="guide-link" href="guide.html">🧰 어떤 AI 도구를 써야 할지 모르겠다면 → 도구 안내 보기</a>
+
+  <!-- Step 1 -->
+  <div class="step-head">
+    <div class="step-badge">1</div>
+    <div><div class="step-h">무엇을 만들지 정하기</div><div class="step-sub">프롬프트를 쓰기 전에 5초만 생각해요</div></div>
+  </div>
+  <p class="prose">만들기 전에 딱 세 가지만 정하면 돼요. 이게 곧 프롬프트의 재료가 돼요.</p>
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">무엇을</div><div class="layer-desc">장소 조사 '에' vs '에서' 구분 — 가르칠 목표 문법이에요.</div></div>
+    <div class="layer-item"><div class="layer-tag">어떻게</div><div class="layer-desc">선택형(둘 중 고르기) — 초급은 입력 부담이 적은 선택형이 좋아요.</div></div>
+    <div class="layer-item"><div class="layer-tag">얼마나</div><div class="layer-desc">10문항, '에' 5개·'에서' 5개 균형 — 한쪽으로 치우치지 않게요.</div></div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-head">
+    <div class="step-badge">2</div>
+    <div><div class="step-h">프롬프트로 한 번에 만들기</div><div class="step-sub">아래 프롬프트를 복사해서 그대로 붙여넣으세요</div></div>
+  </div>
+  <p class="prose">Claude나 ChatGPT를 열고 아래 프롬프트를 붙여넣으면, 문항부터 작동하는 앱까지 한 번에 만들어줘요.</p>
   <a class="guide-link" href="guide-prompt.html">📐 프롬프트를 잘 쓰는 법이 궁금하다면 → 프롬프트 작성 가이드 보기</a>
 
-  <div class="sub-title">⚠️ 이 활동에서 특히 주의하세요</div>
-  <div class="caution">'에'와 '에서'를 구분하는 문항을 만들어달라고 하면, AI가 이동의 '에'(학교에 가요)를 섞어서 내놓는 경우가 많아요. 아래 프롬프트처럼 <b>"존재/행동 장소만, 이동의 에는 제외"</b>라고 명시해줘야 원하는 결과가 나와요.</div>
+  <div class="caution">⚠️ '에'와 '에서'를 구분하는 문항을 만들어달라고만 하면, AI가 두 가지 실수를 자주 해요. ① 이동의 '에'(학교에 가요)를 섞고, ② 정답표·해설을 <b>학생 화면에 그대로 노출</b>해요. 그래서 프롬프트에 <b>"존재·행동 장소만, 이동의 에 제외"</b>와 <b>"학생 화면엔 교사용 정보를 숨김"</b>을 꼭 넣으세요.</div>
 
   <div class="prompt-box">
-    <div class="prompt-bar">
-      <div class="prompt-bar-left">
-        <div class="prompt-dot" style="background:#ff5f57"></div>
-        <div class="prompt-dot" style="background:#febc2e"></div>
-        <div class="prompt-dot" style="background:#28c840"></div>
-        <span class="prompt-filename">prompt.txt</span>
-      </div>
-    </div>
-    <div class="prompt-body"><span class="p-section"># 역할 (Role)</span>
-<span class="p-val">한국어 교육 전문가</span>
+    <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">기본 프롬프트</span></div><button class="copy-btn" data-copy="#p-basic">복사</button></div>
+    <div class="prompt-body copy-text" id="p-basic"><span class="p-section"># 만들 것</span>
+<span class="p-val">한국어 학습용 '에/에서' 빈칸 채우기 학생용 웹앱</span>
 
-<span class="p-section"># 과제 (Task)</span>
-<span class="p-val">장소 조사 '에'와 '에서'를 구분하는 빈칸 채우기 문항 생성</span>
-<span class="p-cmt">// 존재/행동 장소만. 이동의 에(가다/오다)는 제외.</span>
+<span class="p-section"># 내용</span>
+<span class="p-key">-</span> <span class="p-val">대상: 초급 학습자</span>
+<span class="p-key">-</span> <span class="p-val">문항: 10개 ('에' 5개, '에서' 5개)</span>
+<span class="p-cmt">// 존재·행동 장소만. 이동의 에(가다/오다/다니다)는 제외.</span>
+<span class="p-key">-</span> <span class="p-val">동사: 초급 기본 동사 (있다/없다/먹다/놀다/공부하다 등)</span>
+<span class="p-key">-</span> <span class="p-val">각 문항마다 정답 해설, 오답 해설 다르게</span>
+<span class="p-key">-</span> <span class="p-val">해설은 문법 용어 없이 쉬운 말로 (예: "하는 곳에는 '에서'")</span>
+<span class="p-cmt">// 행동 동사·존재 동사 같은 용어는 학생 화면에 쓰지 않기</span>
 
-<span class="p-section"># 조건 (Constraints)</span>
-<span class="p-key">-</span> <span class="p-val">대상: TOPIK 1급 초급 학습자</span>
-<span class="p-key">-</span> <span class="p-val">문항 수: 10개 ('에' 5개, '에서' 5개 균형 배치)</span>
-<span class="p-key">-</span> <span class="p-val">동사: 초급 기본 동사만 사용 (있다/없다/먹다/놀다/공부하다 등)</span>
-<span class="p-key">-</span> <span class="p-val">장소: 학습자에게 친숙한 일상 장소</span>
-<span class="p-key">-</span> <span class="p-val">각 문항에 정답, 한국어 해설, 오답 해설 포함</span>
+<span class="p-section"># 동작</span>
+<span class="p-key">-</span> <span class="p-val">'에'/'에서' 버튼을 누르면 즉시 정답/오답 표시</span>
+<span class="p-key">-</span> <span class="p-val">해설을 바로 보여주고, 다음 문항으로 넘어가기</span>
+<span class="p-key">-</span> <span class="p-val">10문항을 다 풀면 점수 보여주기</span>
+<span class="p-key">-</span> <span class="p-val">휴대폰 화면에서도 잘 보이게</span>
 
-<span class="p-section"># 출력 (Output)</span>
-<span class="p-val">JSON 형식</span></div>
+<span class="p-section"># 중요</span>
+<span class="p-key">-</span> <span class="p-val">학생 화면에는 문제·선택지·피드백·점수만 보이게</span>
+<span class="p-cmt">// 정답표, 문항 균형, 제작 설명은 학생에게 보이지 않게</span></div>
   </div>
 
-  <div class="tip">역할과 출력 형식은 그대로 두고, 과제와 조건만 바꾸면 어떤 문법 항목이든 만들 수 있어요.</div>
+  <div class="tip">💡 위 프롬프트의 뼈대(만들 것·내용·동작·중요)는 그대로 두고, 목표 문법만 바꾸면 어떤 활동이든 만들 수 있어요. 색이나 버튼 모양 같은 디자인은 굳이 적지 않아도 알아서 만들어줘요.</div>
 
-  <div class="sub-title">🔁 이렇게 바꿔서 응용하세요</div>
-  <p class="prose">에/에서 대신 다른 문법 항목으로 만들고 싶으면, 과제와 조건만 수정하면 돼요.</p>
+  <div class="sub-title">🔁 다른 문법으로 바꾸려면</div>
+  <p class="prose">전체를 다시 쓰지 말고, 아래 세 곳만 바꾸세요.</p>
   <div class="layer-list">
-    <div class="layer-item"><div class="layer-tag">역할</div><div class="layer-desc">그대로 두세요. 교육 전문가 역할은 어떤 문법 항목에도 통해요.</div></div>
-    <div class="layer-item"><div class="layer-tag">과제</div><div class="layer-desc">목표 문법만 바꾸세요. "이/가 vs 은/는 구분 문항 생성", "과거 시제 어미 활용 문항 생성"</div></div>
-    <div class="layer-item"><div class="layer-tag">조건</div><div class="layer-desc">대상 레벨과 문법 특성에 맞게 조정하세요. 중급이면 TOPIK 3급, 말하기 활동이면 대화문 형식으로.</div></div>
-    <div class="layer-item"><div class="layer-tag">출력</div><div class="layer-desc">앱으로 만들 거면 JSON, 인쇄용이면 "표 형식으로 정리해줘"로 바꾸세요.</div></div>
+    <div class="layer-item"><div class="layer-tag">문법 바꾸기</div><div class="layer-desc">"장소 조사 '에'와 '에서'" → "주격 '이/가'와 보조사 '은/는'", "과거 시제 어미" 등으로.</div></div>
+    <div class="layer-item"><div class="layer-tag">난이도 바꾸기</div><div class="layer-desc">"초급" → "초중급"이나 "중급 학습자"로. 어휘 수준도 같이 올려달라고 하세요.</div></div>
+    <div class="layer-item"><div class="layer-tag">방식 바꾸기</div><div class="layer-desc">선택형 대신 "직접 입력형", "카드 뒤집기", "문장 배열하기"처럼 원하는 활동 방식을 적으세요.</div></div>
   </div>
 
-  <div class="divider"></div>
+  <!-- Step 3 -->
+  <div class="step-head">
+    <div class="step-badge">3</div>
+    <div><div class="step-h">나온 앱 점검하고 손보기</div><div class="step-sub">바로 학생에게 주지 말고, 먼저 점검하고 고쳐요</div></div>
+  </div>
+  <p class="prose">프롬프트를 넣으면 앱이 바로 나와요. 하지만 한 번에 완벽하진 않아요. 먼저 <b>무엇을 고칠지 찾고</b>, 그 다음 <b>고치면</b> 돼요.</p>
 
-  <div class="section-title">📤 Step 2. 결과를 확인하세요</div>
-  <p class="prose">AI가 아래처럼 JSON 형식으로 문항을 만들어 줘요. 직접 수정해서 쓸 수도 있어요. <b>파란색 키에 마우스를 올려보세요.</b></p>
+  <div class="sub-title">먼저, 무엇을 고칠지 점검하기</div>
+  <p class="prose">코드를 읽을 필요 없어요. 학생처럼 직접 풀어보며 아래만 확인하세요.</p>
+  <div class="finish-box">
+    <div class="finish-title">미리보기에서 확인할 것</div>
+    <ul class="finish-list">
+      <li>첫 화면에 문제와 "에/에서" 선택지가 바로 보이나요?</li>
+      <li>정답을 누르면 바로 정답/오답과 해설이 나오나요?</li>
+      <li>문항이 10개이고, 마지막에 점수가 나오나요?</li>
+      <li>"가요·와요·다녀요"처럼 <b>이동의 '에'</b>가 섞이지 않았나요?</li>
+      <li>학생 화면에 <b>정답표·문항 균형·교사용 설명</b>이 안 보이나요?</li>
+      <li>스마트폰 크기에서도 버튼을 누르기 편한가요?</li>
+    </ul>
+  </div>
+  <div class="warn">⚠️ AI는 빠르게 초안을 만드는 조수일 뿐, 교육적 판단은 선생님 몫이에요. 어색한 문장이나 수준에 안 맞는 어휘가 없는지 꼭 확인하세요.</div>
 
-  <div class="prompt-box">
-    <div class="prompt-bar">
-      <div class="prompt-bar-left">
-        <div class="prompt-dot" style="background:#ff5f57"></div>
-        <div class="prompt-dot" style="background:#febc2e"></div>
-        <div class="prompt-dot" style="background:#28c840"></div>
-        <span class="prompt-filename">output.json</span>
+  <div class="sub-title">고치는 방법은 두 가지예요</div>
+  <p class="prose">고칠 곳을 찾았으면, 아래 두 방법 중 편한 쪽으로 수정하세요. 대부분은 <b>방법 ①</b>로 충분해요.</p>
+
+  <div class="method-card">
+    <div class="method-num">방법 ①</div>
+    <div class="method-body">
+      <div class="method-title">말로 고치기 <span class="method-tag easy">제일 쉬움</span></div>
+      <p class="prose">고치고 싶은 걸 그냥 말하면 돼요. 코드를 볼 필요도 없어요. 대부분 이걸로 해결돼요.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">이렇게 말하면 돼요</span></div><button class="copy-btn" data-copy="#p-fix">복사</button></div>
+        <div class="prompt-body copy-text" id="p-fix"><span class="p-val">3번 문항 문장이 어색해. 더 자연스럽게 바꿔줘.</span>
+<span class="p-val">이동의 '에'가 섞였어. 가다·오다 문장은 빼고 다시 만들어줘.</span>
+<span class="p-val">학생 화면에 정답표가 보여. 문제·선택지·점수만 남겨줘.</span>
+<span class="p-val">버튼이 작아서 휴대폰에서 누르기 힘들어. 크게 해줘.</span>
+<span class="p-val">배경색을 베이지색으로 바꿔줘.</span></div>
       </div>
     </div>
-    <div class="json-body">
+  </div>
+
+  <div class="method-card">
+    <div class="method-num">방법 ②</div>
+    <div class="method-body">
+      <div class="method-title">코드로 고치기 <span class="method-tag pro">더 정밀하게</span></div>
+      <p class="prose">여러 곳을 한꺼번에 손보거나 세밀하게 조정하고 싶으면, AI한테 <b>"코드를 보여줘"</b>라고 해서 직접 고칠 수 있어요. AI가 만든 문항은 코드 안에 이렇게 들어 있어요. <b>파란 글씨에 마우스를 올려보세요.</b></p>
+
+      <div class="code-box">
+        <div class="code-bar"><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span><span class="code-fname">문항 데이터 (일부)</span></div>
+        <div class="code-body">{
+  <span class="ck" data-c="sentence">sentence</span>: <span class="cs">"책이 가방___ 있어요."</span>,
+  <span class="ck" data-c="answer">answer</span>: <span class="cs">"에"</span>,
+  <span class="ck" data-c="correct">correct</span>: <span class="cs">"정답이에요. '있어요'는 있는 장소라 '에'."</span>,
+  <span class="ck" data-c="wrong">wrong</span>: <span class="cs">"아니에요. 있는 장소를 말하므로 '에'가 맞아요."</span>
+},
 {
-  <span class="jk" data-key="questions">"questions"</span>: [
-    {
-      <span class="jk" data-key="id">"id"</span>: <span class="jn">1</span>,
-      <span class="jk" data-key="sentence">"sentence"</span>: <span class="js">"저는 도서관______ 공부해요."</span>,
-      <span class="jk" data-key="answer">"answer"</span>: <span class="js">"에서"</span>,
-      <span class="jk" data-key="verb_type">"verb_type"</span>: <span class="js">"행동"</span>,
-      <span class="jk" data-key="feedback_correct">"feedback_correct"</span>: <span class="js">"✅ '공부하다'는 행동 동사예요."</span>,
-      <span class="jk" data-key="feedback_wrong">"feedback_wrong"</span>: <span class="js">"❌ 행동 장소에는 '에서'를 써요."</span>
-    },
-    {
-      <span class="jk" data-key="id">"id"</span>: <span class="jn">2</span>,
-      <span class="jk" data-key="sentence">"sentence"</span>: <span class="js">"학교______ 선생님이 있어요."</span>,
-      <span class="jk" data-key="answer">"answer"</span>: <span class="js">"에"</span>,
-      <span class="jk" data-key="verb_type">"verb_type"</span>: <span class="js">"존재"</span>,
-      <span class="jk" data-key="feedback_correct">"feedback_correct"</span>: <span class="js">"✅ '있다'는 존재 동사예요."</span>,
-      <span class="jk" data-key="feedback_wrong">"feedback_wrong"</span>: <span class="js">"❌ 존재 장소에는 '에'를 써요."</span>
-    },
-    { <span class="jk" data-key="id">"id"</span>: <span class="jn">3</span>, <span class="jk">"..."</span>: <span class="js">"..."</span> }
-  ]
-}
+  <span class="ck" data-c="sentence">sentence</span>: <span class="cs">"민수는 식당___ 밥을 먹어요."</span>,
+  <span class="ck" data-c="answer">answer</span>: <span class="cs">"에서"</span>,
+  <span class="ck" data-c="correct">correct</span>: <span class="cs">"정답이에요. '먹어요'는 행동이라 '에서'."</span>,
+  <span class="ck" data-c="wrong">wrong</span>: <span class="cs">"아니에요. 먹는 행동의 장소라 '에서'가 맞아요."</span>
+}</div>
+        <div class="code-hint">💡 마우스를 올리면 각 부분이 무슨 뜻인지 알려줘요. 이 부분 문장·정답·해설을 고치면 문항이 바뀌어요.</div>
+      </div>
+
+      <a class="guide-link" href="act-form-1-1-code.html" target="_blank">📄 AI가 만든 전체 코드를 구역별 설명과 함께 보기 →</a>
     </div>
   </div>
-  <div class="legend">
-    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#a6e3a1"></div>sentence</div><span class="leg-arrow">→</span><span class="leg-desc">빈칸이 포함된 <b>문장</b>이에요. ______가 빈칸 위치예요.</span></div>
-    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#89b4fa"></div>answer</div><span class="leg-arrow">→</span><span class="leg-desc"><b>정답</b>을 넣는 곳이에요. "에" 또는 "에서" 중 하나가 들어가요.</span></div>
-    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#cba6f7"></div>verb_type</div><span class="leg-arrow">→</span><span class="leg-desc">행동/존재/이동 중 해당하는 <b>동사 유형</b>이에요. 해설의 기준이 돼요.</span></div>
-    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#a6e3a1"></div>feedback_correct</div><span class="leg-arrow">→</span><span class="leg-desc">학습자가 <b>정답을 골랐을 때</b> 나오는 해설이에요.</span></div>
-    <div class="leg-row"><div class="leg-tag"><div class="leg-dot" style="background:#f38ba8"></div>feedback_wrong</div><span class="leg-arrow">→</span><span class="leg-desc">학습자가 <b>오답을 골랐을 때</b> 나오는 해설이에요.</span></div>
+
+  <div class="tip">고치고 → 다시 확인하고를 마음에 들 때까지 반복하면 돼요. 급하면 방법 ①만으로도 충분해요.</div>
+
+  <!-- Step 4 -->
+  <!-- Step 4 -->
+  <div class="step-head">
+    <div class="step-badge">4</div>
+    <div><div class="step-h">학생에게 내보내기</div><div class="step-sub">링크나 QR코드로 공유해요</div></div>
   </div>
+  <p class="prose">앱이 완성되면 링크 하나로 학생에게 줄 수 있어요. 학생은 각자 휴대폰으로 접속해서 자기 속도로 풀면 돼요. 인쇄도 복사도 필요 없어요.</p>
+  <a class="guide-link" href="guide-deploy.html">🚀 만든 앱을 인터넷에 올리고 링크·QR코드 만드는 법 → 배포 가이드 보기</a>
 
-  <div class="warn">⚠️ AI가 만든 문항은 꼭 확인하세요. 어색한 표현이나 수준에 맞지 않는 어휘가 섞여 있을 수 있어요. AI는 빠르게 초안을 만들어 주는 조수고, 교육적 판단은 선생님 몫이에요.</div>
-
-  <div class="divider"></div>
-
-  <div class="section-title">🛠 Step 3. 코드 생성 도구로 앱을 만드세요</div>
-  <p class="prose">JSON 데이터가 준비됐으면, Antigravity 같은 코드 생성 도구에 붙여넣고 이렇게 말하면 돼요.</p>
-  <p class="prose"><b>"이 데이터로 한국어 학습용 빈칸 채우기 웹앱 만들어줘. '에' 또는 '에서' 선택하면 즉시 정답/오답 표시되고, 해설 나오고, 10문항 다 풀면 점수 보여줘."</b></p>
-  <p class="prose">완성되면 아래처럼 작동하는 앱이 나와요. 직접 눌러보세요!</p>
-  <a class="guide-link" href="guide-deploy.html">🚀 만든 앱을 학생에게 보여주는 법이 궁금하다면 → 배포 가이드 보기</a>
+  <!-- 심화 -->
+  <div class="accordion deepdive">
+    <div class="acc-head">🔍 [심화] 문항을 더 꼼꼼히 검토하고 싶다면 — 2단계로 나눠 만들기<span class="acc-arrow">▶</span></div>
+    <div class="acc-body">
+      <p class="prose">한 번에 앱까지 만들면 빠르지만, 문항을 하나하나 검토하긴 어려워요. 문항의 질을 꼼꼼히 통제하고 싶으면 <b>두 단계로 나눠서</b> 만드세요.</p>
+      <p class="prose"><b>먼저 문항(JSON)만</b> 만들어 달라고 해서 내용을 검토·수정한 뒤, <b>그 다음에 앱으로</b> 만드는 방식이에요. AI가 만든 문항을 표로 받아 천천히 확인할 수 있어요.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">1단계 — 문항만</span></div></div>
+        <div class="prompt-body"><span class="p-cmt">// 앱 말고 문항 데이터만 먼저 받기</span>
+<span class="p-val">위 조건으로 문항 10개를 JSON 형식으로만 만들어줘.</span>
+<span class="p-val">각 문항에 문장, 정답, 정답 해설, 오답 해설을 넣어줘.</span></div>
+      </div>
+      <p class="prose">받은 문항을 검토하고 고친 뒤, "이 데이터로 웹앱 만들어줘"라고 이어서 말하면 돼요. 문항 검토가 왜 중요한지는 프롬프트 가이드에서 더 다뤄요.</p>
+    </div>
+  </div>
 </div>
 
 <!-- ══ PRACTICE ══ -->
@@ -297,7 +462,7 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
   <p class="section-lead">완성된 앱이 어떻게 작동하는지 직접 체험해 보세요.</p>
 
   <div class="act-box">
-    <div class="act-header"><div class="act-header-title">장소의 '에'와 '에서'</div><div class="act-header-sub">TOPIK 1급 · 빈칸 채우기 · 10문항</div></div>
+    <div class="act-header"><div class="act-header-title">장소의 '에'와 '에서'</div><div class="act-header-sub">초급 · 빈칸 채우기 · 10문항</div></div>
     <div class="act-body">
       <div class="prog-wrap"><div class="prog-fill" id="pf" style="width:0%"></div></div>
       <div id="qz"></div>
@@ -321,7 +486,7 @@ body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line
   <div class="section-title">✅ 이것만 확인하세요</div>
   <ul class="check-list">
     <li>모든 문장이 문법적으로 자연스러운가요?</li>
-    <li>어휘가 TOPIK 1급 수준에 맞나요? ("프레젠테이션" 같은 단어는 부적합해요)</li>
+    <li>어휘가 초급 수준에 맞나요? ("프레젠테이션" 같은 단어는 부적합해요)</li>
     <li>각 문항의 정답이 딱 하나인가요?</li>
     <li>'에' 5개, '에서' 5개, 균형이 맞나요?</li>
     <li>이동의 '에'(가다/오다)가 섞이지 않았나요?</li>
@@ -377,16 +542,16 @@ document.querySelectorAll('.jk[data-key]').forEach(el => {
 
 // 퀴즈
 const qs = [
-  {s:"저는 도서관_____ 공부해요.", a:"에서", ok:"✅ '공부하다'는 행동 동사예요. 행동 장소에는 '에서'를 써요.", no:"❌ '공부하다'는 행동 동사예요. 행동 장소에는 '에서'를 써요."},
-  {s:"학교_____ 선생님이 있어요.", a:"에", ok:"✅ '있다'는 존재 동사예요. 존재 장소에는 '에'를 써요.", no:"❌ '있다'는 존재 동사예요. 존재 장소에는 '에'를 써요."},
-  {s:"친구가 카페_____ 커피를 마셔요.", a:"에서", ok:"✅ '마시다'는 행동 동사예요. 행동 장소 → '에서'", no:"❌ '마시다'는 행동 동사예요. 행동 장소에는 '에서'를 써요."},
-  {s:"가방이 방_____ 있어요.", a:"에", ok:"✅ '있다'는 존재 동사예요. 존재 장소 → '에'", no:"❌ '있다'는 존재 동사예요. 존재 장소에는 '에'를 써요."},
-  {s:"저는 회사_____ 일해요.", a:"에서", ok:"✅ '일하다'는 행동 동사예요. 행동 장소 → '에서'", no:"❌ '일하다'는 행동 동사예요. 행동 장소에는 '에서'를 써요."},
-  {s:"병원_____ 의사가 있어요.", a:"에", ok:"✅ '있다'는 존재 동사예요. 존재 장소 → '에'", no:"❌ '있다'는 존재 동사예요. 존재 장소에는 '에'를 써요."},
-  {s:"우리는 공원_____ 놀아요.", a:"에서", ok:"✅ '놀다'는 행동 동사예요. 행동 장소 → '에서'", no:"❌ '놀다'는 행동 동사예요. 행동 장소에는 '에서'를 써요."},
-  {s:"식당_____ 음식이 많아요.", a:"에", ok:"✅ '많다'는 상태 표현이에요. 상태 장소에는 '에'를 써요.", no:"❌ '많다'는 상태 표현이에요. 상태 장소에는 '에'를 써요."},
-  {s:"저는 집_____ 밥을 먹어요.", a:"에서", ok:"✅ '먹다'는 행동 동사예요. 행동 장소 → '에서'", no:"❌ '먹다'는 행동 동사예요. 행동 장소에는 '에서'를 써요."},
-  {s:"지하철역_____ 버스가 없어요.", a:"에", ok:"✅ '없다'는 존재 동사예요. 존재 장소에는 '에'를 써요.", no:"❌ '없다'는 존재 동사예요. 존재 장소에는 '에'를 써요."}
+  {s:"저는 도서관_____ 공부해요.", a:"에서", ok:"✅ '공부하다'는 무언가를 하는 말이에요. 하는 곳에는 '에서'를 써요.", no:"아쉬워요. '공부하다'는 무언가를 하는 말이에요. 하는 곳에는 '에서'를 써요."},
+  {s:"학교_____ 선생님이 있어요.", a:"에", ok:"✅ '있다'는 있는 것을 말해요. 있는 곳에는 '에'를 써요.", no:"아쉬워요. '있다'는 있는 것을 말해요. 있는 곳에는 '에'를 써요."},
+  {s:"친구가 카페_____ 커피를 마셔요.", a:"에서", ok:"✅ '마시다'는 하는 말이에요. 하는 곳 → '에서'", no:"아쉬워요. '마시다'는 하는 말이에요. 하는 곳에는 '에서'를 써요."},
+  {s:"가방이 방_____ 있어요.", a:"에", ok:"✅ '있다'는 있는 것을 말해요. 있는 곳 → '에'", no:"아쉬워요. '있다'는 있는 것을 말해요. 있는 곳에는 '에'를 써요."},
+  {s:"저는 회사_____ 일해요.", a:"에서", ok:"✅ '일하다'는 하는 말이에요. 하는 곳 → '에서'", no:"아쉬워요. '일하다'는 하는 말이에요. 하는 곳에는 '에서'를 써요."},
+  {s:"병원_____ 의사가 있어요.", a:"에", ok:"✅ '있다'는 있는 것을 말해요. 있는 곳 → '에'", no:"아쉬워요. '있다'는 있는 것을 말해요. 있는 곳에는 '에'를 써요."},
+  {s:"우리는 공원_____ 놀아요.", a:"에서", ok:"✅ '놀다'는 하는 말이에요. 하는 곳 → '에서'", no:"아쉬워요. '놀다'는 하는 말이에요. 하는 곳에는 '에서'를 써요."},
+  {s:"식당_____ 음식이 많아요.", a:"에", ok:"✅ '많다'는 어떤지를 말해요. 이럴 때 곳 뒤에는 '에'를 써요.", no:"아쉬워요. '많다'는 어떤지를 말해요. 이럴 때 곳 뒤에는 '에'를 써요."},
+  {s:"저는 집_____ 밥을 먹어요.", a:"에서", ok:"✅ '먹다'는 하는 말이에요. 하는 곳 → '에서'", no:"아쉬워요. '먹다'는 하는 말이에요. 하는 곳에는 '에서'를 써요."},
+  {s:"지하철역_____ 버스가 없어요.", a:"에", ok:"✅ '없다'는 없는 것을 말해요. 있는(없는) 곳에는 '에'를 써요.", no:"아쉬워요. '없다'는 없는 것을 말해요. 있는(없는) 곳에는 '에'를 써요."}
 ];
 let cur = 0, score = 0;
 function sh(a) { return [...a].sort(() => Math.random() - .5); }
@@ -420,6 +585,45 @@ function ans(c) {
   setTimeout(() => { cur++; render(); }, 1800);
 }
 go();
+
+// 복사 버튼
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.querySelector(btn.dataset.copy);
+    if (!target) return;
+    const text = target.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '복사됨 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+
+// 코드 발췌 호버 툴팁
+const codeInfo = {
+  sentence: {title:'sentence — 문장', role:'빈칸이 들어간 문장이에요. ___가 빈칸 자리예요.', edit:true},
+  answer: {title:'answer — 정답', role:'"에" 또는 "에서" 중 정답을 적는 곳이에요.', edit:true},
+  correct: {title:'correct — 정답 해설', role:'학생이 맞혔을 때 나오는 설명이에요.', edit:true},
+  wrong: {title:'wrong — 오답 해설', role:'학생이 틀렸을 때 나오는 설명이에요.', edit:true}
+};
+document.querySelectorAll('.ck[data-c]').forEach(el => {
+  el.addEventListener('mouseenter', e => {
+    const d = codeInfo[el.dataset.c]; if (!d) return;
+    document.getElementById('tt-title').textContent = d.title;
+    document.getElementById('tt-role').textContent = d.role;
+    document.getElementById('tt-badge').innerHTML = '<span class="tt-badge badge-yes">✏️ 여기를 고치면 돼요</span>';
+    posTip(e); tt.classList.add('show');
+  });
+  el.addEventListener('mousemove', e => posTip(e));
+  el.addEventListener('mouseleave', hideTip);
+});
+
+// 아코디언 (디자인 옵션 / 심화)
+document.querySelectorAll('.accordion .acc-head').forEach(head => {
+  head.addEventListener('click', () => head.parentElement.classList.toggle('open'));
+});
 
 // 스크롤 스파이
 const navLinks = document.querySelectorAll('#main-nav a[data-section]');
