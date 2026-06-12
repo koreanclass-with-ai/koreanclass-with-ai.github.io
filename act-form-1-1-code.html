@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전체 코드 보기 — 에/에서 빈칸 채우기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f9f9f7;color:#1a1a1a;line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:860px;margin:0 auto;padding:32px 24px 80px;}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#888;text-decoration:none;margin-bottom:24px;}
+.back:hover{color:#1a1a1a;}
+h1{font-size:26px;font-weight:900;letter-spacing:-0.02em;margin-bottom:8px;}
+.lead{font-size:14px;color:#888;margin-bottom:24px;}
+.legend-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:14px 16px;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;}
+.lg{display:flex;align-items:center;gap:7px;font-size:12px;color:#555;}
+.lg .sw{width:14px;height:14px;border-radius:4px;}
+.copy-btn{font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:700;color:#cdd6f4;background:#252b36;border:1px solid #3c4454;border-radius:8px;padding:5px 12px;cursor:pointer;transition:all .15s;margin-left:auto;}
+.copy-btn:hover{background:#303847;color:#fff;}
+.copy-btn.copied{background:#a6e3a1;color:#1e1e2e;border-color:#a6e3a1;}
+.howto{font-size:13px;color:#7a6a3a;background:#F4F1EA;border-left:3px solid #A89868;border-radius:8px;padding:12px 16px;margin-bottom:24px;line-height:1.6;}
+.code-box{background:#1e1e2e;border-radius:14px;overflow:hidden;}
+.code-bar{background:#181825;padding:10px 16px;display:flex;align-items:center;gap:6px;position:sticky;top:0;}
+.code-dot{width:11px;height:11px;border-radius:50%;}
+.code-fname{color:#9399b2;font-size:12px;margin-left:6px;font-family:monospace;}
+.code-body{padding:0;font-family:'D2Coding','Consolas','Courier New',monospace;font-size:12.5px;line-height:1.7;color:#cdd6f4;overflow-x:auto;}
+.zone{display:block;border-left:3px solid transparent;padding:14px 18px;white-space:pre;}
+.zone-design{background:rgba(203,166,247,0.08);border-left-color:#cba6f7;}
+.zone-data{background:rgba(166,227,161,0.08);border-left-color:#a6e3a1;}
+.zone-logic{background:rgba(137,180,250,0.08);border-left-color:#89b4fa;}
+.zone-head{font-family:'Noto Sans KR',sans-serif;white-space:normal;margin-bottom:10px;}
+.zone-label{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:6px;}
+.zl-design{background:#cba6f7;color:#1e1e2e;}.zl-data{background:#a6e3a1;color:#1e1e2e;}.zl-logic{background:#89b4fa;color:#1e1e2e;}
+.zone-note{font-size:12px;color:#9399b2;font-family:'Noto Sans KR',sans-serif;margin-top:4px;}
+.cc{color:#6c7086;font-style:italic;}.cs{color:#a6e3a1;}.ck2{color:#89b4fa;}.cp{color:#f9e2af;}.cr{color:#f38ba8;}
+.ck{color:#89b4fa;cursor:help;border-radius:3px;padding:0 2px;transition:background .15s;}
+.ck:hover{background:rgba(137,180,250,0.25);}
+.tooltip{position:fixed;background:#1e1e2e;color:#cdd6f4;border:1px solid #45475a;border-radius:10px;padding:10px 13px;font-size:12px;max-width:240px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:1000;display:none;font-family:'Noto Sans KR',sans-serif;line-height:1.5;}
+.tooltip.show{display:block;}
+.tt-title{font-weight:700;margin-bottom:4px;color:#fff;}
+.tt-badge{display:inline-block;margin-top:6px;font-size:11px;padding:2px 8px;border-radius:6px;background:#a6e3a1;color:#1e1e2e;font-weight:500;}
+@media(max-width:560px){.code-body{font-size:11px;}.wrap{padding:24px 12px 60px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="act-form-1-1.html">← 활동 페이지로 돌아가기</a>
+  <h1>AI가 만든 전체 코드</h1>
+  <p class="lead">'에/에서 빈칸 채우기' 앱의 전체 코드예요. 크게 세 구역으로 나뉘어요. 전부 이해할 필요는 없어요 — 바꾸고 싶은 구역만 보면 돼요.</p>
+
+  <div class="legend-bar">
+    <div class="lg"><span class="sw" style="background:#cba6f7;"></span>① 디자인 (색·글꼴·모양)</div>
+    <div class="lg"><span class="sw" style="background:#a6e3a1;"></span>② 문항 데이터 (문장·정답·해설)</div>
+    <div class="lg"><span class="sw" style="background:#89b4fa;"></span>③ 작동 로직 (채점·점수)</div>
+    <button class="copy-btn" id="copyAll">전체 복사</button>
+  </div>
+
+  <div class="howto">💡 <b>파란 글씨</b>에 마우스를 올리면 설명이 나와요. 코드를 직접 고치기 부담되면, 이 코드를 복사해 AI한테 주고 "여기를 이렇게 바꿔줘"라고 말해도 돼요.</div>
+
+  <div class="code-box">
+    <div class="code-bar"><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span><span class="code-fname">index.html</span></div>
+    <div class="code-body"><span class="zone zone-design"><span class="zone-head"><span class="zone-label zl-design">① 디자인</span><div class="zone-note">색·글꼴·버튼 모양을 정하는 부분. 겉모습을 바꾸려면 여기를 고쳐요.</div></span><span class="cc">&lt;!-- 화면 스타일 --&gt;</span>
+&lt;style&gt;
+  :root {
+    --bg: <span class="ck" data-c="bg">#f5f7fb</span>;          <span class="cc">/* 배경색 */</span>
+    --primary: <span class="ck" data-c="primary">#2563eb</span>;     <span class="cc">/* 버튼·강조색 (파랑) */</span>
+    --good: <span class="ck" data-c="good">#15803d</span>;        <span class="cc">/* 정답 표시 (초록) */</span>
+    --bad: <span class="ck" data-c="bad">#b91c1c</span>;         <span class="cc">/* 오답 표시 (빨강) */</span>
+  }
+  body {
+    font-family: <span class="cs">system-ui, sans-serif</span>;  <span class="cc">/* 글꼴 */</span>
+    background: <span class="cs">var(--bg)</span>;
+  }
+  .app {
+    max-width: <span class="cp">560px</span>;            <span class="cc">/* 화면 최대 너비 */</span>
+    border-radius: <span class="cp">22px</span>;         <span class="cc">/* 모서리 둥글기 */</span>
+    box-shadow: 0 12px 35px rgba(15,23,42,0.12);
+  }
+  .sentence {
+    font-size: <span class="ck" data-c="fontsize">clamp(25px, 7vw, 36px)</span>; <span class="cc">/* 문장 크기 */</span>
+    font-weight: <span class="cp">800</span>;
+  }
+  .choice {                          <span class="cc">/* 선택 버튼 */</span>
+    background: <span class="cs">var(--primary)</span>;
+    min-height: <span class="cp">72px</span>;
+    font-size: <span class="cp">30px</span>;
+  }
+  .feedback.correct { background: <span class="cs">#dcfce7</span>; }  <span class="cc">/* 정답 배경 */</span>
+  .feedback.wrong { background: <span class="cs">#fee2e2</span>; }    <span class="cc">/* 오답 배경 */</span>
+&lt;/style&gt;</span><span class="zone zone-data"><span class="zone-head"><span class="zone-label zl-data">② 문항 데이터</span><div class="zone-note">문장·정답·해설이 들어 있어요. 문항 내용을 바꾸려면 여기를 고쳐요. (활동 페이지에서 본 그 부분)</div></span><span class="cc">// 문항 목록 — 이 안의 내용만 바꾸면 문항이 달라져요</span>
+const questions = [
+  {
+    <span class="ck" data-c="sentence">sentence</span>: <span class="cs">"책이 가방___ 있어요."</span>,        <span class="cc">// ___가 빈칸</span>
+    <span class="ck" data-c="answer">answer</span>: <span class="cs">"에"</span>,                      <span class="cc">// 정답</span>
+    <span class="ck" data-c="correct">correct</span>: <span class="cs">"정답이에요. '있어요'는 있는 장소라 '에'."</span>,
+    <span class="ck" data-c="wrong">wrong</span>: <span class="cs">"아니에요. 있는 장소를 말하므로 '에'가 맞아요."</span>
+  },
+  {
+    <span class="ck" data-c="sentence">sentence</span>: <span class="cs">"민수는 식당___ 밥을 먹어요."</span>,
+    <span class="ck" data-c="answer">answer</span>: <span class="cs">"에서"</span>,
+    <span class="ck" data-c="correct">correct</span>: <span class="cs">"정답이에요. '먹어요'는 행동이라 '에서'."</span>,
+    <span class="ck" data-c="wrong">wrong</span>: <span class="cs">"아니에요. 먹는 행동의 장소라 '에서'가 맞아요."</span>
+  },
+  <span class="cc">// ... 같은 형식으로 문항이 이어져요 (총 10개)</span>
+  <span class="cc">// 문항을 추가하려면 { } 묶음을 복사해 붙이면 돼요</span>
+];</span><span class="zone zone-logic"><span class="zone-head"><span class="zone-label zl-logic">③ 작동 로직</span><div class="zone-note">버튼을 누르면 채점하고 점수를 세고 다음 문제로 넘기는 부분. 보통 손댈 일이 없어요.</div></span><span class="cc">// 답을 골랐을 때 실행되는 부분</span>
+function chooseAnswer(selected) {
+  const q = questions[current];
+  const isCorrect = selected === q.<span class="ck2">answer</span>;   <span class="cc">// 고른 답과 정답 비교</span>
+  if (isCorrect) score++;                  <span class="cc">// 맞으면 점수 +1</span>
+
+  <span class="cc">// 빈칸에 정답 채우고, 해설 보여주기</span>
+  feedback.innerHTML = isCorrect
+    ? q.<span class="ck2">correct</span>     <span class="cc">// 맞았을 때 해설</span>
+    : q.<span class="ck2">wrong</span>;      <span class="cc">// 틀렸을 때 해설</span>
+}
+
+<span class="cc">// 마지막 문제까지 풀면 점수 화면 보여주기</span>
+function showResult() {
+  scoreBox.textContent = score + " / " + questions.length;
+  <span class="cc">// 점수에 따라 다른 격려 메시지</span>
+}
+
+<span class="cc">// '다음 문제' 버튼을 누르면 다음 문항으로</span>
+nextBtn.addEventListener("click", () =&gt; {
+  current++;
+  (current &gt;= questions.length) ? showResult() : renderQuestion();
+});</span></div>
+  </div>
+</div>
+
+<div class="tooltip" id="tt"><div class="tt-title" id="ttt"></div><div id="ttr"></div><div id="ttb"></div></div>
+
+<script>
+const info = {
+  bg:{t:"배경색",r:"앱 전체의 배경 색이에요. 다른 색 코드로 바꾸면 배경이 바뀌어요.",b:"✏️ 고치면 배경색이 바뀜"},
+  primary:{t:"강조색 (파랑)",r:"버튼과 강조 부분의 색이에요.",b:"✏️ 버튼 색이 바뀜"},
+  good:{t:"정답 색 (초록)",r:"정답일 때 글자 색이에요.",b:"✏️ 정답 표시색"},
+  bad:{t:"오답 색 (빨강)",r:"오답일 때 글자 색이에요.",b:"✏️ 오답 표시색"},
+  fontsize:{t:"문장 크기",r:"clamp는 화면 크기에 따라 글자가 자동 조절돼요. 가운데 값(7vw)이 기준이에요.",b:"✏️ 문장 크기"},
+  sentence:{t:"sentence — 문장",r:"빈칸이 들어간 문장이에요. ___가 빈칸 자리예요.",b:"✏️ 여기를 고치면 됨"},
+  answer:{t:"answer — 정답",r:"'에' 또는 '에서' 중 정답을 적어요.",b:"✏️ 여기를 고치면 됨"},
+  correct:{t:"correct — 정답 해설",r:"학생이 맞혔을 때 나오는 설명이에요.",b:"✏️ 여기를 고치면 됨"},
+  wrong:{t:"wrong — 오답 해설",r:"학생이 틀렸을 때 나오는 설명이에요.",b:"✏️ 여기를 고치면 됨"}
+};
+const tt=document.getElementById('tt');
+function pos(e){const x=e.clientX+16,y=e.clientY-10,w=240,vw=innerWidth,vh=innerHeight;tt.style.left=(x+w>vw?x-w-32:x)+'px';tt.style.top=(y+140>vh?y-140:y)+'px';}
+document.querySelectorAll('.ck[data-c]').forEach(el=>{
+  el.addEventListener('mouseenter',e=>{const d=info[el.dataset.c];if(!d)return;document.getElementById('ttt').textContent=d.t;document.getElementById('ttr').textContent=d.r;document.getElementById('ttb').innerHTML='<span class="tt-badge">'+d.b+'</span>';pos(e);tt.classList.add('show');});
+  el.addEventListener('mousemove',pos);
+  el.addEventListener('mouseleave',()=>tt.classList.remove('show'));
+});
+
+// 전체 코드 복사 (설명 주석 없이 순수 코드만)
+document.getElementById('copyAll').addEventListener('click', function(){
+  const code = document.querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(code).then(()=>{
+    this.textContent='복사됨 ✓'; this.classList.add('copied');
+    setTimeout(()=>{this.textContent='전체 복사'; this.classList.remove('copied');},1500);
+  });
+});
+</script>
+</body>
+</html>

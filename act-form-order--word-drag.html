@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>흩어진 어절로 문장 만들기 — AI로 10분 만에 배열 앱 만드는 법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}
+.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+
+/* ── 히어로 ── */
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}
+.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}
+.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}
+.nav a:hover{color:#1a1a1a;}
+.nav a.primary,.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}
+
+/* ── 섹션 카드 ── */
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}
+.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+
+/* ── 공통 텍스트 ── */
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}
+.prose b{color:#1a1a1a;font-weight:500;}
+.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}
+.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+
+/* ── 개요표 ── */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.overview-table tr{border-bottom:0.5px solid #e5e5e5;}
+.overview-table tr:last-child{border-bottom:none;}
+.overview-table td:first-child{background:#f5f5f3;color:#666;padding:9px 14px;width:110px;font-weight:500;}
+.overview-table td:last-child{padding:9px 14px;color:#1a1a1a;}
+
+/* ── 알림 박스 ── */
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}
+.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.caution b{font-weight:500;}
+
+/* ── 가이드 링크 ── */
+.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:1rem;}
+
+/* ── 프롬프트 카드 ── */
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}
+.prompt-bar-left{display:flex;align-items:center;gap:5px;}
+.prompt-dot{width:8px;height:8px;border-radius:50%;}
+.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}
+.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.p-section{color:#8b949e;}.p-val{color:#e6edf3;}.p-cmt{color:#e3b341;}.p-key{color:#79c0ff;}
+
+/* ── 응용 레이어 ── */
+.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}
+.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}
+.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.layer-desc{font-size:13px;color:#555;line-height:1.7;}
+
+/* ── 태그·스티키 네비 ── */
+.axis-card{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px;}
+.axis-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;background:#fff;border:0.5px solid #d8d6d0;color:#1a1a1a;}
+.axis-badge .ax-label{font-size:10px;font-weight:500;color:#aaa;letter-spacing:0.03em;}
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}
+.stage-flow{display:flex;align-items:stretch;gap:0;margin:20px 0;flex-wrap:nowrap;}
+.stage-step{flex:1 1 0;min-width:0;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:10px 5px;text-align:center;}
+.stage-step.highlight{border-color:#3C3489;background:#EEEDFE;}
+.stage-step .st-phase{font-size:10px;font-weight:700;color:#aaa;letter-spacing:0.02em;margin-bottom:4px;}
+.stage-step.highlight .st-phase{color:#3C3489;}
+.stage-step .st-name{font-size:12px;font-weight:700;margin-bottom:3px;white-space:nowrap;}
+.stage-step .st-desc{font-size:10px;color:#888;line-height:1.3;}
+.stage-arrow{display:flex;align-items:center;color:#ccc;font-size:11px;padding:0 3px;flex-shrink:0;}
+.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.usage-item{background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px;}
+.usage-item .ui-icon{font-size:18px;margin-bottom:8px;}
+.usage-item .ui-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.usage-item .ui-desc{font-size:12px;color:#888;line-height:1.5;}
+@media(max-width:560px){.usage-grid{grid-template-columns:1fr;}.stage-arrow{padding:0 1px;}.stage-step{padding:8px 2px;}.stage-step .st-name{font-size:10px;}.stage-step .st-desc{display:none;}}
+.step-head{display:flex;align-items:center;gap:12px;margin:28px 0 14px;}
+.step-badge{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.step-head .step-h{font-size:17px;font-weight:700;}
+.step-head .step-sub{font-size:12px;color:#aaa;margin-top:2px;}
+.accordion{border:0.5px solid rgba(0,0,0,0.1);border-radius:10px;margin:12px 0;overflow:hidden;background:#fff;}
+.acc-head{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;user-select:none;font-size:13px;font-weight:500;color:#555;background:#fafaf8;}
+.acc-head:hover{background:#f4f4f0;}
+.acc-head .acc-arrow{margin-left:auto;font-size:11px;color:#bbb;transition:transform .2s;}
+.accordion.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:16px;border-top:0.5px solid rgba(0,0,0,0.07);}
+.accordion.open .acc-body{display:block;}
+.deepdive{background:#F4F1EA;border:0.5px solid #D8D0BC;border-radius:10px;margin:20px 0;overflow:hidden;}
+.deepdive .acc-head{background:#EFEADF;color:#7a6a3a;font-weight:700;}
+.deepdive .acc-head:hover{background:#e8e1d2;}
+
+/* 코드 발췌 (호버 설명) */
+.code-box{background:#1e1e2e;border-radius:12px;overflow:hidden;margin:12px 0;}
+.code-bar{background:#181825;padding:8px 14px;display:flex;align-items:center;gap:6px;}
+.code-dot{width:11px;height:11px;border-radius:50%;}
+.code-fname{color:#9399b2;font-size:12px;margin-left:6px;font-family:'D2Coding','Consolas',monospace;}
+.code-body{padding:16px;font-family:'D2Coding','Consolas','Courier New',monospace;font-size:13px;line-height:1.7;color:#cdd6f4;overflow-x:auto;white-space:pre;}
+.ck{color:#89b4fa;cursor:help;border-radius:3px;padding:0 2px;transition:background .15s;position:relative;}
+.ck:hover{background:rgba(137,180,250,0.25);}
+.cs{color:#a6e3a1;}
+.cc{color:#6c7086;font-style:italic;}
+.code-hint{font-size:12px;color:#888;margin-top:8px;display:flex;align-items:center;gap:5px;padding:0 16px 12px;}
+.method-card{display:flex;gap:14px;border:0.5px solid rgba(0,0,0,0.1);border-radius:12px;padding:18px;margin:14px 0;background:#fff;}
+.method-num{flex-shrink:0;font-size:13px;font-weight:700;color:#1a1a1a;background:#f0efed;border-radius:8px;padding:6px 12px;height:fit-content;}
+.method-body{flex:1;min-width:0;}
+.method-title{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.method-tag{font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;}
+.method-tag.easy{background:#EAF3DE;color:#27500A;}
+.method-tag.pro{background:#E6F1FB;color:#0C447C;}
+@media(max-width:560px){.method-card{flex-direction:column;gap:10px;}}
+.copy-btn{font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;color:#cdd6f4;background:#252b36;border:1px solid #3c4454;border-radius:8px;padding:4px 10px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{background:#303847;color:#fff;}
+.copy-btn.copied{background:#EAF3DE;color:#3B6D11;border-color:#639922;}
+.finish-box{background:#fff;border:0.5px solid #dbe7d3;border-radius:10px;padding:14px 16px;margin:14px 0;}
+.finish-title{font-size:13px;font-weight:700;color:#3B6D11;margin-bottom:8px;}
+.finish-list{list-style:none;display:grid;gap:6px;}
+.finish-list li{font-size:13px;color:#555;line-height:1.65;padding-left:18px;position:relative;}
+.finish-list li::before{content:"✓";position:absolute;left:0;color:#639922;font-weight:700;}
+
+/* ── 툴팁 ── */
+.tooltip{position:fixed;background:#fff;border:0.5px solid #ddd;border-radius:12px;padding:12px 14px;width:220px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;line-height:1.7;z-index:9999;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.tooltip.show{opacity:1;}
+.tt-title{font-weight:700;font-size:12px;color:#185FA5;margin-bottom:4px;}
+.tt-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:6px;font-weight:700;}
+.badge-yes{background:#EAF3DE;color:#3B6D11;}.badge-no{background:#f5f5f3;color:#888;}
+
+/* ── 배열 연습 앱 ── */
+.act-box{border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.act-header{background:#185FA5;padding:1.1rem 1.25rem;color:#fff;}
+.act-header-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.act-header-sub{font-size:11px;opacity:.8;}
+.act-body{padding:1.25rem;}
+.prog-wrap{height:4px;background:#f0f0f0;border-radius:2px;margin-bottom:1.25rem;overflow:hidden;}
+.prog-fill{height:100%;background:#378ADD;border-radius:2px;transition:width .4s;}
+.q-num-txt{font-size:11px;color:#aaa;margin-bottom:8px;}
+.order-hint{font-size:13px;color:#888;margin-bottom:14px;}
+.slot-line{display:flex;gap:6px;flex-wrap:wrap;min-height:46px;padding:8px;border:1.5px dashed #c9d8e8;border-radius:10px;margin-bottom:14px;align-items:center;}
+.slot-empty{font-size:12px;color:#bbc8d6;padding-left:4px;}
+.pool-line{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.wchip{font-size:15px;font-family:'Noto Sans KR',sans-serif;padding:9px 14px;border:0.5px solid #ccc;border-radius:10px;background:#fff;cursor:pointer;transition:all .15s;color:#1a1a1a;}
+.wchip:hover{background:#f5f5f3;}
+.wchip.placed{border-color:#378ADD;background:#E6F1FB;color:#0C447C;}
+.wchip:disabled{opacity:.35;cursor:default;}
+.order-actions{display:flex;gap:8px;}
+.order-actions button{padding:10px 18px;border:0.5px solid #ccc;border-radius:10px;background:transparent;color:#1a1a1a;font-size:13px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;}
+.order-actions button.primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a;font-weight:700;}
+.order-actions button:disabled{opacity:.35;cursor:default;}
+.fb{font-size:13px;padding:9px 12px;border-radius:8px;display:none;line-height:1.65;margin-top:12px;}
+.fb.show{display:block;}
+.fb.ok{background:#EAF3DE;color:#3B6D11;}
+.fb.no{background:#FCEBEB;color:#791F1F;}
+.score-wrap{text-align:center;padding:2rem 1rem;}
+.score-big{font-size:44px;font-weight:700;color:#1a1a1a;}
+.score-sub{font-size:13px;color:#888;margin-top:4px;}
+.score-actions{display:flex;gap:8px;justify-content:center;margin-top:1.25rem;}
+.score-actions button,.score-actions a{padding:10px 20px;border:0.5px solid #ccc;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;}
+.score-actions a:hover,.score-actions button:hover{background:#f5f5f3;}
+
+/* ── 체크리스트 ── */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}
+.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ── 응용 테이블 ── */
+.var-table{width:100%;border-collapse:collapse;font-size:13px;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.var-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:#888;letter-spacing:.05em;background:#f5f5f3;border-bottom:0.5px solid #e5e5e5;}
+.var-table td{padding:9px 12px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:top;line-height:1.6;}
+.var-table tr:last-child td{border-bottom:none;}
+
+/* ── 모바일 ── */
+@media(max-width:640px){
+  .wrap{padding:1rem .75rem 3rem;}
+  .hero,.section{padding:1.25rem;border-radius:12px;}
+  .hero-title{font-size:20px;}
+  .nav{gap:6px;}
+  .nav a{padding:7px 10px;font-size:12px;}
+  .wchip{font-size:14px;padding:8px 12px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- TODO: 순서 배열 허브(act-form-order.html)가 생기면 목적지 교체 -->
+<a href="activity.html" style="display:inline-block;font-size:13px;color:#888;text-decoration:none;margin-bottom:14px;">← 활동 설계로</a>
+
+<!-- ══ 히어로 ══ -->
+<div class="hero">
+  <div class="tag">❶ 형태 학습 · 순서 배열 (드래그) · 어절 드래그 문장 완성</div>
+  <h1 class="hero-title">흩어진 어절로 문장 만들기,<br>AI로 10분 만에 배열 앱 만드는 법</h1>
+  <p class="hero-desc">섞여 있는 어절 카드를 순서대로 놓아 문장을 완성하는 앱이에요. 프롬프트 하나로 문장을 뽑고, 자동채점 앱까지 만드는 과정을 단계별로 안내해요.</p>
+  <div class="axis-card">
+    <span class="axis-badge"><span class="ax-label">문항형식</span> 배열형</span>
+    <span class="axis-badge"><span class="ax-label">자료유형</span> 텍스트</span>
+    <span class="axis-badge"><span class="ax-label">상호작용</span> 개인</span>
+    <span class="axis-badge"><span class="ax-label">언어영역</span> 문법</span>
+    <span class="axis-badge"><span class="ax-label">난이도</span> 초급</span>
+  </div>
+</div>
+
+<!-- ══ 스티키 네비 ══ -->
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#intro" data-section="intro">설계 의도</a>
+    <a href="#usage" data-section="usage">수업 활용</a>
+    <a href="#build" data-section="build">제작 과정</a>
+    <a href="#practice" data-section="practice">연습 문제</a>
+    <a href="#check" data-section="check">점검·응용</a>
+  </div>
+</div>
+
+<!-- ══ INTRO ══ -->
+<div class="section" id="intro">
+  <div class="section-tag">INTRO</div>
+  <div class="section-title">💡 왜 이 형식으로 만들었나요?</div>
+
+  <table class="overview-table">
+    <tr><td>활동 유형</td><td>순서 배열 (어절 카드 놓기)</td></tr>
+    <tr><td>범주</td><td>❶ 형태 학습</td></tr>
+    <tr><td>대상</td><td>초급</td></tr>
+    <tr><td>목표 문법</td><td>한국어 기본 어순 (주어 → 때·장소 → 목적어 → 서술어)</td></tr>
+    <tr><td>규모</td><td>8문항 / 5–10분</td></tr>
+    <tr><td>배포 형태</td><td>웹 기반 자동채점 (링크/QR코드 공유)</td></tr>
+  </table>
+
+  <p class="prose">"한국어는 동사가 마지막"이라는 걸 머리로는 알아도, 막상 문장을 만들면 모어의 어순이 튀어나와요. 영어권 학습자가 "저는 만났어요 친구를"처럼 말하는 게 대표적이죠.</p>
+  <p class="prose"><b>배열형으로 만든 이유</b>가 있어요. 초급 학습자에게 문장을 처음부터 쓰게 하면 어휘·철자·어순을 동시에 감당해야 해요. 어절 카드를 주면 어휘와 철자는 해결된 상태라, <b>"어떤 순서로 놓을까"라는 어순 판단에만</b> 집중할 수 있어요.</p>
+  <p class="prose">카드를 직접 움직이는 것도 포인트예요. 문장 구조를 눈과 손으로 만지는 경험이라서, 설명을 듣는 것보다 어순 감각이 빨리 붙어요. 조사가 어절에 붙어 있으니 "'친구를'은 목적어니까 동사 앞" 같은 단서 찾기 연습도 자연스럽게 돼요.</p>
+</div>
+
+<!-- ══ USAGE ══ -->
+<div class="section" id="usage">
+  <div class="section-tag">USAGE</div>
+  <div class="section-title">📍 수업 어디에서 쓰면 좋을까요?</div>
+  <p class="prose">이 활동은 <b>기본 문형을 제시한 직후, 확인 연습</b> 단계에 가장 잘 맞아요. "주어–목적어–서술어" 어순을 배운 뒤 스스로 문장을 조립해 보는 자리예요.</p>
+
+  <div class="stage-flow">
+    <div class="stage-step"><div class="st-phase">1</div><div class="st-name">도입</div><div class="st-desc">동기 유발·주제 환기</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">2</div><div class="st-name">제시</div><div class="st-desc">기본 어순 설명</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step highlight"><div class="st-phase">3</div><div class="st-name">연습 ★</div><div class="st-desc">이 활동으로 조립</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">4</div><div class="st-name">활동</div><div class="st-desc">자기 문장 만들기</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">5</div><div class="st-name">마무리</div><div class="st-desc">오답 어순 점검</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">6</div><div class="st-name">과제</div><div class="st-desc">집에서 복습</div></div>
+  </div>
+  <p class="prose" style="font-size:13px;color:#aaa;margin-top:-4px;">이 활동은 주로 <b style="color:#888;">3단계 연습</b>에 쓰지만, 4단계에서 "오늘 만든 문장을 카드 없이 직접 써 보기"로 이어가면 한 차시가 자연스럽게 연결돼요.</p>
+
+  <div class="usage-grid">
+    <div class="usage-item"><div class="ui-icon">⏱</div><div class="ui-title">수업 중 5분 연습</div><div class="ui-desc">문형 설명 직후 "각자 맞춰 보세요"로 5분. 손을 움직이는 활동이라 분위기 전환에도 좋아요.</div></div>
+    <div class="usage-item"><div class="ui-icon">🔍</div><div class="ui-title">어순 오류 진단</div><div class="ui-desc">누가 어떤 순서로 틀리는지 보면 모어 간섭 패턴이 보여요. 다음 수업의 설명 포인트가 돼요.</div></div>
+    <div class="usage-item"><div class="ui-icon">🗣</div><div class="ui-title">말하기 전 워밍업</div><div class="ui-desc">말하기 활동 전에 목표 문형을 카드로 먼저 조립하게 하면, 입을 뗄 때 부담이 줄어요.</div></div>
+    <div class="usage-item"><div class="ui-icon">🏠</div><div class="ui-title">복습 숙제</div><div class="ui-desc">링크를 공유해 집에서 풀게 해요. 자동채점이라 따로 검사할 필요가 없어요.</div></div>
+  </div>
+
+  <div class="tip">이 활동은 정확성을 다지는 <b>형태 학습</b> 단계예요. 어순이 몸에 붙으면, 같은 카드로 "다른 순서도 가능할까?"를 토론하는 중급 활동으로도 키울 수 있어요.</div>
+</div>
+
+<!-- ══ BUILD ══ -->
+<div class="section" id="build">
+  <div class="section-tag">BUILD</div>
+  <div class="section-title">🛠 따라 만들기 — 4단계</div>
+  <p class="prose">요즘은 Claude나 ChatGPT 같은 대화형 AI에 바로 부탁하면, 작동하는 웹앱까지 한 번에 만들어줘요. 코드를 몰라도 괜찮아요. 아래 4단계만 따라오세요.</p>
+  <a class="guide-link" href="guide.html">🧰 어떤 AI 도구를 써야 할지 모르겠다면 → 도구 안내 보기</a>
+
+  <!-- Step 1 -->
+  <div class="step-head">
+    <div class="step-badge">1</div>
+    <div><div class="step-h">무엇을 만들지 정하기</div><div class="step-sub">프롬프트를 쓰기 전에 5초만 생각해요</div></div>
+  </div>
+  <p class="prose">만들기 전에 딱 세 가지만 정하면 돼요. 이게 곧 프롬프트의 재료가 돼요.</p>
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">무엇을</div><div class="layer-desc">한국어 기본 어순 (주어 → 때·장소 → 목적어 → 서술어) — 가르칠 목표예요.</div></div>
+    <div class="layer-item"><div class="layer-tag">어떻게</div><div class="layer-desc">어절 카드 배열 — 카드를 눌러(또는 끌어) 순서대로 놓는 방식이에요.</div></div>
+    <div class="layer-item"><div class="layer-tag">얼마나</div><div class="layer-desc">8문항, 한 문장은 3~4어절 — 초급은 5어절을 넘기지 않는 게 좋아요.</div></div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-head">
+    <div class="step-badge">2</div>
+    <div><div class="step-h">프롬프트로 한 번에 만들기</div><div class="step-sub">아래 프롬프트를 복사해서 그대로 붙여넣으세요</div></div>
+  </div>
+  <p class="prose">Claude나 ChatGPT를 열고 아래 프롬프트를 붙여넣으면, 문장부터 작동하는 앱까지 한 번에 만들어줘요.</p>
+  <a class="guide-link" href="guide-prompt.html">📐 프롬프트를 잘 쓰는 법이 궁금하다면 → 프롬프트 작성 가이드 보기</a>
+
+  <div class="caution">⚠️ "어순 배열 문제 만들어줘"라고만 하면, AI가 두 가지 실수를 자주 해요. ① 조사를 단어에서 떼어 <b>'친구' '를'처럼 따로 카드</b>로 만들고, ② <b>다른 어순도 자연스러운 문장</b>을 내요("어제 저는 친구를 만났어요"도 맞는데 오답 처리). 그래서 프롬프트에 <b>"조사는 앞말에 붙여 한 어절로"</b>와 <b>"정답 어순이 하나뿐인 문장만"</b>을 꼭 넣으세요.</div>
+
+  <div class="prompt-box">
+    <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">기본 프롬프트</span></div><button class="copy-btn" data-copy="#p-basic">복사</button></div>
+    <div class="prompt-body copy-text" id="p-basic"><span class="p-section"># 만들 것</span>
+<span class="p-val">한국어 학습용 '어절 순서 배열' 학생용 웹앱</span>
+
+<span class="p-section"># 내용</span>
+<span class="p-key">-</span> <span class="p-val">대상: 초급 학습자</span>
+<span class="p-key">-</span> <span class="p-val">문항: 8개, 한 문장은 3~4어절</span>
+<span class="p-key">-</span> <span class="p-val">조사는 앞말에 붙여 한 어절로 (예: "친구를" — "친구"+"를" 금지)</span>
+<span class="p-cmt">// 주어로 시작하고, 정답 어순이 하나뿐인 문장만 사용</span>
+<span class="p-key">-</span> <span class="p-val">어휘: 초급 기본 어휘 (학교, 친구, 먹다, 공부하다 등)</span>
+<span class="p-key">-</span> <span class="p-val">각 문항마다 순서 규칙 해설</span>
+<span class="p-key">-</span> <span class="p-val">해설은 문법 용어 없이 쉬운 말로 (예: "'무엇을'은 '뭐 해요' 앞에 와요")</span>
+<span class="p-cmt">// 주어·목적어·서술어 같은 용어는 학생 화면에 쓰지 않기</span>
+
+<span class="p-section"># 동작</span>
+<span class="p-key">-</span> <span class="p-val">섞인 어절 카드를 누르면 순서대로 윗줄에 들어가기</span>
+<span class="p-key">-</span> <span class="p-val">놓은 카드를 다시 누르면 아래로 되돌아오기</span>
+<span class="p-key">-</span> <span class="p-val">다 놓으면 [확인] 버튼 → 정답/오답과 해설 보여주기</span>
+<span class="p-key">-</span> <span class="p-val">8문항을 다 풀면 점수 보여주기</span>
+<span class="p-key">-</span> <span class="p-val">휴대폰에서는 드래그 대신 터치로 조작되게</span>
+
+<span class="p-section"># 중요</span>
+<span class="p-key">-</span> <span class="p-val">학생 화면에는 문제·카드·피드백·점수만 보이게</span>
+<span class="p-cmt">// 정답 어순 목록, 제작 설명은 학생에게 보이지 않게</span></div>
+  </div>
+
+  <div class="tip">💡 위 프롬프트의 뼈대(만들 것·내용·동작·중요)는 그대로 두고, 목표만 바꾸면 어떤 활동이든 만들 수 있어요. 색이나 카드 모양 같은 디자인은 굳이 적지 않아도 알아서 만들어줘요.</div>
+
+  <div class="sub-title">🔁 다른 활동으로 바꾸려면</div>
+  <p class="prose">전체를 다시 쓰지 말고, 아래 세 곳만 바꾸세요.</p>
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">단위 바꾸기</div><div class="layer-desc">어절 → 문장 카드로: "대화 4~6턴을 순서대로 배열"이라고 하면 대화 순서 배열이 돼요. 요리법이면 절차 배열.</div></div>
+    <div class="layer-item"><div class="layer-tag">난이도 바꾸기</div><div class="layer-desc">"5~6어절로", "안 쓰이는 교란 어절 1개 섞기"를 추가하면 중급용이 돼요.</div></div>
+    <div class="layer-item"><div class="layer-tag">초점 바꾸기</div><div class="layer-desc">"한국어·영어 어순을 나란히 비교하게"라고 하면 어순 비교 활동이 돼요.</div></div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-head">
+    <div class="step-badge">3</div>
+    <div><div class="step-h">나온 앱 점검하고 손보기</div><div class="step-sub">바로 학생에게 주지 말고, 먼저 점검하고 고쳐요</div></div>
+  </div>
+  <p class="prose">프롬프트를 넣으면 앱이 바로 나와요. 하지만 한 번에 완벽하진 않아요. 먼저 <b>무엇을 고칠지 찾고</b>, 그 다음 <b>고치면</b> 돼요.</p>
+
+  <div class="sub-title">먼저, 무엇을 고칠지 점검하기</div>
+  <p class="prose">코드를 읽을 필요 없어요. 학생처럼 직접 풀어보며 아래만 확인하세요.</p>
+  <div class="finish-box">
+    <div class="finish-title">미리보기에서 확인할 것</div>
+    <ul class="finish-list">
+      <li>첫 화면에 섞인 카드와 놓을 자리가 바로 보이나요?</li>
+      <li>카드를 잘못 놓았을 때 다시 뺄 수 있나요?</li>
+      <li>조사가 앞말에 붙어 있나요? ("친구를"이 한 카드인가요?)</li>
+      <li>다른 어순으로도 자연스러운 문장이 오답 처리되지 않나요?</li>
+      <li>학생 화면에 <b>정답 어순 목록·교사용 설명</b>이 안 보이나요?</li>
+      <li>스마트폰 크기에서도 카드를 누르기 편한가요?</li>
+    </ul>
+  </div>
+  <div class="warn">⚠️ AI는 빠르게 초안을 만드는 조수일 뿐, 교육적 판단은 선생님 몫이에요. 특히 어순 문제는 <b>"이 순서만 맞는가?"</b>를 문항마다 소리 내어 읽으며 확인하세요.</div>
+
+  <div class="sub-title">고치는 방법은 두 가지예요</div>
+  <p class="prose">고칠 곳을 찾았으면, 아래 두 방법 중 편한 쪽으로 수정하세요. 대부분은 <b>방법 ①</b>로 충분해요.</p>
+
+  <div class="method-card">
+    <div class="method-num">방법 ①</div>
+    <div class="method-body">
+      <div class="method-title">말로 고치기 <span class="method-tag easy">제일 쉬움</span></div>
+      <p class="prose">고치고 싶은 걸 그냥 말하면 돼요. 코드를 볼 필요도 없어요. 대부분 이걸로 해결돼요.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">이렇게 말하면 돼요</span></div><button class="copy-btn" data-copy="#p-fix">복사</button></div>
+        <div class="prompt-body copy-text" id="p-fix"><span class="p-val">2번 문장은 '어제'가 앞에 와도 자연스러워. 어순이 하나로 고정되는 문장으로 바꿔줘.</span>
+<span class="p-val">조사가 따로 카드로 나왔어. 앞말에 붙여서 한 카드로 만들어줘.</span>
+<span class="p-val">놓은 카드를 다시 뺄 수가 없어. 누르면 되돌아오게 해줘.</span>
+<span class="p-val">카드가 작아서 휴대폰에서 누르기 힘들어. 크게 해줘.</span>
+<span class="p-val">맞혔을 때 완성된 문장을 한 번 더 크게 보여줘.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="method-card">
+    <div class="method-num">방법 ②</div>
+    <div class="method-body">
+      <div class="method-title">코드로 고치기 <span class="method-tag pro">더 정밀하게</span></div>
+      <p class="prose">여러 곳을 한꺼번에 손보거나 세밀하게 조정하고 싶으면, AI한테 <b>"코드를 보여줘"</b>라고 해서 직접 고칠 수 있어요. AI가 만든 문항은 코드 안에 이렇게 들어 있어요. <b>파란 글씨에 마우스를 올려보세요.</b></p>
+
+      <div class="code-box">
+        <div class="code-bar"><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span><span class="code-fname">문항 데이터 (일부)</span></div>
+        <div class="code-body">{
+  <span class="ck" data-c="answer">answer</span>: [<span class="cs">"저는"</span>, <span class="cs">"어제"</span>, <span class="cs">"친구를"</span>, <span class="cs">"만났어요"</span>],
+  <span class="ck" data-c="explain">explain</span>: <span class="cs">"'언제'(어제)는 '누가' 다음에, '무엇을'은 '뭐 해요' 앞에 와요."</span>
+},
+{
+  <span class="ck" data-c="answer">answer</span>: [<span class="cs">"동생이"</span>, <span class="cs">"빵을"</span>, <span class="cs">"먹어요"</span>],
+  <span class="ck" data-c="explain">explain</span>: <span class="cs">"'누가' → '무엇을' → '뭐 해요' 순서예요."</span>
+}</div>
+      </div>
+      <div class="code-hint">💡 answer에 적은 순서가 정답 어순이에요 — 카드는 여기서 자동으로 섞여 나와요. 이 부분을 고치면 문항이 바뀌어요.</div>
+
+      <a class="guide-link" href="act-form-order-code.html" target="_blank">📄 AI가 만든 전체 코드를 구역별 설명과 함께 보기 →</a>
+    </div>
+  </div>
+
+  <div class="tip">고치고 → 다시 확인하고를 마음에 들 때까지 반복하면 돼요. 급하면 방법 ①만으로도 충분해요.</div>
+
+  <!-- Step 4 -->
+  <div class="step-head">
+    <div class="step-badge">4</div>
+    <div><div class="step-h">학생에게 내보내기</div><div class="step-sub">링크나 QR코드로 공유해요</div></div>
+  </div>
+  <p class="prose">앱이 완성되면 링크 하나로 학생에게 줄 수 있어요. 학생은 각자 휴대폰으로 접속해서 자기 속도로 풀면 돼요. 인쇄도 복사도 필요 없어요.</p>
+  <a class="guide-link" href="guide-deploy.html">🚀 만든 앱을 인터넷에 올리고 링크·QR코드 만드는 법 → 배포 가이드 보기</a>
+
+  <!-- 심화 -->
+  <div class="accordion deepdive">
+    <div class="acc-head">🔍 [심화] 문장을 더 꼼꼼히 검토하고 싶다면 — 2단계로 나눠 만들기<span class="acc-arrow">▶</span></div>
+    <div class="acc-body">
+      <p class="prose">한 번에 앱까지 만들면 빠르지만, 문장을 하나하나 검토하긴 어려워요. 어순 문제는 특히 <b>"다른 순서도 되는 문장"</b>이 섞이기 쉬워서, 문장의 질을 통제하고 싶으면 <b>두 단계로 나눠서</b> 만드세요.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">1단계 — 문장만</span></div></div>
+        <div class="prompt-body"><span class="p-cmt">// 앱 말고 문장 목록만 먼저 받기</span>
+<span class="p-val">위 조건으로 문장 8개를 표로만 만들어줘.</span>
+<span class="p-val">각 문장에 어절 분리, 정답 어순, 해설을 넣고,</span>
+<span class="p-val">다른 어순도 자연스러운 문장이 있으면 표시해줘.</span></div>
+      </div>
+      <p class="prose">받은 문장을 소리 내어 읽으며 검토하고 고친 뒤, "이 데이터로 웹앱 만들어줘"라고 이어서 말하면 돼요.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRACTICE ══ -->
+<div class="section" id="practice">
+  <div class="section-tag">PRACTICE</div>
+  <div class="section-title">🎯 직접 풀어보기</div>
+  <p class="section-lead">완성된 앱이 어떻게 작동하는지 직접 체험해 보세요.</p>
+
+  <div class="act-box">
+    <div class="act-header"><div class="act-header-title">어절 순서 배열 — 문장 만들기</div><div class="act-header-sub">초급 · 순서 배열 · 8문항</div></div>
+    <div class="act-body">
+      <div class="prog-wrap"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+      <div id="qz"></div>
+      <div id="sc" style="display:none" class="score-wrap">
+        <div class="score-big" id="sn"></div>
+        <div class="score-sub">8문항 중 정답</div>
+        <div class="score-actions">
+          <button onclick="go()">다시 풀기</button>
+          <a href="#intro">설명 다시 보기</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">링크 하나, 또는 QR코드를 출력해서 교실에서 바로 쓸 수 있어요. 학생이 각자 스마트폰으로 접속해서 자기 속도로 풀면 돼요.</div>
+</div>
+
+<!-- ══ CHECK ══ -->
+<div class="section" id="check">
+  <div class="section-tag">CHECK</div>
+  <div class="section-title">✅ 이것만 확인하세요</div>
+  <ul class="check-list">
+    <li>조사가 전부 앞말에 붙어 한 어절로 돼 있나요?</li>
+    <li>각 문항의 정답 어순이 그 문장에서 가장 자연스러운 하나인가요? (소리 내어 읽어 보세요)</li>
+    <li>어휘가 초급 수준에 맞나요?</li>
+    <li>서술어가 항상 마지막에 오나요?</li>
+    <li>한 문장이 5어절을 넘지 않나요?</li>
+  </ul>
+
+  <div class="section-title">🔄 이렇게 바꿔 쓸 수도 있어요</div>
+  <table class="var-table">
+    <thead><tr><th>바꾸고 싶은 것</th><th>방법</th><th>예시</th></tr></thead>
+    <tbody>
+      <tr><td>단위를 문장으로</td><td>어절 카드 → 문장 카드</td><td>대화 4~6턴 순서 배열, 요리법 절차 배열</td></tr>
+      <tr><td>난이도 올리기</td><td>어절 수 5~6개 + 교란 어절 추가</td><td>안 쓰이는 어절 1개를 섞어 골라내게</td></tr>
+      <tr><td>어순 비교로</td><td>한국어·영어 문장을 나란히</td><td>같은 뜻의 두 언어 어순 차이 발견하기</td></tr>
+      <tr><td>인쇄용으로</td><td>"어절 카드를 A4로 정리해줘" 요청</td><td>오려서 책상 위에서 맞추는 카드 세트</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- .wrap -->
+
+<div class="tooltip" id="tt"><div class="tt-title" id="tt-title"></div><div id="tt-role"></div><div id="tt-badge"></div></div>
+
+<script>
+// ── 툴팁 ──
+const tt = document.getElementById('tt');
+function posTip(e) {
+  const x = e.clientX + 16, y = e.clientY - 10, w = 220, vw = window.innerWidth, vh = window.innerHeight;
+  tt.style.left = (x + w > vw ? x - w - 32 : x) + 'px';
+  tt.style.top = (y + 160 > vh ? y - 160 : y) + 'px';
+}
+function hideTip() { tt.classList.remove('show'); }
+const codeInfo = {
+  answer: {title:'answer — 정답 어순', role:'정답 순서대로 어절을 적는 곳이에요. 카드는 여기서 자동으로 섞여 나와요.', edit:true},
+  explain: {title:'explain — 해설', role:'확인을 눌렀을 때 나오는 어순 규칙 설명이에요.', edit:true}
+};
+document.querySelectorAll('.ck[data-c]').forEach(el => {
+  el.addEventListener('mouseenter', e => {
+    const d = codeInfo[el.dataset.c]; if (!d) return;
+    document.getElementById('tt-title').textContent = d.title;
+    document.getElementById('tt-role').textContent = d.role;
+    document.getElementById('tt-badge').innerHTML = '<span class="tt-badge badge-yes">✏️ 여기를 고치면 돼요</span>';
+    posTip(e); tt.classList.add('show');
+  });
+  el.addEventListener('mousemove', e => posTip(e));
+  el.addEventListener('mouseleave', hideTip);
+});
+
+// ── 배열 연습 앱 ──
+const qs = [
+  {answer:["저는","한국어를","공부해요"], explain:"'누가'(저는) → '무엇을'(한국어를) → '뭐 해요'(공부해요) 순서예요."},
+  {answer:["동생이","빵을","먹어요"], explain:"'누가' → '무엇을' → '뭐 해요'. '~해요' 말은 항상 마지막에 와요."},
+  {answer:["친구가","학교에","와요"], explain:"'누가' 다음에 '어디에'(학교에), '뭐 해요'는 마지막이에요."},
+  {answer:["저는","도서관에서","공부해요"], explain:"'어디에서'(도서관에서)는 '뭐 해요' 앞에 와요."},
+  {answer:["우리는","주말에","영화를","봐요"], explain:"'누가' → '언제'(주말에) → '무엇을' → '뭐 해요' 순서예요."},
+  {answer:["어머니가","부엌에서","요리를","해요"], explain:"'누가' → '어디에서' → '무엇을' → '뭐 해요' 순서예요."},
+  {answer:["저는","어제","친구를","만났어요"], explain:"'언제'(어제)는 '누가' 다음에, '무엇을'은 '뭐 해요' 앞에 와요."},
+  {answer:["학생들이","교실에서","한국어를","배워요"], explain:"'누가' → '어디에서' → '무엇을' → '뭐 해요' — 기본 순서 그대로예요."}
+];
+let cur = 0, score = 0, placed = [], pool = [], answered = false;
+function sh(a){ return [...a].map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]); }
+function go(){ cur = 0; score = 0; document.getElementById('sc').style.display='none'; setupQ(); }
+function setupQ(){
+  document.getElementById('pf').style.width = (cur / qs.length * 100) + '%';
+  if (cur >= qs.length) {
+    document.getElementById('qz').innerHTML = '';
+    document.getElementById('sc').style.display = 'block';
+    document.getElementById('sn').textContent = score + ' / ' + qs.length;
+    return;
+  }
+  const q = qs[cur];
+  placed = []; answered = false;
+  pool = sh(q.answer);
+  // 섞었는데 정답 순서면 한 번 더 섞기
+  if (pool.join('|') === q.answer.join('|')) pool = sh(q.answer);
+  renderQ();
+}
+function renderQ(){
+  const q = qs[cur];
+  document.getElementById('qz').innerHTML = `
+    <div class="q-num-txt">${cur + 1} / ${qs.length}</div>
+    <div class="order-hint">어절 카드를 <b>순서대로</b> 누르세요. '누가'부터 시작해요.</div>
+    <div class="slot-line" id="slots">${placed.length ? placed.map((w,i)=>`<button class="wchip placed" onclick="unplace(${i})">${w}</button>`).join('') : '<span class="slot-empty">여기에 문장이 만들어져요</span>'}</div>
+    <div class="pool-line" id="pool">${pool.map((w,i)=>`<button class="wchip" onclick="place(${i})">${w}</button>`).join('')}</div>
+    <div class="order-actions">
+      <button class="primary" id="chkBtn" onclick="checkAns()" ${placed.length===q.answer.length?'':'disabled'}>확인</button>
+      <button onclick="resetQ()">처음부터</button>
+    </div>
+    <div class="fb" id="fb"></div>`;
+}
+function place(i){ if(answered) return; placed.push(pool[i]); pool.splice(i,1); renderQ(); }
+function unplace(i){ if(answered) return; pool.push(placed[i]); placed.splice(i,1); renderQ(); }
+function resetQ(){ if(answered) return; const q=qs[cur]; placed=[]; pool=sh(q.answer); renderQ(); }
+function checkAns(){
+  if(answered) return;
+  const q = qs[cur];
+  const ok = placed.join('|') === q.answer.join('|');
+  answered = true;
+  if (ok) score++;
+  const fb = document.getElementById('fb');
+  fb.innerHTML = (ok ? '✅ 맞았어요! <b>' + q.answer.join(' ') + '.</b><br>' : '아쉬워요. 정답은 <b>' + q.answer.join(' ') + '.</b><br>') + q.explain;
+  fb.className = 'fb show ' + (ok ? 'ok' : 'no');
+  document.getElementById('chkBtn').disabled = true;
+  document.querySelectorAll('#slots .wchip, #pool .wchip').forEach(b => b.disabled = true);
+  const actions = document.querySelector('.order-actions');
+  const next = document.createElement('button');
+  next.className = 'primary'; next.textContent = '다음 →';
+  next.onclick = () => { cur++; setupQ(); };
+  actions.appendChild(next);
+}
+go();
+
+// ── 복사 버튼 ──
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.querySelector(btn.dataset.copy);
+    if (!target) return;
+    navigator.clipboard.writeText(target.innerText).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '복사됨 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+
+// ── 아코디언 ──
+document.querySelectorAll('.accordion .acc-head').forEach(head => {
+  head.addEventListener('click', () => head.parentElement.classList.toggle('open'));
+});
+
+// ── 스크롤 스파이 ──
+const navLinks = document.querySelectorAll('#main-nav a[data-section]');
+const sections = document.querySelectorAll('.section[id]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`#main-nav a[data-section="${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

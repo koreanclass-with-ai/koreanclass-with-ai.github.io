@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>딕토글로스 — 듣고 자기 말로 다시 쓰는 활동 만드는 법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#f9f9f7;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;line-height:1.7;}
+.wrap{max-width:700px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+
+/* ── 히어로 ── */
+.hero{background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:8px;}
+.hero-desc{font-size:13px;color:#888;margin-bottom:14px;}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.chip{font-size:11px;color:#666;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:5px 11px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;}
+.nav a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;padding:8px 14px;border-radius:10px;border:0.5px solid transparent;background:transparent;color:#aaa;font-size:13px;font-weight:500;transition:all .15s;}
+.nav a:hover{color:#1a1a1a;}
+.nav a.primary,.nav a.active{color:#1a1a1a;font-weight:700;border-bottom:2px solid #1a1a1a;border-radius:0;padding-bottom:6px;}
+
+/* ── 섹션 카드 ── */
+.section{margin-top:14px;background:#fff;border:0.5px solid #e5e5e5;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.03);}
+.section-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#888;background:#f5f5f3;border:0.5px solid #e5e5e5;border-radius:20px;padding:3px 10px;margin-bottom:10px;}
+.section-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.section-lead{font-size:13px;color:#888;margin-bottom:16px;}
+
+/* ── 공통 텍스트 ── */
+.prose{font-size:14px;color:#555;line-height:1.9;margin-bottom:.85rem;}
+.prose b{color:#1a1a1a;font-weight:500;}
+.sub-title{font-size:14px;font-weight:700;color:#1a1a1a;margin:1.5rem 0 .6rem;padding-left:10px;border-left:2px solid #ccc;}
+.divider{height:0.5px;background:#e5e5e5;margin:1.5rem 0;}
+
+/* ── 개요표 ── */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.overview-table tr{border-bottom:0.5px solid #e5e5e5;}
+.overview-table tr:last-child{border-bottom:none;}
+.overview-table td:first-child{background:#f5f5f3;color:#666;padding:9px 14px;width:110px;font-weight:500;}
+.overview-table td:last-child{padding:9px 14px;color:#1a1a1a;}
+
+/* ── 알림 박스 ── */
+.tip{background:#E6F1FB;border-left:3px solid #378ADD;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#0C447C;line-height:1.75;margin:1rem 0;}
+.warn{background:#f5f5f3;border-left:3px solid #ccc;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#666;line-height:1.75;margin:1rem 0;}
+.caution{background:#FCEBEB;border-left:3px solid #E24B4A;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#791F1F;line-height:1.75;margin:1rem 0;}
+.caution b{font-weight:500;}
+
+/* ── 가이드 링크 ── */
+.guide-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B6D11;text-decoration:none;padding:6px 12px;background:#EAF3DE;border-radius:8px;margin-bottom:1rem;}
+.guide-link + .guide-link{margin-left:8px;}
+
+/* ── 프롬프트 카드 ── */
+.prompt-box{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.prompt-bar{background:#161b22;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}
+.prompt-bar-left{display:flex;align-items:center;gap:5px;}
+.prompt-dot{width:8px;height:8px;border-radius:50%;}
+.prompt-filename{font-size:10px;color:#8b949e;margin-left:4px;}
+.prompt-body{padding:14px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:1.9;color:#e6edf3;white-space:pre-wrap;}
+.p-section{color:#8b949e;}.p-val{color:#e6edf3;}.p-cmt{color:#e3b341;}.p-key{color:#79c0ff;}
+
+/* ── 응용 레이어 ── */
+.layer-list{display:flex;flex-direction:column;gap:12px;margin:0.5rem 0 1rem;}
+.layer-item{padding:12px 14px;background:#f9f9f7;border-radius:10px;}
+.layer-tag{display:inline-block;font-size:11px;font-weight:700;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.layer-desc{font-size:13px;color:#555;line-height:1.7;}
+
+/* ── 스티키 네비 ── */
+.axis-card{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px;}
+.axis-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;background:#fff;border:0.5px solid #d8d6d0;color:#1a1a1a;}
+.axis-badge .ax-label{font-size:10px;font-weight:500;color:#aaa;letter-spacing:0.03em;}
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(249,249,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 0;margin-bottom:0;}
+.stage-flow{display:flex;align-items:stretch;gap:0;margin:20px 0;flex-wrap:nowrap;}
+.stage-step{flex:1 1 0;min-width:0;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:10px 5px;text-align:center;}
+.stage-step.highlight{border-color:#3C3489;background:#EEEDFE;}
+.stage-step.stage-opt{border-style:dashed;border-color:#ccc;background:transparent;opacity:0.75;}
+.stage-step.stage-opt .st-phase{color:#bbb;}
+.stage-opt-arrow{color:#ccc;}
+.stage-step .st-phase{font-size:10px;font-weight:700;color:#aaa;letter-spacing:0.02em;margin-bottom:4px;}
+.stage-step.highlight .st-phase{color:#3C3489;}
+.stage-step .st-name{font-size:12px;font-weight:700;margin-bottom:3px;white-space:nowrap;}
+.stage-step .st-desc{font-size:10px;color:#888;line-height:1.3;}
+.stage-arrow{display:flex;align-items:center;color:#ccc;font-size:11px;padding:0 3px;flex-shrink:0;}
+.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.usage-item{background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px;}
+.usage-item .ui-icon{font-size:18px;margin-bottom:8px;}
+.usage-item .ui-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.usage-item .ui-desc{font-size:12px;color:#888;line-height:1.5;}
+@media(max-width:560px){.usage-grid{grid-template-columns:1fr;}.stage-arrow{padding:0 1px;}.stage-step{padding:8px 2px;}.stage-step .st-name{font-size:10px;}.stage-step .st-desc{display:none;}}
+.step-head{display:flex;align-items:center;gap:12px;margin:28px 0 14px;}
+.step-badge{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.step-head .step-h{font-size:17px;font-weight:700;}
+.step-head .step-sub{font-size:12px;color:#aaa;margin-top:2px;}
+.accordion{border:0.5px solid rgba(0,0,0,0.1);border-radius:10px;margin:12px 0;overflow:hidden;background:#fff;}
+.acc-head{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;user-select:none;font-size:13px;font-weight:500;color:#555;background:#fafaf8;}
+.acc-head:hover{background:#f4f4f0;}
+.acc-head .acc-arrow{margin-left:auto;font-size:11px;color:#bbb;transition:transform .2s;}
+.accordion.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:16px;border-top:0.5px solid rgba(0,0,0,0.07);}
+.accordion.open .acc-body{display:block;}
+.deepdive{background:#F4F1EA;border:0.5px solid #D8D0BC;border-radius:10px;margin:20px 0;overflow:hidden;}
+.deepdive .acc-head{background:#EFEADF;color:#7a6a3a;font-weight:700;}
+.deepdive .acc-head:hover{background:#e8e1d2;}
+/* 코드 발췌 (호버 설명) */
+.code-box{background:#1e1e2e;border-radius:12px;overflow:hidden;margin:12px 0;}
+.code-bar{background:#181825;padding:8px 14px;display:flex;align-items:center;gap:6px;}
+.code-dot{width:11px;height:11px;border-radius:50%;}
+.code-fname{color:#9399b2;font-size:12px;margin-left:6px;font-family:'D2Coding','Consolas',monospace;}
+.code-body{padding:16px;font-family:'D2Coding','Consolas','Courier New',monospace;font-size:13px;line-height:1.7;color:#cdd6f4;overflow-x:auto;white-space:pre;}
+.ck{color:#89b4fa;cursor:help;border-radius:3px;padding:0 2px;transition:background .15s;position:relative;}
+.ck:hover{background:rgba(137,180,250,0.25);}
+.cs{color:#a6e3a1;}
+.cc{color:#6c7086;font-style:italic;}
+.cp{color:#f9e2af;}
+.code-hint{font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:5px;}
+/* 전체 코드 3구역 */
+.fullcode .code-body{font-size:12px;line-height:1.65;}
+.zone{display:block;border-left:3px solid transparent;padding:8px 10px;margin:0 -10px;border-radius:4px;}
+.zone-design{background:rgba(203,166,247,0.08);border-left-color:#cba6f7;}
+.zone-data{background:rgba(166,227,161,0.08);border-left-color:#a6e3a1;}
+.zone-logic{background:rgba(137,180,250,0.08);border-left-color:#89b4fa;}
+.zone-label{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-bottom:6px;font-family:'Noto Sans KR',sans-serif;}
+.zl-design{background:#cba6f7;color:#1e1e2e;}
+.zl-data{background:#a6e3a1;color:#1e1e2e;}
+.zl-logic{background:#89b4fa;color:#1e1e2e;}
+.zone-note{font-size:11px;color:#9399b2;font-family:'Noto Sans KR',sans-serif;margin-bottom:8px;font-style:normal;}
+.method-card{display:flex;gap:14px;border:0.5px solid rgba(0,0,0,0.1);border-radius:12px;padding:18px;margin:14px 0;background:#fff;}
+.method-num{flex-shrink:0;font-size:13px;font-weight:700;color:#1a1a1a;background:#f0efed;border-radius:8px;padding:6px 12px;height:fit-content;}
+.method-body{flex:1;min-width:0;}
+.method-title{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.method-tag{font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;}
+.method-tag.easy{background:#EAF3DE;color:#27500A;}
+.method-tag.pro{background:#E6F1FB;color:#0C447C;}
+@media(max-width:560px){.method-card{flex-direction:column;gap:10px;}}
+.prompt-bar{display:flex;align-items:center;justify-content:space-between;}
+.copy-btn{font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;color:#cdd6f4;background:#252b36;border:1px solid #3c4454;border-radius:8px;padding:4px 10px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{background:#303847;color:#fff;}
+.copy-btn.copied{background:#EAF3DE;color:#3B6D11;border-color:#639922;}
+.finish-box{background:#fff;border:0.5px solid #dbe7d3;border-radius:10px;padding:14px 16px;margin:14px 0;}
+.finish-title{font-size:13px;font-weight:700;color:#3B6D11;margin-bottom:8px;}
+.finish-list{list-style:none;display:grid;gap:6px;}
+.finish-list li{font-size:13px;color:#555;line-height:1.65;padding-left:18px;position:relative;}
+.finish-list li::before{content:"✓";position:absolute;left:0;color:#639922;font-weight:700;}
+
+/* ── JSON ── */
+.json-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#cdd6f4;white-space:pre-wrap;background:#1e1e2e;}
+.jk{color:#89b4fa;cursor:pointer;border-radius:3px;padding:1px 3px;transition:background .15s;}
+.jk:hover,.jk.active{background:rgba(137,180,250,0.2);}
+.js{color:#a6e3a1;}.jn{color:#fab387;}
+.legend{display:flex;flex-direction:column;gap:0;margin-top:14px;}
+.leg-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid #e5e5e5;}
+.leg-row:last-child{border-bottom:none;}
+.leg-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;padding:4px 11px;background:#f5f5f3;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.leg-arrow{font-size:12px;color:#aaa;flex-shrink:0;margin-top:3px;}
+.leg-desc{font-size:13px;color:#555;line-height:1.7;}
+.leg-desc b{color:#1a1a1a;font-weight:500;}
+
+/* ── 툴팁 ── */
+.tooltip{position:fixed;background:#fff;border:0.5px solid #ddd;border-radius:12px;padding:12px 14px;width:220px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;line-height:1.7;z-index:9999;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.tooltip.show{opacity:1;}
+.tt-title{font-weight:700;font-size:12px;color:#185FA5;margin-bottom:4px;}
+.tt-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:6px;font-weight:700;}
+.badge-yes{background:#EAF3DE;color:#3B6D11;}.badge-no{background:#f5f5f3;color:#888;}
+
+/* ── 퀴즈 ── */
+.act-box{border:0.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin:1rem 0;}
+.act-header{background:#185FA5;padding:1.1rem 1.25rem;color:#fff;}
+.act-header-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.act-header-sub{font-size:11px;opacity:.8;}
+.act-body{padding:1.25rem;}
+.prog-wrap{height:4px;background:#f0f0f0;border-radius:2px;margin-bottom:1.25rem;overflow:hidden;}
+.prog-fill{height:100%;background:#378ADD;border-radius:2px;transition:width .4s;}
+.q-sentence{font-size:18px;color:#1a1a1a;line-height:1.9;margin-bottom:1rem;}
+.blank{display:inline-block;border-bottom:2.5px solid #378ADD;min-width:48px;text-align:center;color:#185FA5;font-weight:700;}
+.choices{display:flex;gap:8px;margin-bottom:.75rem;}
+.cbtn{flex:1;padding:12px;border:0.5px solid #ccc;border-radius:10px;background:transparent;color:#1a1a1a;font-size:16px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;}
+.cbtn:hover{background:#f5f5f3;}
+.cbtn.ok{background:#EAF3DE;border-color:#639922;color:#3B6D11;}
+.cbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F;}
+.fb{font-size:13px;padding:9px 12px;border-radius:8px;display:none;line-height:1.65;}
+.fb.show{display:block;}
+.fb.ok{background:#EAF3DE;color:#3B6D11;}
+.fb.no{background:#FCEBEB;color:#791F1F;}
+.q-num-txt{font-size:11px;color:#aaa;margin-bottom:8px;}
+.score-wrap{text-align:center;padding:2rem 1rem;}
+.score-big{font-size:44px;font-weight:700;color:#1a1a1a;}
+.score-sub{font-size:13px;color:#888;margin-top:4px;}
+.score-actions{display:flex;gap:8px;justify-content:center;margin-top:1.25rem;}
+.score-actions button,.score-actions a{padding:10px 20px;border:0.5px solid #ccc;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;}
+.score-actions a:hover,.score-actions button:hover{background:#f5f5f3;}
+
+/* ── 체크리스트 ── */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}
+.check-list li{font-size:13px;color:#555;padding:8px 12px;background:#f5f5f3;border-radius:8px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+.check-list li::before{content:"✓";color:#639922;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ── 변형 테이블 ── */
+.var-table{width:100%;border-collapse:collapse;font-size:13px;border:0.5px solid #e5e5e5;border-radius:8px;overflow:hidden;}
+.var-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:#888;letter-spacing:.05em;background:#f5f5f3;border-bottom:0.5px solid #e5e5e5;}
+.var-table td{padding:9px 12px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:top;line-height:1.6;}
+.var-table tr:last-child td{border-bottom:none;}
+
+/* ── 모바일 ── */
+@media(max-width:640px){
+  .wrap{padding:1rem .75rem 3rem;}
+  .hero,.section{padding:1.25rem;border-radius:12px;}
+  .hero-title{font-size:20px;}
+  .nav{gap:6px;}
+  .nav a{padding:7px 10px;font-size:12px;}
+  .q-sentence{font-size:16px;}
+  .legend .leg-row{flex-direction:column;gap:4px;}
+}
+
+/* ── Dictogloss 전용 ── */
+.dicto-app{max-width:560px;}
+.dg-stage{margin-bottom:14px;}
+.dg-step-tabs{display:flex;gap:6px;margin-bottom:16px;}
+.dg-step-tab{flex:1;text-align:center;font-size:12px;font-weight:700;color:#bbb;background:#f0efed;border-radius:8px;padding:8px 4px;border:0.5px solid transparent;}
+.dg-step-tab.active{background:#EEEDFE;color:#3C3489;border-color:#3C3489;}
+.dg-step-tab.done{background:#EAF3DE;color:#3B6D11;}
+.audio-player{display:flex;align-items:center;gap:14px;background:#1e1e2e;border-radius:14px;padding:18px 20px;margin:14px 0;}
+.audio-btn{flex-shrink:0;width:52px;height:52px;border-radius:50%;background:#7C6FE8;color:#fff;border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s,background .2s;}
+.audio-btn:hover{background:#6B5DD8;}
+.audio-btn:active{transform:scale(0.95);}
+.audio-info{flex:1;color:#cdd6f4;}
+.audio-info .ai-label{font-size:12px;color:#9399b2;margin-bottom:2px;}
+.audio-info .ai-status{font-size:14px;font-weight:500;}
+.audio-controls{display:flex;gap:8px;align-items:center;}
+.speed-btn{font-size:11px;font-weight:700;color:#9399b2;background:#252b36;border:1px solid #3c4454;border-radius:6px;padding:4px 8px;cursor:pointer;}
+.speed-btn.active{background:#7C6FE8;color:#fff;border-color:#7C6FE8;}
+.replay-note{font-size:12px;color:#999;text-align:center;margin-top:4px;}
+.dg-write{width:100%;min-height:120px;border:1px solid var(--border);border-radius:12px;padding:14px;font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.7;resize:vertical;background:#fafafa;}
+.dg-write:focus{outline:none;border-color:#7C6FE8;background:#fff;}
+.dg-actions{display:flex;gap:10px;margin-top:14px;}
+.dg-btn{flex:1;padding:14px;border:none;border-radius:12px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+.dg-btn-primary{background:#7C6FE8;color:#fff;}
+.dg-btn-primary:hover{background:#6B5DD8;}
+.dg-btn-ghost{background:#f0efed;color:#666;}
+.compare-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px;}
+.compare-card{border:0.5px solid var(--border);border-radius:12px;padding:16px;}
+.compare-card.original{background:#EEF3F8;border-color:#C8D8E8;}
+.compare-card.mine{background:#fafafa;}
+.compare-label{font-size:11px;font-weight:700;letter-spacing:0.04em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.compare-card.original .compare-label{color:#185FA5;}
+.compare-card.mine .compare-label{color:#888;}
+.compare-text{font-size:15px;line-height:1.75;color:#1a1a1a;}
+.compare-text.empty{color:#bbb;font-style:italic;}
+.checkpoint-box{background:#F4F1EA;border:0.5px solid #D8D0BC;border-radius:12px;padding:16px;margin-top:16px;}
+.checkpoint-title{font-size:13px;font-weight:700;color:#7a6a3a;margin-bottom:10px;}
+.checkpoint-list{list-style:none;display:grid;gap:8px;}
+.checkpoint-list li{font-size:13px;color:#555;line-height:1.5;padding-left:24px;position:relative;}
+.checkpoint-list li::before{content:"○";position:absolute;left:4px;color:#A89868;}
+.keyword-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.kw-chip{font-size:12px;background:#fff;border:0.5px solid #D8D0BC;border-radius:16px;padding:4px 12px;color:#7a6a3a;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- TODO: 딕토글로스 허브가 생기면 목적지 교체 -->
+<a href="activity.html" style="display:inline-block;font-size:13px;color:#888;text-decoration:none;margin-bottom:14px;">← 활동 설계로</a>
+
+<!-- ══ 히어로 ══ -->
+<div class="hero">
+  <div class="tag">📖 의미 구성 · 딕토글로스 · AI 피드백 버전</div>
+  <h1 class="hero-title">딕토글로스(Dictogloss),<br>듣고 자기 말로 다시 쓰는 활동 만들기</h1>
+  <p class="hero-desc">짧은 지문을 듣고 기억을 되살려 자기 말로 재구성하는 활동이에요. 음성 합성으로 듣기 자료를 만들고, 모범답안과 비교하는 앱까지 만드는 과정을 안내해요.</p>
+  <div class="axis-card">
+    <span class="axis-badge ax-format"><span class="ax-label">문항형식</span> 서술형</span>
+    <span class="axis-badge ax-media"><span class="ax-label">자료유형</span> 음성</span>
+    <span class="axis-badge ax-interaction"><span class="ax-label">상호작용</span> 개인·짝</span>
+    <span class="axis-badge ax-language"><span class="ax-label">언어영역</span> 듣기·쓰기</span>
+    <span class="axis-badge ax-level"><span class="ax-label">난이도</span> 중급</span>
+  </div>
+</div>
+
+<!-- ══ 스티키 네비 ══ -->
+<div class="sticky-nav">
+  <div class="nav" id="main-nav">
+    <a href="#intro" data-section="intro">설계 의도</a>
+    <a href="#usage" data-section="usage">수업 활용</a>
+    <a href="#build" data-section="build">제작 과정</a>
+    <a href="#practice" data-section="practice">직접 해보기</a>
+    <a href="#check" data-section="check">점검·응용</a>
+  </div>
+</div>
+
+<!-- ══ INTRO ══ -->
+<div class="section" id="intro">
+  <div class="section-tag">INTRO</div>
+  <div class="section-title">📋 어떤 활동인가요?</div>
+
+  <table class="overview-table">
+    <tbody>
+      <tr><th>학습 목표</th><td>들은 내용을 이해하고, 자기 말로 재구성하며 듣기·쓰기를 통합한다</td></tr>
+      <tr><th>활동 형식</th><td>서술형 (자유 재구성) · 음성 자료 기반</td></tr>
+      <tr><th>대상 수준</th><td>중급</td></tr>
+      <tr><th>적정 시간</th><td>15~20분</td></tr>
+      <tr><th>언어 영역</th><td>듣기 + 쓰기 (통합)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title" style="margin-top:1.5rem;">💡 왜 이 활동인가요?</div>
+  <p class="prose">딕토글로스는 받아쓰기와 다릅니다. 받아쓰기가 들은 것을 <b>그대로</b> 옮긴다면, 딕토글로스는 들은 것을 <b>이해하고 재구성</b>해요. 학습자는 짧은 지문을 두세 번 듣고, 핵심을 기억한 뒤, 자기 말로 다시 써요. 토씨 하나까지 똑같을 필요는 없어요. 의미가 통하고 문법이 맞으면 돼요.</p>
+  <p class="prose">이 과정에서 학습자는 단순히 소리를 받아 적는 것을 넘어, <b>내용을 이해하고 문장으로 재구성</b>하는 능력을 길러요. 듣기와 쓰기가 자연스럽게 연결되고, 자신이 아는 문법과 어휘를 총동원하게 돼요. 그래서 중급 학습자의 통합적 언어 능력을 기르는 데 효과적이에요.</p>
+
+  <div class="tip">💡 짝 활동으로 확장하면 더 좋아요. 각자 재구성한 뒤 둘이 비교하며 더 나은 문장을 함께 만들면, 자연스러운 의미 협상이 일어나요.</div>
+</div>
+
+<!-- ══ USAGE ══ -->
+<div class="section" id="usage">
+  <div class="section-tag">USAGE</div>
+  <div class="section-title">📍 수업 어디에서 쓰면 좋을까요?</div>
+  <p class="prose">딕토글로스는 <b>듣기와 쓰기를 통합하는 전개 단계</b>에 잘 맞아요. 목표 문법이나 표현이 담긴 지문을 듣고 재구성하게 하면, 배운 내용을 실제로 활용하게 돼요.</p>
+
+  <div class="stage-flow">
+    <div class="stage-step"><div class="st-phase">1</div><div class="st-name">도입</div><div class="st-desc">주제·배경 환기</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">2</div><div class="st-name">제시</div><div class="st-desc">목표 표현 학습</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">3</div><div class="st-name">연습</div><div class="st-desc">표현 형태 연습</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step highlight"><div class="st-phase">4</div><div class="st-name">활동 ★</div><div class="st-desc">듣고 재구성·비교</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">5</div><div class="st-name">마무리</div><div class="st-desc">오류 정리·피드백</div></div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-step"><div class="st-phase">6</div><div class="st-name">과제</div><div class="st-desc">유사 지문 복습</div></div>
+  </div>
+  <p class="prose" style="font-size:13px;color:#aaa;margin-top:-4px;">이 활동은 주로 <b style="color:#888;">4단계 활동</b>에 쓰여요. 듣고 쓴 글을 짝·모범답안과 비교하는 것까지가 한 활동이에요 — 듣기·쓰기를 한 번에 다루므로 수업의 중심 활동으로 삼기 좋아요.</p>
+
+  <div class="usage-grid">
+    <div class="usage-item"><div class="ui-icon">🎧</div><div class="ui-title">듣기·쓰기 통합 수업</div><div class="ui-desc">한 활동으로 듣기와 쓰기를 모두 연습해요. 두 기능을 따로 다룰 시간이 부족할 때 효율적이에요.</div></div>
+    <div class="usage-item"><div class="ui-icon">👥</div><div class="ui-title">짝·모둠 협력 활동</div><div class="ui-desc">각자 재구성한 뒤 비교하게 하면, "이 부분 뭐라고 들었어?" 하는 의미 협상이 일어나요.</div></div>
+    <div class="usage-item"><div class="ui-icon">📝</div><div class="ui-title">목표 문법 적용 연습</div><div class="ui-desc">배운 문법이 담긴 지문을 들려주면, 학습자가 그 문법을 직접 써보게 돼요.</div></div>
+    <div class="usage-item"><div class="ui-icon">🏠</div><div class="ui-title">자기주도 복습 과제</div><div class="ui-desc">링크를 공유해 집에서 풀게 해요. 스스로 듣고, 쓰고, 모범답안과 비교할 수 있어요.</div></div>
+  </div>
+
+  <div class="tip">이 활동은 의미를 다루는 <b>의미 구성</b> 단계예요. 형태 연습을 마친 뒤, 실제 맥락에서 이해하고 표현하는 다리 역할을 해요.</div>
+</div>
+
+<!-- ══ BUILD ══ -->
+<div class="section" id="build">
+  <div class="section-tag">BUILD</div>
+  <div class="section-title">🛠 따라 만들기 — 4단계</div>
+  <p class="prose">딕토글로스는 듣기 자료(음성)가 필요해서 빈칸 채우기보다 한 단계가 더 있어요. 그래도 대화형 AI와 음성 합성 도구만 있으면 코드를 몰라도 만들 수 있어요.</p>
+  <a class="guide-link" href="guide.html">🧰 어떤 도구를 써야 할지 모르겠다면 → 도구 안내 보기</a>
+
+  <!-- Step 1 -->
+  <div class="step-head">
+    <div class="step-badge">1</div>
+    <div><div class="step-h">무엇을 만들지 정하기</div><div class="step-sub">지문과 활동 방식을 먼저 정해요</div></div>
+  </div>
+  <p class="prose">딕토글로스는 <b>지문 선택</b>이 가장 중요해요. 너무 길면 기억하기 어렵고, 너무 쉬우면 재구성할 게 없어요. 아래 세 가지를 정하세요.</p>
+  <div class="layer-list">
+    <div class="layer-item"><div class="layer-tag">무엇을</div><div class="layer-desc">목표 표현 — 예: '-는 동안', '-기 때문에' 같은 중급 문법이 자연스럽게 들어간 지문</div></div>
+    <div class="layer-item"><div class="layer-tag">얼마나</div><div class="layer-desc">3~4문장, 50~70자 — 한 번에 기억할 수 있는 분량. 중급은 이 정도가 적당해요</div></div>
+    <div class="layer-item"><div class="layer-tag">어떻게</div><div class="layer-desc">듣기 2~3회 → 재구성 → 모범답안 비교 — 자기 점검 방식으로</div></div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-head">
+    <div class="step-badge">2</div>
+    <div><div class="step-h">프롬프트로 한 번에 만들기</div><div class="step-sub">지문·모범답안·비교 화면까지 한 번에</div></div>
+  </div>
+  <p class="prose">아래 프롬프트를 붙여넣으면 지문과 앱이 함께 나와요. 음성은 다음 단계에서 더해요.</p>
+  <a class="guide-link" href="guide-prompt.html">📐 프롬프트를 잘 쓰는 법이 궁금하다면 → 프롬프트 작성 가이드 보기</a>
+
+  <div class="caution">⚠️ 딕토글로스는 정답이 하나가 아니에요. AI에게 "정확히 일치해야 정답"으로 만들게 하면 안 돼요. <b>"모범답안과 비교해 학습자가 스스로 점검"</b>하는 방식이라고 꼭 명시하고, <b>지문이 학생 화면에 처음부터 보이지 않게</b> 해야 해요. (글로 보이면 듣기 활동이 아니에요.)</div>
+
+  <div class="prompt-box">
+    <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">기본 프롬프트</span></div><button class="copy-btn" data-copy="#p-basic">복사</button></div>
+    <div class="prompt-body copy-text" id="p-basic"><span class="p-section"># 만들 것</span>
+<span class="p-val">한국어 학습용 딕토글로스(듣고 재구성) 학생용 웹앱</span>
+
+<span class="p-section"># 지문</span>
+<span class="p-key">-</span> <span class="p-val">대상: 중급 학습자</span>
+<span class="p-key">-</span> <span class="p-val">3~4문장, 50~70자 분량의 짧은 글</span>
+<span class="p-key">-</span> <span class="p-val">목표 표현 '-는 동안', '-기 때문에'가 자연스럽게 들어가게</span>
+<span class="p-cmt">// 주제는 일상생활 (예: 주말 계획, 취미)</span>
+<span class="p-key">-</span> <span class="p-val">지문, 그리고 핵심 키워드 5~6개를 함께 만들기</span>
+
+<span class="p-section"># 동작 (3단계)</span>
+<span class="p-key">-</span> <span class="p-val">① 듣기: 재생 버튼으로 지문을 들음 (여러 번 가능)</span>
+<span class="p-key">-</span> <span class="p-val">② 쓰기: 들은 내용을 자기 말로 입력하는 칸</span>
+<span class="p-key">-</span> <span class="p-val">③ 비교: '모범답안 보기'를 누르면 원문과 나란히 비교</span>
+
+<span class="p-section"># 중요</span>
+<span class="p-key">-</span> <span class="p-val">정답 일치가 아니라, 모범답안과 비교해 스스로 점검하는 방식</span>
+<span class="p-key">-</span> <span class="p-val">지문 원문은 ③ 비교 단계 전까지 화면에 보이지 않게</span>
+<span class="p-cmt">// 듣기 활동이므로 글이 미리 보이면 안 됨</span>
+<span class="p-key">-</span> <span class="p-val">키워드는 힌트로 ② 쓰기 단계에서 선택적으로 보기</span>
+<span class="p-key">-</span> <span class="p-val">휴대폰 화면에서도 잘 보이게</span></div>
+  </div>
+
+  <div class="tip">💡 위 프롬프트의 뼈대는 그대로 두고 지문 주제·목표 표현만 바꾸면 어떤 딕토글로스든 만들 수 있어요.</div>
+
+  <!-- Step 3 : 음성 -->
+  <div class="step-head">
+    <div class="step-badge">3</div>
+    <div><div class="step-h">듣기 음성 넣기</div><div class="step-sub">딕토글로스의 핵심 — 음성을 더해요</div></div>
+  </div>
+  <p class="prose">빈칸 채우기와 달리 딕토글로스는 <b>음성</b>이 꼭 필요해요. 두 가지 방법이 있어요.</p>
+
+  <div class="method-card">
+    <div class="method-num">방법 ①</div>
+    <div class="method-body">
+      <div class="method-title">브라우저 음성 기능 쓰기 <span class="method-tag easy">제일 쉬움</span></div>
+      <p class="prose">웹 브라우저에는 글자를 읽어주는 기능이 기본으로 들어 있어요. 따로 음성 파일을 안 만들어도 돼요. 프롬프트에 한 줄만 더하면 앱이 알아서 지문을 읽어줘요.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">음성 추가 (프롬프트에 덧붙이기)</span></div><button class="copy-btn" data-copy="#p-voice">복사</button></div>
+        <div class="prompt-body copy-text" id="p-voice"><span class="p-section"># 음성</span>
+<span class="p-key">-</span> <span class="p-val">브라우저 음성 합성(Web Speech API)으로 지문을 읽어주기</span>
+<span class="p-key">-</span> <span class="p-val">한국어 음성으로, 재생 속도를 조절할 수 있게 (느리게/보통)</span>
+<span class="p-key">-</span> <span class="p-val">재생 버튼을 누를 때마다 다시 들을 수 있게</span></div>
+      </div>
+      <div class="tip">이 방법은 아래 '직접 해보기'의 앱에 쓰인 방식이에요. 별도 파일 없이 바로 작동해요. 다만 기기·브라우저에 따라 음성 품질이 조금씩 달라요.</div>
+    </div>
+  </div>
+
+  <div class="method-card">
+    <div class="method-num">방법 ②</div>
+    <div class="method-body">
+      <div class="method-title">음성 파일 만들어 넣기 <span class="method-tag pro">품질 좋게</span></div>
+      <p class="prose">더 자연스러운 음성을 원하면, 음성 합성(TTS) 서비스로 지문을 음성 파일로 만들어 넣을 수 있어요. 성우 같은 목소리, 속도·억양 조절이 가능해요.</p>
+      <a class="guide-link" href="guide-media.html">🔊 음성 파일 만들고 앱에 넣는 법 → 음성 자료 가이드 보기</a>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-head">
+    <div class="step-badge">4</div>
+    <div><div class="step-h">점검하고 내보내기</div><div class="step-sub">확인하고 학생에게 공유해요</div></div>
+  </div>
+  <p class="prose">학생처럼 직접 들어보고 써보며 아래를 확인하세요.</p>
+  <div class="finish-box">
+    <div class="finish-title">미리보기에서 확인할 것</div>
+    <ul class="finish-list">
+      <li>처음에 지문 글자가 안 보이고, 음성만 들리나요?</li>
+      <li>재생 버튼으로 여러 번 들을 수 있나요?</li>
+      <li>목표 표현('-는 동안' 등)이 지문에 자연스럽게 들어갔나요?</li>
+      <li>지문 길이가 중급에 맞나요? (너무 길거나 짧지 않은지)</li>
+      <li>'모범답안 보기'를 누르면 원문과 비교할 수 있나요?</li>
+      <li>음성 속도가 중급 학습자에게 적당한가요?</li>
+    </ul>
+  </div>
+  <p class="prose">고칠 게 있으면 말로 부탁하면 돼요. "지문을 더 짧게", "음성을 더 느리게"처럼요. 더 정밀하게 손보고 싶으면 코드를 직접 고칠 수도 있어요 — 지문을 바꾸려면 코드의 ② 구역 한 곳만 고치면 돼요. 완성되면 링크나 QR코드로 학생에게 주면 끝이에요.</p>
+  <a class="guide-link" href="act-meaning-dictogloss-code.html" target="_blank">📄 AI가 만든 전체 코드를 구역별 설명과 함께 보기 →</a>
+  <a class="guide-link" href="guide-deploy.html">🚀 만든 앱을 올리고 링크·QR코드 만드는 법 → 배포 가이드 보기</a>
+
+  <!-- 심화: AI 피드백 -->
+  <div class="accordion deepdive">
+    <div class="acc-head">🔍 [심화] 모범답안 비교 대신, AI가 직접 피드백하게 하려면<span class="acc-arrow">▶</span></div>
+    <div class="acc-body">
+      <p class="prose">기본 버전은 학습자가 <b>모범답안과 스스로 비교</b>하는 방식이에요. 한 걸음 더 나아가, 학습자가 쓴 글을 <b>AI가 읽고 피드백</b>하게 만들 수도 있어요. 문법 오류를 짚고, 빠진 내용을 알려주고, 더 자연스러운 표현을 제안하는 식이에요.</p>
+      <p class="prose">이렇게 하려면 앱이 AI와 연결되어야 해서 조금 더 복잡해요. 평가 기준을 분명히 정해주는 게 중요한데, 그래야 AI가 일관되게 피드백해요.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><div class="prompt-bar-left"><div class="prompt-dot" style="background:#ff5f57"></div><div class="prompt-dot" style="background:#febc2e"></div><div class="prompt-dot" style="background:#28c840"></div><span class="prompt-filename">AI 피드백 기준 예시</span></div><button class="copy-btn" data-copy="#p-ai">복사</button></div>
+        <div class="prompt-body copy-text" id="p-ai"><span class="p-val">학습자가 쓴 글을 다음 세 가지로 평가하고</span>
+<span class="p-val">각각 한 문장씩 짚어줘.</span>
+<span class="p-key">1)</span> <span class="p-val">원문의 핵심 내용을 담았는가</span>
+<span class="p-key">2)</span> <span class="p-val">목표 표현('-는 동안' 등)을 바르게 썼는가</span>
+<span class="p-key">3)</span> <span class="p-val">더 자연스럽게 고칠 표현은 없는가</span>
+<span class="p-cmt">// 틀린 것만 지적하지 말고, 잘한 점도 먼저 칭찬</span></div>
+      </div>
+      <p class="prose">처음에는 기본(모범답안 비교)으로 시작하고, 익숙해지면 시도해 보세요. 더 자세한 내용은 아래 가이드를 참고하세요.</p>
+      <a class="guide-link" href="guide-prompt.html">📐 피드백 기준을 잘 설계하는 법 → 프롬프트 작성 가이드 보기</a>
+      <!-- TODO: guide-ai-feedback.html(AI 연동 가이드) 생기면 목적지 교체 -->
+      <a class="guide-link" href="guide.html">🤖 앱에 AI를 연결하는 법 → 도구 안내에서 보기</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRACTICE ══ -->
+<div class="section" id="practice">
+  <div class="section-tag">PRACTICE</div>
+  <div class="section-title">🎯 직접 해보기</div>
+  <p class="section-lead">완성된 딕토글로스 앱이에요. 들어보고, 자기 말로 써보고, 모범답안과 비교해 보세요.</p>
+
+  <div class="act-box dicto-app">
+    <div class="act-header"><div class="act-header-title">주말 이야기</div><div class="act-header-sub">중급 · 듣고 재구성 · 듣기+쓰기</div></div>
+    <div class="act-body">
+      <div class="dg-step-tabs">
+        <div class="dg-step-tab active" id="tab-1">① 듣기</div>
+        <div class="dg-step-tab" id="tab-2">② 쓰기</div>
+        <div class="dg-step-tab" id="tab-3">③ 비교</div>
+      </div>
+
+      <!-- 단계 1: 듣기 -->
+      <div class="dg-stage" id="stage-1">
+        <p class="prose" style="font-size:14px;">아래 버튼을 눌러 지문을 들어보세요. <b>여러 번 들어도 돼요.</b> 글자는 일부러 보이지 않아요 — 귀로 듣고 기억하는 게 핵심이에요.</p>
+        <div class="audio-player">
+          <button class="audio-btn" id="playBtn">▶</button>
+          <div class="audio-info">
+            <div class="ai-label">듣기 지문</div>
+            <div class="ai-status" id="audioStatus">재생 버튼을 누르세요</div>
+          </div>
+          <div class="audio-controls">
+            <button class="speed-btn active" data-rate="0.85" id="rateSlow">느리게</button>
+            <button class="speed-btn" data-rate="1" id="rateNormal">보통</button>
+          </div>
+        </div>
+        <div class="replay-note" id="playCount">들은 횟수: 0회</div>
+        <div class="dg-actions">
+          <button class="dg-btn dg-btn-primary" onclick="goStage(2)">다 들었어요 → 쓰기</button>
+        </div>
+      </div>
+
+      <!-- 단계 2: 쓰기 -->
+      <div class="dg-stage" id="stage-2" style="display:none;">
+        <p class="prose" style="font-size:14px;">들은 내용을 <b>자기 말로</b> 다시 써보세요. 토씨 하나까지 똑같을 필요는 없어요. 의미가 통하면 돼요.</p>
+        <textarea class="dg-write" id="writeArea" placeholder="들은 내용을 여기에 써보세요..."></textarea>
+        <div style="margin-top:10px;">
+          <button class="speed-btn" id="hintBtn" style="border-color:#A89868;color:#7a6a3a;">💡 키워드 힌트 보기</button>
+          <div class="keyword-chips" id="keywords" style="display:none;">
+            <span class="kw-chip">주말</span>
+            <span class="kw-chip">친구</span>
+            <span class="kw-chip">영화</span>
+            <span class="kw-chip">-는 동안</span>
+            <span class="kw-chip">비가 오다</span>
+            <span class="kw-chip">-기 때문에</span>
+          </div>
+        </div>
+        <div class="dg-actions">
+          <button class="dg-btn dg-btn-ghost" onclick="goStage(1)">← 다시 듣기</button>
+          <button class="dg-btn dg-btn-primary" onclick="goStage(3)">다 썼어요 → 비교</button>
+        </div>
+      </div>
+
+      <!-- 단계 3: 비교 -->
+      <div class="dg-stage" id="stage-3" style="display:none;">
+        <p class="prose" style="font-size:14px;">이제 원문과 비교해 보세요. <b>똑같지 않아도 괜찮아요.</b> 핵심 내용과 목표 표현을 담았는지 확인하는 거예요.</p>
+        <div class="compare-grid">
+          <div class="compare-card original">
+            <div class="compare-label">📖 모범답안 (원문)</div>
+            <div class="compare-text" id="originalText"></div>
+          </div>
+          <div class="compare-card mine">
+            <div class="compare-label">✍️ 내가 쓴 것</div>
+            <div class="compare-text" id="myText"></div>
+          </div>
+        </div>
+
+        <div class="checkpoint-box">
+          <div class="checkpoint-title">스스로 점검해 보세요</div>
+          <ul class="checkpoint-list">
+            <li>원문의 핵심 내용(친구와 영화 본 일)을 담았나요?</li>
+            <li>'-는 동안', '-기 때문에'를 사용했나요?</li>
+            <li>문장이 문법적으로 자연스러운가요?</li>
+            <li>빠뜨린 정보가 있다면 무엇인가요?</li>
+          </ul>
+        </div>
+
+        <div class="dg-actions">
+          <button class="dg-btn dg-btn-ghost" onclick="resetDicto()">처음부터 다시</button>
+          <button class="dg-btn dg-btn-primary" onclick="goStage(2)">다시 써보기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">링크 하나, 또는 QR코드를 출력해 교실에서 바로 쓸 수 있어요. 짝 활동으로 하면 각자 쓴 뒤 비교하며 더 풍부한 학습이 일어나요.</div>
+</div>
+
+<!-- ══ CHECK ══ -->
+<div class="section" id="check">
+  <div class="section-tag">CHECK</div>
+  <div class="section-title">✅ 이것만 확인하세요</div>
+  <ul class="check-list">
+    <li>지문 길이가 중급에 맞나요? (3~4문장, 한 번에 기억할 분량)</li>
+    <li>목표 표현이 지문에 자연스럽게 들어갔나요?</li>
+    <li>처음에 지문 글자가 안 보이고 음성만 들리나요?</li>
+    <li>음성 속도가 중급 학습자에게 적당한가요?</li>
+    <li>모범답안 비교가 '일치 채점'이 아니라 '자기 점검'으로 되어 있나요?</li>
+  </ul>
+
+  <div class="section-title">🔄 이렇게 바꿔 쓸 수도 있어요</div>
+  <table class="var-table">
+    <thead><tr><th>바꾸고 싶은 것</th><th>방법</th><th>예시</th></tr></thead>
+    <tbody>
+      <tr><td>다른 문법으로</td><td>지문의 목표 표현만 교체</td><td>'-는 동안' → '-(으)ㄴ 적이 있다'</td></tr>
+      <tr><td>난이도 올리기</td><td>지문을 길게, 키워드 힌트 제거</td><td>5~6문장, 추상적 주제로</td></tr>
+      <tr><td>난이도 낮추기</td><td>지문을 짧게, 듣기 횟수 늘리기</td><td>2문장, 키워드 미리 제시</td></tr>
+      <tr><td>짝 활동으로</td><td>"둘이 비교하는 안내문 추가" 요청</td><td>각자 쓴 뒤 함께 완성</td></tr>
+      <tr><td>AI 피드백으로</td><td>위 [심화] 참고</td><td>AI가 직접 평가·조언</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- .wrap -->
+
+<script>
+// ===== 딕토글로스 앱 =====
+const passage = "지난 주말에 친구하고 영화를 봤어요. 영화를 보는 동안 밖에 비가 많이 왔어요. 비가 오기 때문에 우리는 카페에서 커피를 마시면서 기다렸어요.";
+let playCount = 0;
+let currentRate = 0.85;
+
+const playBtn = document.getElementById('playBtn');
+const audioStatus = document.getElementById('audioStatus');
+const playCountEl = document.getElementById('playCount');
+
+function speak() {
+  if (!('speechSynthesis' in window)) {
+    audioStatus.textContent = "이 브라우저는 음성을 지원하지 않아요";
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(passage);
+  u.lang = 'ko-KR';
+  u.rate = currentRate;
+  const voices = window.speechSynthesis.getVoices();
+  const ko = voices.find(v => v.lang === 'ko-KR' || v.lang.startsWith('ko'));
+  if (ko) u.voice = ko;
+  u.onstart = () => { audioStatus.textContent = "재생 중..."; playBtn.textContent = "⏸"; };
+  u.onend = () => { audioStatus.textContent = "다시 들으려면 ▶"; playBtn.textContent = "▶"; };
+  window.speechSynthesis.speak(u);
+  playCount++;
+  playCountEl.textContent = "들은 횟수: " + playCount + "회";
+}
+playBtn.addEventListener('click', () => {
+  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+    window.speechSynthesis.cancel();
+    audioStatus.textContent = "멈췄어요. 다시 ▶";
+    playBtn.textContent = "▶";
+  } else {
+    speak();
+  }
+});
+// 음성 목록 로드
+if ('speechSynthesis' in window) window.speechSynthesis.onvoiceschanged = () => {};
+
+document.getElementById('rateSlow').addEventListener('click', function(){
+  currentRate = 0.85; this.classList.add('active'); document.getElementById('rateNormal').classList.remove('active');
+});
+document.getElementById('rateNormal').addEventListener('click', function(){
+  currentRate = 1; this.classList.add('active'); document.getElementById('rateSlow').classList.remove('active');
+});
+
+// 키워드 힌트
+document.getElementById('hintBtn').addEventListener('click', function(){
+  const kw = document.getElementById('keywords');
+  const showing = kw.style.display !== 'none';
+  kw.style.display = showing ? 'none' : 'flex';
+  this.textContent = showing ? '💡 키워드 힌트 보기' : '🙈 힌트 숨기기';
+});
+
+// 단계 전환
+function goStage(n) {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  playBtn.textContent = "▶";
+  [1,2,3].forEach(i => {
+    document.getElementById('stage-'+i).style.display = (i===n) ? 'block' : 'none';
+    const tab = document.getElementById('tab-'+i);
+    tab.classList.toggle('active', i===n);
+    tab.classList.toggle('done', i<n);
+  });
+  if (n === 3) {
+    document.getElementById('originalText').textContent = passage;
+    const mine = document.getElementById('writeArea').value.trim();
+    const myEl = document.getElementById('myText');
+    if (mine) { myEl.textContent = mine; myEl.classList.remove('empty'); }
+    else { myEl.textContent = "(아직 쓴 내용이 없어요)"; myEl.classList.add('empty'); }
+  }
+  document.getElementById('practice').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function resetDicto() {
+  document.getElementById('writeArea').value = '';
+  playCount = 0;
+  playCountEl.textContent = "들은 횟수: 0회";
+  audioStatus.textContent = "재생 버튼을 누르세요";
+  goStage(1);
+}
+
+// ===== 복사 버튼 =====
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.querySelector(btn.dataset.copy);
+    if (!target) return;
+    navigator.clipboard.writeText(target.innerText).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '복사됨 ✓'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+
+// ===== 아코디언 =====
+document.querySelectorAll('.accordion .acc-head').forEach(head => {
+  head.addEventListener('click', () => head.parentElement.classList.toggle('open'));
+});
+
+// ===== 스크롤 스파이 =====
+const navLinks = document.querySelectorAll('#main-nav a');
+const sections = ['intro','usage','build','practice','check'].map(id => document.getElementById(id));
+function onScroll() {
+  let cur = sections[0].id;
+  const y = window.scrollY + 120;
+  sections.forEach(s => { if (s && s.offsetTop <= y) cur = s.id; });
+  navLinks.forEach(a => a.classList.toggle('active', a.dataset.section === cur));
+}
+window.addEventListener('scroll', onScroll);
+navLinks.forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const t = document.getElementById(a.dataset.section);
+  if (t) window.scrollTo({top: t.offsetTop - 70, behavior:'smooth'});
+}));
+onScroll();
+</script>
+</body>
+</html>

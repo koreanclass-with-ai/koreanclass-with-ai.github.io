@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전체 코드 보기 — 딕토글로스</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f9f9f7;color:#1a1a1a;line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:860px;margin:0 auto;padding:32px 24px 80px;}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#888;text-decoration:none;margin-bottom:24px;}
+.back:hover{color:#1a1a1a;}
+h1{font-size:26px;font-weight:900;letter-spacing:-0.02em;margin-bottom:8px;}
+.lead{font-size:14px;color:#888;margin-bottom:24px;}
+.legend-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:14px 16px;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;}
+.lg{display:flex;align-items:center;gap:7px;font-size:12px;color:#555;}
+.lg .sw{width:14px;height:14px;border-radius:4px;}
+.copy-btn{font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:700;color:#cdd6f4;background:#252b36;border:1px solid #3c4454;border-radius:8px;padding:5px 12px;cursor:pointer;transition:all .15s;margin-left:auto;}
+.copy-btn:hover{background:#303847;color:#fff;}
+.copy-btn.copied{background:#a6e3a1;color:#1e1e2e;border-color:#a6e3a1;}
+.howto{font-size:13px;color:#7a6a3a;background:#F4F1EA;border-left:3px solid #A89868;border-radius:8px;padding:12px 16px;margin-bottom:24px;line-height:1.6;}
+.code-box{background:#1e1e2e;border-radius:14px;overflow:hidden;}
+.code-bar{background:#181825;padding:10px 16px;display:flex;align-items:center;gap:6px;position:sticky;top:0;}
+.code-dot{width:11px;height:11px;border-radius:50%;}
+.code-fname{color:#9399b2;font-size:12px;margin-left:6px;font-family:monospace;}
+.code-body{padding:0;font-family:'D2Coding','Consolas','Courier New',monospace;font-size:12.5px;line-height:1.7;color:#cdd6f4;overflow-x:auto;}
+.zone{display:block;border-left:3px solid transparent;padding:14px 18px;white-space:pre;}
+.zone-design{background:rgba(203,166,247,0.08);border-left-color:#cba6f7;}
+.zone-data{background:rgba(166,227,161,0.08);border-left-color:#a6e3a1;}
+.zone-logic{background:rgba(137,180,250,0.08);border-left-color:#89b4fa;}
+.zone-head{font-family:'Noto Sans KR',sans-serif;white-space:normal;margin-bottom:10px;}
+.zone-label{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:6px;}
+.zl-design{background:#cba6f7;color:#1e1e2e;}.zl-data{background:#a6e3a1;color:#1e1e2e;}.zl-logic{background:#89b4fa;color:#1e1e2e;}
+.zone-note{font-size:12px;color:#9399b2;font-family:'Noto Sans KR',sans-serif;margin-top:4px;}
+.cc{color:#6c7086;font-style:italic;}.cs{color:#a6e3a1;}.ck2{color:#89b4fa;}.cp{color:#f9e2af;}.cr{color:#f38ba8;}
+.ck{color:#89b4fa;cursor:help;border-radius:3px;padding:0 2px;transition:background .15s;}
+.ck:hover{background:rgba(137,180,250,0.25);}
+.tooltip{position:fixed;background:#1e1e2e;color:#cdd6f4;border:1px solid #45475a;border-radius:10px;padding:10px 13px;font-size:12px;max-width:240px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:1000;display:none;font-family:'Noto Sans KR',sans-serif;line-height:1.5;}
+.tooltip.show{display:block;}
+.tt-title{font-weight:700;margin-bottom:4px;color:#fff;}
+.tt-badge{display:inline-block;margin-top:6px;font-size:11px;padding:2px 8px;border-radius:6px;background:#a6e3a1;color:#1e1e2e;font-weight:500;}
+@media(max-width:560px){.code-body{font-size:11px;}.wrap{padding:24px 12px 60px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="act-meaning-dictogloss.html">← 활동 페이지로 돌아가기</a>
+  <h1>AI가 만든 전체 코드</h1>
+  <p class="lead">'딕토글로스' 앱의 전체 코드예요. 크게 세 구역으로 나뉘어요. 전부 이해할 필요는 없어요 — 바꾸고 싶은 구역만 보면 돼요. 지문을 바꾸려면 ②만 고치면 끝이에요.</p>
+
+  <div class="legend-bar">
+    <div class="lg"><span class="sw" style="background:#cba6f7;"></span>① 디자인 (색·단계 탭·쓰기 칸)</div>
+    <div class="lg"><span class="sw" style="background:#a6e3a1;"></span>② 지문 데이터 (지문·키워드)</div>
+    <div class="lg"><span class="sw" style="background:#89b4fa;"></span>③ 작동 로직 (음성·단계·비교)</div>
+    <button class="copy-btn" id="copyAll">전체 복사</button>
+  </div>
+
+  <div class="howto">💡 <b>파란 글씨</b>에 마우스를 올리면 설명이 나와요. 코드를 직접 고치기 부담되면, 이 코드를 복사해 AI한테 주고 "여기를 이렇게 바꿔줘"라고 말해도 돼요.</div>
+
+  <div class="code-box">
+    <div class="code-bar"><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span><span class="code-fname">index.html</span></div>
+    <div class="code-body"><span class="zone zone-design"><span class="zone-head"><span class="zone-label zl-design">① 디자인</span><div class="zone-note">색·단계 탭·쓰기 칸 모양을 정하는 부분. 겉모습을 바꾸려면 여기를 고쳐요.</div></span><span class="cc">&lt;!-- 화면 스타일 --&gt;</span>
+&lt;style&gt;
+  :root {
+    --bg: <span class="ck" data-c="bg">#f5f7fb</span>;          <span class="cc">/* 배경색 */</span>
+    --primary: <span class="ck" data-c="primary">#2563eb</span>;     <span class="cc">/* 버튼·강조색 (파랑) */</span>
+  }
+  .step-tab {                        <span class="cc">/* ① 듣기 ② 쓰기 ③ 비교 단계 탭 */</span>
+    border-radius: <span class="cp">20px</span>;
+    font-size: <span class="cp">13px</span>;
+  }
+  .step-tab.active { background: <span class="cs">var(--primary)</span>; color: <span class="cs">#fff</span>; }
+  .play-btn {                        <span class="cc">/* 재생 버튼 */</span>
+    width: <span class="ck" data-c="playsize">72px</span>; height: <span class="cp">72px</span>;   <span class="cc">/* 버튼 크기 */</span>
+    border-radius: <span class="cp">50%</span>;
+    font-size: <span class="cp">26px</span>;
+  }
+  .write-area {                      <span class="cc">/* 학생이 글 쓰는 칸 */</span>
+    min-height: <span class="ck" data-c="writeheight">140px</span>;          <span class="cc">/* 쓰기 칸 높이 */</span>
+    font-size: <span class="cp">16px</span>;
+    line-height: <span class="cp">1.8</span>;
+  }
+  .compare-card.original { border-color: <span class="cs">#15803d</span>; }  <span class="cc">/* 모범답안 카드 */</span>
+  .compare-card.mine { border-color: <span class="cs">var(--primary)</span>; } <span class="cc">/* 내 글 카드 */</span>
+&lt;/style&gt;</span><span class="zone zone-data"><span class="zone-head"><span class="zone-label zl-data">② 지문 데이터</span><div class="zone-note">지문·키워드 힌트가 들어 있어요. 다른 지문으로 바꾸려면 여기만 고치면 돼요.</div></span><span class="cc">// 들려줄 지문 — 이 글이 곧 모범답안이에요</span>
+const <span class="ck" data-c="passage">passage</span> = <span class="cs">"지난 주말에 친구하고 영화를 봤어요. 영화를 보는 동안
+밖에 비가 많이 왔어요. 비가 오기 때문에 우리는 카페에서
+커피를 마시면서 기다렸어요."</span>;
+
+<span class="cc">// 쓰기 단계의 키워드 힌트 (힌트 버튼을 누르면 보여요)</span>
+const <span class="ck" data-c="keywords">keywords</span> = [<span class="cs">"주말"</span>, <span class="cs">"친구"</span>, <span class="cs">"영화"</span>, <span class="cs">"-는 동안"</span>, <span class="cs">"비가 오다"</span>, <span class="cs">"-기 때문에"</span>];
+
+<span class="cc">// 음성 속도 (1이 보통, 0.85가 조금 느리게)</span>
+let <span class="ck" data-c="rate">currentRate</span> = <span class="cp">0.85</span>;
+<span class="cc">// ⚠️ 지문을 바꿀 때: 목표 표현이 자연스럽게 들어가게,</span>
+<span class="cc">//    길이는 3~4문장(중급 기준)을 지켜요</span></span><span class="zone zone-logic"><span class="zone-head"><span class="zone-label zl-logic">③ 작동 로직</span><div class="zone-note">음성을 재생하고, 단계를 넘기고, 원문과 비교해 주는 부분. 보통 손댈 일이 없어요.</div></span><span class="cc">// 브라우저 내장 음성으로 지문 읽어주기 (TTS)</span>
+function speak() {
+  const u = new SpeechSynthesisUtterance(<span class="ck2">passage</span>);
+  u.lang = <span class="cs">"ko-KR"</span>;                  <span class="cc">// 한국어 음성</span>
+  u.rate = <span class="ck2">currentRate</span>;              <span class="cc">// 재생 속도</span>
+  window.speechSynthesis.speak(u);
+  playCount++;                       <span class="cc">// 들은 횟수 세기</span>
+}
+
+<span class="cc">// 단계 전환 — ① 듣기 → ② 쓰기 → ③ 비교</span>
+function goStage(n) {
+  <span class="cc">// n번 단계만 보여주고 나머지는 숨겨요</span>
+  [1,2,3].forEach(i =&gt; {
+    stage(i).style.display = (i === n) ? <span class="cs">"block"</span> : <span class="cs">"none"</span>;
+  });
+
+  <span class="cc">// ③ 비교 단계: 원문과 학생 글을 나란히 보여주기</span>
+  if (n === 3) {
+    originalText.textContent = <span class="ck2">passage</span>;          <span class="cc">// 모범답안</span>
+    myText.textContent = writeArea.value;        <span class="cc">// 학생이 쓴 글</span>
+  }
+}
+
+<span class="cc">// 키워드 힌트 보이기/숨기기</span>
+hintBtn.addEventListener(<span class="cs">"click"</span>, () =&gt; {
+  keywordBox.hidden = !keywordBox.hidden;
+});
+
+<span class="cc">// '처음부터 다시' — 쓴 글과 들은 횟수 초기화</span>
+function resetDicto() {
+  writeArea.value = <span class="cs">""</span>;
+  playCount = 0;
+  goStage(1);
+}</span></div>
+  </div>
+</div>
+
+<div class="tooltip" id="tt"><div class="tt-title" id="ttt"></div><div id="ttr"></div><div id="ttb"></div></div>
+
+<script>
+const info = {
+  bg:{t:"배경색",r:"앱 전체의 배경 색이에요. 다른 색 코드로 바꾸면 배경이 바뀌어요.",b:"✏️ 고치면 배경색이 바뀜"},
+  primary:{t:"강조색 (파랑)",r:"버튼과 활성 단계 탭의 색이에요.",b:"✏️ 버튼 색이 바뀜"},
+  playsize:{t:"재생 버튼 크기",r:"듣기 단계의 둥근 재생 버튼 크기예요. 교실 화면용이면 키우세요.",b:"✏️ 버튼 크기"},
+  writeheight:{t:"쓰기 칸 높이",r:"학생이 글을 쓰는 칸의 최소 높이예요. 지문이 길면 같이 키우세요.",b:"✏️ 쓰기 칸 크기"},
+  passage:{t:"passage — 지문",r:"들려줄 글이에요. 이 글이 그대로 모범답안이 돼요. 지문을 바꾸려면 여기만 고치면 돼요.",b:"✏️ 여기를 고치면 됨"},
+  keywords:{t:"keywords — 키워드 힌트",r:"쓰기 단계에서 힌트 버튼을 누르면 나오는 단어들이에요. 지문을 바꾸면 같이 바꿔주세요.",b:"✏️ 여기를 고치면 됨"},
+  rate:{t:"currentRate — 음성 속도",r:"1이 보통 속도예요. 0.85면 조금 느리게, 초급이면 0.7~0.8을 써보세요.",b:"✏️ 여기를 고치면 됨"}
+};
+const tt=document.getElementById('tt');
+function pos(e){const x=e.clientX+16,y=e.clientY-10,w=240,vw=innerWidth,vh=innerHeight;tt.style.left=(x+w>vw?x-w-32:x)+'px';tt.style.top=(y+140>vh?y-140:y)+'px';}
+document.querySelectorAll('.ck[data-c]').forEach(el=>{
+  el.addEventListener('mouseenter',e=>{const d=info[el.dataset.c];if(!d)return;document.getElementById('ttt').textContent=d.t;document.getElementById('ttr').textContent=d.r;document.getElementById('ttb').innerHTML='<span class="tt-badge">'+d.b+'</span>';pos(e);tt.classList.add('show');});
+  el.addEventListener('mousemove',pos);
+  el.addEventListener('mouseleave',()=>tt.classList.remove('show'));
+});
+
+// 전체 코드 복사
+document.getElementById('copyAll').addEventListener('click', function(){
+  const code = document.querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(code).then(()=>{
+    this.textContent='복사됨 ✓'; this.classList.add('copied');
+    setTimeout(()=>{this.textContent='전체 복사'; this.classList.remove('copied');},1500);
+  });
+});
+</script>
+</body>
+</html>

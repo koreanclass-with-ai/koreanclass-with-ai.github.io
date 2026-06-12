@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>단어 퍼즐 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --green:#2E8B57;--green-light:#F0FFF4;
+  --amber:#B8860B;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FFF0F0;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+.crumb{padding:96px 0 0;font-size:12px;color:var(--text-light);}
+.crumb a{color:var(--text-sub);text-decoration:none;}
+.crumb a:hover{color:var(--text);}
+.crumb b{color:var(--blue);font-weight:700;}
+.page-header{padding:16px 0 28px;}
+.page-header h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;line-height:1.2;letter-spacing:-0.03em;margin-bottom:10px;}
+.page-header .lead{font-size:15.5px;color:var(--text-sub);max-width:660px;}
+.page-header .lead b{color:var(--text);}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px;}
+.btag{font-size:11px;font-weight:600;color:var(--text-sub);background:var(--card);border:0.5px solid var(--border);border-radius:7px;padding:5px 11px;}
+.hub-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+.hub-link{font-size:12.5px;color:var(--green);background:var(--green-light);border-radius:8px;padding:7px 14px;text-decoration:none;font-weight:600;}
+.hub-link.code{color:var(--blue);background:var(--blue-light);}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:44px 0 6px;}
+.sec-head h2{font-size:22px;font-weight:800;letter-spacing:-0.01em;}
+.sec-cnt{font-size:13px;color:var(--text-light);font-weight:500;}
+.sec-desc{font-size:13px;color:var(--text-sub);margin-bottom:20px;}
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.vc{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;position:relative;}
+.vc:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.06);}
+.vc.dim{opacity:.72;cursor:default;}
+.vc.dim:hover{transform:none;box-shadow:none;}
+.vt{height:96px;display:flex;align-items:center;justify-content:center;padding:12px;background:var(--blue-light);}
+.vc.dim .vt{background:var(--bg-alt);}
+.vt .m{background:var(--card);border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.07);padding:10px 16px;font-size:12.5px;font-weight:600;text-align:center;max-width:190px;color:var(--blue);}
+.vc.dim .vt .m{color:var(--text-sub);box-shadow:none;border:0.5px solid var(--border);}
+.status{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:700;padding:2px 9px;border-radius:6px;letter-spacing:0.03em;}
+.s-done{background:var(--green-light);color:var(--green);border:0.5px solid var(--green);}
+.s-later{background:var(--bg-alt);color:var(--text-sub);}
+.vi{padding:14px 18px;flex:1;display:flex;flex-direction:column;}
+.vi h3{font-size:14px;font-weight:800;margin-bottom:3px;letter-spacing:-0.01em;}
+.vi p{font-size:11.5px;color:var(--text-sub);line-height:1.5;flex:1;}
+.v-hint{font-size:10.5px;color:var(--text-light);line-height:1.5;border-top:0.5px solid var(--border);padding-top:8px;margin-top:10px;}
+.v-hint b{color:var(--text-sub);}
+.v-mod{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:5px;margin-left:4px;vertical-align:1px;background:var(--amber-light);color:var(--amber);}
+.knob-table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+.knob-table td{padding:13px 18px;border-bottom:0.5px solid var(--border);vertical-align:top;}
+.knob-table tr:last-child td{border-bottom:none;}
+.knob-table td:first-child{font-weight:700;white-space:nowrap;width:140px;}
+.knob-table a{color:var(--green);font-weight:700;text-decoration:none;}
+.knob-table .soon{color:var(--text-light);font-weight:700;}
+.bottom-note{text-align:center;padding:48px 0 80px;color:var(--text-sub);font-size:14px;}
+.bottom-note a{color:var(--green);font-weight:700;text-decoration:none;}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.vg{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.vg{grid-template-columns:1fr;}}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">도구 안내</a><a href="activity.html" class="active">활동 설계</a><a href="demo.html">체험하기</a><a href="column.html">읽을거리</a><a href="faq.html">자주 묻는 질문</a></div></div></nav>
+
+<div class="container">
+  <div class="crumb"><a href="activity.html">활동 설계</a> › <b>단어 퍼즐</b></div>
+</div>
+
+<header class="page-header"><div class="container">
+  <div class="section-tag">Basic Activity 17</div>
+  <h1>단어 퍼즐</h1>
+  <p class="lead">단어 목록만 주면 <b>퍼즐을 자동으로</b> 만들어요. 크로스워드·행맨·워드서치로 어휘를 재미있게 복습해요.</p>
+  <div class="tag-row"><span class="btag">게임</span><span class="btag">텍스트</span><span class="btag">개인</span><span class="btag">어휘</span><span class="btag">초급~중급</span></div>
+  <div class="hub-links">
+    <a class="hub-link" href="demo.html">▶ 완성본 먼저 만져보기 → 체험하기</a>
+  </div>
+</div></header>
+
+<main class="container">
+
+  <div class="sec-head reveal"><h2>이 방식으로 만드는 활동 6가지</h2><span class="sec-cnt">하나씩 천천히 채워 가는 중이에요</span></div>
+  <p class="sec-desc reveal">회색 카드는 준비 중이에요. 그래도 카드마다 <b>"지금 만들려면"</b> 한 줄을 달아 뒀어요 — 프롬프트에서 그 부분만 바꾸면, 기다리지 않고 오늘 수업에 바로 쓸 수 있어요.</p>
+
+  <div class="vg">
+
+    <a class="vc reveal" href="act-form-4-3.html">
+      <span class="status s-done">완성</span>
+      <div class="vt"><div class="m">⬛⬜ 가로세로</div></div>
+      <div class="vi"><h3>크로스워드</h3><p>이 묶음의 대표 — 뜻풀이를 단서로 가로세로 칸을 채우는 낱말 퍼즐.</p><div class="v-hint"><b>설계 의도부터 점검까지 풀 상세 — 다른 퍼즐도 같은 틀로 확장돼요.</b></div></div>
+    </a>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🔤 빈칸 _ _ _</div></div>
+      <div class="vi"><h3>행맨</h3><p>글자를 하나씩 추측해 단어를 맞혀요 — 철자 복습.</p><div class="v-hint"><b>지금 만들려면:</b> 단어 목록을 주고 '뜻 힌트 + 글자 추측' 행맨 형식으로.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🔍 글자 숲</div></div>
+      <div class="vi"><h3>워드서치</h3><p>글자판 속에 숨은 낱말을 찾아 표시해요.</p><div class="v-hint"><b>지금 만들려면:</b> '주제 어휘 10개를 글자판에 숨긴 워드서치'로 요청.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🔀 글자 섞기</div></div>
+      <div class="vi"><h3>글자 순서 맞추기</h3><p>뒤섞인 글자를 바로 배열해 단어를 완성해요.</p><div class="v-hint"><b>지금 만들려면:</b> 낱말의 글자를 섞어 주고 뜻 힌트와 함께 맞추게.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🧩 짝 맞추기 메모리</div></div>
+      <div class="vi"><h3>뒤집기 메모리</h3><p>카드를 뒤집어 낱말–뜻 짝을 기억해 맞혀요.</p><div class="v-hint"><b>지금 만들려면:</b> '낱말카드 + 뜻카드'를 섞어 뒤집기 메모리 게임으로.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🪜 끝말잇기</div></div>
+      <div class="vi"><h3>끝말잇기</h3><p>앞 단어의 끝 글자로 새 단어를 이어요 — 어휘 확장.</p><div class="v-hint"><b>지금 만들려면:</b> 주제 어휘 안에서 '끝말잇기 사슬 만들기' 규칙으로.</div></div>
+    </div>
+
+  </div>
+
+  <div class="sec-head reveal"><h2>🎛 조정 손잡이</h2><span class="sec-cnt">위 활동 어디에나 적용돼요</span></div>
+  <table class="knob-table reveal">
+    <tbody>
+      <tr><td>난이도 올리기</td><td>단어 수를 늘리고, 뜻풀이를 더 돌려서 어렵게 쓰기.</td></tr>
+      <tr><td>난이도 내리기</td><td>단어를 6개 이하로 줄이고, 첫 글자를 미리 채워 두기.</td></tr>
+      <tr><td>인쇄용으로</td><td>"종이 퍼즐로 인쇄용 만들어줘"를 붙이면 워크시트가 나와요.</td></tr>
+      <tr><td>어휘 가져오기</td><td>수업에서 배운 낱말 목록을 그대로 넣으면 돼요 — <a href="guide-prompt.html">프롬프트 가이드</a></td></tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-note reveal">
+    찾는 활동이 없나요? 새 활동이 올라올 때마다 연재로 소식을 전해 드려요.<br>
+    <a href="activity.html">← 활동 설계로 돌아가기</a>
+  </div>
+
+</main>
+
+<footer><div class="container">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

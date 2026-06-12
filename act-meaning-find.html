@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>맞춤 읽기 자료 + 이해 활동 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --green:#2E8B57;--green-light:#F0FFF4;
+  --amber:#B8860B;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FFF0F0;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+.crumb{padding:96px 0 0;font-size:12px;color:var(--text-light);}
+.crumb a{color:var(--text-sub);text-decoration:none;}
+.crumb a:hover{color:var(--text);}
+.crumb b{color:var(--blue);font-weight:700;}
+.page-header{padding:16px 0 28px;}
+.page-header h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;line-height:1.2;letter-spacing:-0.03em;margin-bottom:10px;}
+.page-header .lead{font-size:15.5px;color:var(--text-sub);max-width:660px;}
+.page-header .lead b{color:var(--text);}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px;}
+.btag{font-size:11px;font-weight:600;color:var(--text-sub);background:var(--card);border:0.5px solid var(--border);border-radius:7px;padding:5px 11px;}
+.hub-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+.hub-link{font-size:12.5px;color:var(--green);background:var(--green-light);border-radius:8px;padding:7px 14px;text-decoration:none;font-weight:600;}
+.hub-link.code{color:var(--blue);background:var(--blue-light);}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:44px 0 6px;}
+.sec-head h2{font-size:22px;font-weight:800;letter-spacing:-0.01em;}
+.sec-cnt{font-size:13px;color:var(--text-light);font-weight:500;}
+.sec-desc{font-size:13px;color:var(--text-sub);margin-bottom:20px;}
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.vc{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;position:relative;}
+.vc:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.06);}
+.vc.dim{opacity:.72;cursor:default;}
+.vc.dim:hover{transform:none;box-shadow:none;}
+.vt{height:96px;display:flex;align-items:center;justify-content:center;padding:12px;background:var(--blue-light);}
+.vc.dim .vt{background:var(--bg-alt);}
+.vt .m{background:var(--card);border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.07);padding:10px 16px;font-size:12.5px;font-weight:600;text-align:center;max-width:190px;color:var(--blue);}
+.vc.dim .vt .m{color:var(--text-sub);box-shadow:none;border:0.5px solid var(--border);}
+.status{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:700;padding:2px 9px;border-radius:6px;letter-spacing:0.03em;}
+.s-done{background:var(--green-light);color:var(--green);border:0.5px solid var(--green);}
+.s-later{background:var(--bg-alt);color:var(--text-sub);}
+.vi{padding:14px 18px;flex:1;display:flex;flex-direction:column;}
+.vi h3{font-size:14px;font-weight:800;margin-bottom:3px;letter-spacing:-0.01em;}
+.vi p{font-size:11.5px;color:var(--text-sub);line-height:1.5;flex:1;}
+.v-hint{font-size:10.5px;color:var(--text-light);line-height:1.5;border-top:0.5px solid var(--border);padding-top:8px;margin-top:10px;}
+.v-hint b{color:var(--text-sub);}
+.v-mod{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:5px;margin-left:4px;vertical-align:1px;background:var(--amber-light);color:var(--amber);}
+.knob-table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+.knob-table td{padding:13px 18px;border-bottom:0.5px solid var(--border);vertical-align:top;}
+.knob-table tr:last-child td{border-bottom:none;}
+.knob-table td:first-child{font-weight:700;white-space:nowrap;width:140px;}
+.knob-table a{color:var(--green);font-weight:700;text-decoration:none;}
+.knob-table .soon{color:var(--text-light);font-weight:700;}
+.bottom-note{text-align:center;padding:48px 0 80px;color:var(--text-sub);font-size:14px;}
+.bottom-note a{color:var(--green);font-weight:700;text-decoration:none;}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.vg{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.vg{grid-template-columns:1fr;}}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">도구 안내</a><a href="activity.html" class="active">활동 설계</a><a href="demo.html">체험하기</a><a href="column.html">읽을거리</a><a href="faq.html">자주 묻는 질문</a></div></div></nav>
+
+<div class="container">
+  <div class="crumb"><a href="activity.html">활동 설계</a> › <b>맞춤 읽기 자료 + 이해 활동</b></div>
+</div>
+
+<header class="page-header"><div class="container">
+  <div class="section-tag">Basic Activity 08</div>
+  <h1>맞춤 읽기 자료 + 이해 활동</h1>
+  <p class="lead">학생 수준에 맞는 <b>지문을 만들고, 이해 문항까지 함께</b> 뽑아요. 정보 찾기부터 중심 내용·추론까지.</p>
+  <div class="tag-row"><span class="btag">선택+서술</span><span class="btag">텍스트</span><span class="btag">개인</span><span class="btag">읽기</span><span class="btag">초급~고급</span></div>
+  <div class="hub-links">
+    <a class="hub-link" href="demo.html">▶ 완성본 먼저 만져보기 → 체험하기</a>
+  </div>
+</div></header>
+
+<main class="container">
+
+  <div class="sec-head reveal"><h2>이 방식으로 만드는 활동 6가지</h2><span class="sec-cnt">하나씩 천천히 채워 가는 중이에요</span></div>
+  <p class="sec-desc reveal">회색 카드는 준비 중이에요. 그래도 카드마다 <b>"지금 만들려면"</b> 한 줄을 달아 뒀어요 — 프롬프트에서 그 부분만 바꾸면, 기다리지 않고 오늘 수업에 바로 쓸 수 있어요.</p>
+
+  <div class="vg">
+
+    <a class="vc reveal" href="act-mean-2-1.html">
+      <span class="status s-done">완성</span>
+      <div class="vt"><div class="m">📖 → ❓</div></div>
+      <div class="vi"><h3>안내문 정보 찾기</h3><p>이 묶음의 대표 — 안내문에서 필요한 정보를 찾아 답해요.</p><div class="v-hint"><b>설계 의도부터 점검까지 풀 상세 — 다른 읽기 활동도 같은 틀로 확장돼요.</b></div></div>
+    </a>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">이 글의 제목은?</div></div>
+      <div class="vi"><h3>중심 내용 파악</h3><p>글의 주제·제목을 고르거나 한 줄로 요약해요.</p><div class="v-hint"><b>지금 만들려면:</b> 목표를 '중심 내용'으로 두고 제목 고르기 + 한 줄 요약을 같이.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">왜 그랬을까?</div></div>
+      <div class="vi"><h3>숨은 뜻 추론</h3><p>글에 직접 안 나온 까닭·기분을 단서로 추론해요.</p><div class="v-hint"><b>지금 만들려면:</b> '글에 안 나온 것을 단서로 추론'을 목표로, 근거 문장도 찾게.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">사실 / 의견</div></div>
+      <div class="vi"><h3>사실과 의견 구분</h3><p>문장이 사실인지 글쓴이 생각인지 가려요 — 중·고급.</p><div class="v-hint"><b>지금 만들려면:</b> 문장을 섞어 주고 '사실인지 의견인지' 고르고 표시 근거 적기.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">앞에 / 뒤에 올 말</div></div>
+      <div class="vi"><h3>이어질 내용 예측</h3><p>글의 흐름을 보고 다음에 올 내용을 짐작해요.</p><div class="v-hint"><b>지금 만들려면:</b> 문단 끝을 잘라 주고 '이어질 내용으로 알맞은 것 고르기'.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">📊 표·그래프 읽기</div></div>
+      <div class="vi"><h3>도표 읽기</h3><p>간단한 표·그래프를 보고 정보를 찾아 답해요 — 실용 읽기.</p><div class="v-hint"><b>지금 만들려면:</b> 지문 대신 '간단한 표/안내판'을 만들고 정보 찾기 문항으로.</div></div>
+    </div>
+
+  </div>
+
+  <div class="sec-head reveal"><h2>🎛 조정 손잡이</h2><span class="sec-cnt">위 활동 어디에나 적용돼요</span></div>
+  <table class="knob-table reveal">
+    <tbody>
+      <tr><td>난이도 올리기</td><td>지문을 길게 하고, 추론·비판 문항 비중을 늘리기.</td></tr>
+      <tr><td>난이도 내리기</td><td>지문을 5~6문장으로 줄이고, 답이 그대로 보이는 정보 찾기 위주로.</td></tr>
+      <tr><td>인쇄용으로</td><td>"읽기 워크시트로 정리해줘"를 붙이면 종이 버전이 나와요.</td></tr>
+      <tr><td>수준 맞추기</td><td>[조건]에서 수준(초급·중급·고급)만 바꾸면 지문 난도가 따라가요 — <a href="guide-prompt.html">프롬프트 가이드</a></td></tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-note reveal">
+    찾는 활동이 없나요? 새 활동이 올라올 때마다 연재로 소식을 전해 드려요.<br>
+    <a href="activity.html">← 활동 설계로 돌아가기</a>
+  </div>
+
+</main>
+
+<footer><div class="container">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

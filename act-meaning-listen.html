@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>듣기 이해 활동 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --green:#2E8B57;--green-light:#F0FFF4;
+  --amber:#B8860B;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FFF0F0;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+.crumb{padding:96px 0 0;font-size:12px;color:var(--text-light);}
+.crumb a{color:var(--text-sub);text-decoration:none;}
+.crumb a:hover{color:var(--text);}
+.crumb b{color:var(--blue);font-weight:700;}
+.page-header{padding:16px 0 28px;}
+.page-header h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;line-height:1.2;letter-spacing:-0.03em;margin-bottom:10px;}
+.page-header .lead{font-size:15.5px;color:var(--text-sub);max-width:660px;}
+.page-header .lead b{color:var(--text);}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px;}
+.btag{font-size:11px;font-weight:600;color:var(--text-sub);background:var(--card);border:0.5px solid var(--border);border-radius:7px;padding:5px 11px;}
+.hub-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+.hub-link{font-size:12.5px;color:var(--green);background:var(--green-light);border-radius:8px;padding:7px 14px;text-decoration:none;font-weight:600;}
+.hub-link.code{color:var(--blue);background:var(--blue-light);}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:44px 0 6px;}
+.sec-head h2{font-size:22px;font-weight:800;letter-spacing:-0.01em;}
+.sec-cnt{font-size:13px;color:var(--text-light);font-weight:500;}
+.sec-desc{font-size:13px;color:var(--text-sub);margin-bottom:20px;}
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.vc{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;position:relative;}
+.vc:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.06);}
+.vc.dim{opacity:.72;cursor:default;}
+.vc.dim:hover{transform:none;box-shadow:none;}
+.vt{height:96px;display:flex;align-items:center;justify-content:center;padding:12px;background:var(--blue-light);}
+.vc.dim .vt{background:var(--bg-alt);}
+.vt .m{background:var(--card);border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.07);padding:10px 16px;font-size:12.5px;font-weight:600;text-align:center;max-width:190px;color:var(--blue);}
+.vc.dim .vt .m{color:var(--text-sub);box-shadow:none;border:0.5px solid var(--border);}
+.status{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:700;padding:2px 9px;border-radius:6px;letter-spacing:0.03em;}
+.s-done{background:var(--green-light);color:var(--green);border:0.5px solid var(--green);}
+.s-later{background:var(--bg-alt);color:var(--text-sub);}
+.vi{padding:14px 18px;flex:1;display:flex;flex-direction:column;}
+.vi h3{font-size:14px;font-weight:800;margin-bottom:3px;letter-spacing:-0.01em;}
+.vi p{font-size:11.5px;color:var(--text-sub);line-height:1.5;flex:1;}
+.v-hint{font-size:10.5px;color:var(--text-light);line-height:1.5;border-top:0.5px solid var(--border);padding-top:8px;margin-top:10px;}
+.v-hint b{color:var(--text-sub);}
+.v-mod{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:5px;margin-left:4px;vertical-align:1px;background:var(--amber-light);color:var(--amber);}
+.knob-table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+.knob-table td{padding:13px 18px;border-bottom:0.5px solid var(--border);vertical-align:top;}
+.knob-table tr:last-child td{border-bottom:none;}
+.knob-table td:first-child{font-weight:700;white-space:nowrap;width:140px;}
+.knob-table a{color:var(--green);font-weight:700;text-decoration:none;}
+.knob-table .soon{color:var(--text-light);font-weight:700;}
+.bottom-note{text-align:center;padding:48px 0 80px;color:var(--text-sub);font-size:14px;}
+.bottom-note a{color:var(--green);font-weight:700;text-decoration:none;}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.vg{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.vg{grid-template-columns:1fr;}}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">도구 안내</a><a href="activity.html" class="active">활동 설계</a><a href="demo.html">체험하기</a><a href="column.html">읽을거리</a><a href="faq.html">자주 묻는 질문</a></div></div></nav>
+
+<div class="container">
+  <div class="crumb"><a href="activity.html">활동 설계</a> › <b>듣기 이해 활동</b></div>
+</div>
+
+<header class="page-header"><div class="container">
+  <div class="section-tag">Basic Activity 09</div>
+  <h1>듣기 이해 활동</h1>
+  <p class="lead">음성 자료와 이해 문항을 함께 만들어요. <b>속도·화자·상황</b>을 바꿔 가며 다양한 듣기를 연습해요.</p>
+  <div class="tag-row"><span class="btag">선택+서술</span><span class="btag">음성</span><span class="btag">개인</span><span class="btag">듣기</span><span class="btag">초급~고급</span></div>
+  <div class="hub-links">
+    <a class="hub-link" href="demo.html">▶ 완성본 먼저 만져보기 → 체험하기</a>
+  </div>
+</div></header>
+
+<main class="container">
+
+  <div class="sec-head reveal"><h2>이 방식으로 만드는 활동 6가지</h2><span class="sec-cnt">하나씩 천천히 채워 가는 중이에요</span></div>
+  <p class="sec-desc reveal">회색 카드는 준비 중이에요. 그래도 카드마다 <b>"지금 만들려면"</b> 한 줄을 달아 뒀어요 — 프롬프트에서 그 부분만 바꾸면, 기다리지 않고 오늘 수업에 바로 쓸 수 있어요.</p>
+
+  <div class="vg">
+
+    <a class="vc reveal" href="act-mean-2-2.html">
+      <span class="status s-done">완성</span>
+      <div class="vt"><div class="m">🔊 → ❓</div></div>
+      <div class="vi"><h3>안내 방송 듣기</h3><p>이 묶음의 대표 — 안내 방송을 듣고 필요한 정보를 찾아 답해요.</p><div class="v-hint"><b>설계 의도부터 점검까지 풀 상세 — 다른 듣기도 같은 틀로 확장돼요.</b></div></div>
+    </a>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">📞 여보세요?</div></div>
+      <div class="vi"><h3>전화 통화 듣기</h3><p>전화 대화를 듣고 용건·약속을 파악해요 — 실생활 듣기.</p><div class="v-hint"><b>지금 만들려면:</b> 상황을 '전화 통화'로 두고 약속 시간·장소를 묻는 문항으로.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">또박또박 / 자연스럽게</div></div>
+      <div class="vi"><h3>속도 바꿔 듣기</h3><p>같은 내용을 느린 속도·보통 속도로 들으며 단계로 이해해요.</p><div class="v-hint"><b>지금 만들려면:</b> TTS 속도를 2단계로 주고 '느리게 한 번, 보통 속도로 한 번'.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">👩 / 👨 두 사람</div></div>
+      <div class="vi"><h3>화자 구분 듣기</h3><p>두 사람 대화를 듣고 누가 무엇을 했는지 가려요.</p><div class="v-hint"><b>지금 만들려면:</b> 화자 2명을 다른 목소리로 두고 '누가 한 말인지' 짝짓기 문항.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">핵심만 메모</div></div>
+      <div class="vi"><h3>듣고 메모하기</h3><p>들으며 핵심 정보를 빈칸 표에 메모해요 — 중급.</p><div class="v-hint"><b>지금 만들려면:</b> 빈칸 메모표(언제·어디·무엇)를 함께 만들어 들으며 채우게.</div></div>
+    </div>
+
+    <div class="vc dim reveal">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🔊 → 이어 말하기</div></div>
+      <div class="vi"><h3>듣고 반응하기</h3><p>짧은 말을 듣고 알맞게 대답을 골라/말해요 — 듣기+말하기.</p><div class="v-hint"><b>지금 만들려면:</b> '듣고 알맞은 대답 고르기'로 두고, 뒤에 직접 말해 보기 단계 추가.</div></div>
+    </div>
+
+  </div>
+
+  <div class="sec-head reveal"><h2>🎛 조정 손잡이</h2><span class="sec-cnt">위 활동 어디에나 적용돼요</span></div>
+  <table class="knob-table reveal">
+    <tbody>
+      <tr><td>난이도 올리기</td><td>음성을 길게 하고 한 번만 들려주기, 잡음·빠른 속도 추가.</td></tr>
+      <tr><td>난이도 내리기</td><td>문장을 짧게 끊어 들려주고, 그림 보기로 답하게.</td></tr>
+      <tr><td>음성 만들기</td><td>대본에 TTS를 입혀요 — <a href="guide-media.html">이미지·음성 도구 가이드</a> 참고</td></tr>
+      <tr><td>수준 맞추기</td><td>[조건]에서 수준만 바꾸면 어휘·속도가 따라가요 — <a href="guide-prompt.html">프롬프트 가이드</a></td></tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-note reveal">
+    찾는 활동이 없나요? 새 활동이 올라올 때마다 연재로 소식을 전해 드려요.<br>
+    <a href="activity.html">← 활동 설계로 돌아가기</a>
+  </div>
+
+</main>
+
+<footer><div class="container">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

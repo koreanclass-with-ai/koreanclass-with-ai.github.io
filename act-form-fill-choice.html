@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>빈칸 채우기 — 선택형 — AI로 만드는 한국어 수업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f9f9f7;--bg-alt:#f0efed;
+  --text:#1a1a1a;--text-sub:#888;--text-light:#bbb;
+  --blue:#185FA5;--blue-light:#EBF5FF;
+  --green:#2E8B57;--green-light:#F0FFF4;
+  --amber:#B8860B;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FFF0F0;
+  --border:#e0e0de;--card:#fff;--radius:16px;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── 네비 ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(249,249,247,0.92);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);padding:16px 0;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:16px;text-decoration:none;color:var(--text);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-sub);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--text);font-weight:700;border-bottom:2px solid var(--text);padding-bottom:2px;}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+
+/* ── 헤더 ── */
+.crumb{padding:96px 0 0;font-size:12px;color:var(--text-light);}
+.crumb a{color:var(--text-sub);text-decoration:none;}
+.crumb a:hover{color:var(--text);}
+.crumb b{color:var(--blue);font-weight:700;}
+.page-header{padding:16px 0 28px;}
+.page-header h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;line-height:1.2;letter-spacing:-0.03em;margin-bottom:10px;}
+.page-header .lead{font-size:15.5px;color:var(--text-sub);max-width:640px;}
+.page-header .lead b{color:var(--text);}
+.hub-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+.hub-link{font-size:12.5px;color:var(--green);background:var(--green-light);border-radius:8px;padding:7px 14px;text-decoration:none;font-weight:600;}
+.hub-link.code{color:var(--blue);background:var(--blue-light);}
+
+/* ── 섹션 ── */
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:44px 0 6px;}
+.sec-head h2{font-size:22px;font-weight:800;letter-spacing:-0.01em;}
+.sec-cnt{font-size:13px;color:var(--text-light);font-weight:500;}
+.sec-desc{font-size:13px;color:var(--text-sub);margin-bottom:20px;}
+
+/* ── 변형 카드 그리드 ── */
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.vc{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;position:relative;}
+.vc:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.06);}
+.vc.dim{opacity:.72;cursor:default;}
+.vc.dim:hover{transform:none;box-shadow:none;}
+.vt{height:96px;display:flex;align-items:center;justify-content:center;padding:12px;background:var(--blue-light);}
+.vc.dim .vt{background:var(--bg-alt);}
+.vt .m{background:var(--card);border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.07);padding:10px 16px;font-size:12.5px;font-weight:600;text-align:center;max-width:190px;color:var(--blue);}
+.vc.dim .vt .m{color:var(--text-sub);box-shadow:none;border:0.5px solid var(--border);}
+.status{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:700;padding:2px 9px;border-radius:6px;letter-spacing:0.03em;}
+.s-done{background:var(--green-light);color:var(--green);border:0.5px solid var(--green);}
+.s-later{background:var(--bg-alt);color:var(--text-sub);}
+.vi{padding:14px 18px;flex:1;display:flex;flex-direction:column;}
+.vi h3{font-size:14px;font-weight:800;margin-bottom:3px;letter-spacing:-0.01em;}
+.vi p{font-size:11.5px;color:var(--text-sub);line-height:1.5;flex:1;}
+.v-hint{font-size:10.5px;color:var(--text-light);line-height:1.5;border-top:0.5px solid var(--border);padding-top:8px;margin-top:10px;}
+.v-hint b{color:var(--text-sub);}
+.v-mod{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:5px;margin-left:4px;vertical-align:1px;background:var(--amber-light);color:var(--amber);}
+
+/* ── 조정 손잡이 표 ── */
+.knob-table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+.knob-table td{padding:13px 18px;border-bottom:0.5px solid var(--border);vertical-align:top;}
+.knob-table tr:last-child td{border-bottom:none;}
+.knob-table td:first-child{font-weight:700;white-space:nowrap;width:140px;}
+.knob-table a{color:var(--green);font-weight:700;text-decoration:none;}
+.knob-table .soon{color:var(--text-light);font-weight:700;}
+
+/* ── 하단 ── */
+.bottom-note{text-align:center;padding:48px 0 80px;color:var(--text-sub);font-size:14px;}
+.bottom-note a{color:var(--green);font-weight:700;text-decoration:none;}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.vg{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.vg{grid-template-columns:1fr;}}
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-light);border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-logo" href="index.html">AI 한국어 수업</a><div class="nav-links"><a href="index.html">홈</a><a href="guide.html">도구 안내</a><a href="activity.html" class="active">활동 설계</a><a href="demo.html">체험하기</a><a href="column.html">읽을거리</a><a href="faq.html">자주 묻는 질문</a></div></div></nav>
+
+<div class="container">
+  <div class="crumb"><a href="activity.html">활동 설계</a> › <b>빈칸 채우기 — 선택형</b></div>
+</div>
+
+<header class="page-header"><div class="container">
+  <div class="section-tag">Basic Activity 01</div>
+  <h1>빈칸 채우기 — 선택형</h1>
+  <p class="lead">문장 속 빈칸 + 보기 2~4개 → 즉시 채점·해설. <b>이 방식 하나로 아래 10가지 활동이 나와요</b> — 하나를 익히면 나머지는 내용만 갈아 끼우면 돼요. 활동을 골라 들어가면 만드는 법이 이어집니다.</p>
+  <div class="hub-links">
+    <a class="hub-link code" href="act-form-1-1-code.html">📄 이 활동의 코드 구조 한눈에 보기</a>
+    <a class="hub-link" href="demo.html">▶ 완성본 먼저 만져보기 → 체험하기</a>
+  </div>
+</div></header>
+
+<main class="container">
+
+  <div class="sec-head reveal"><h2>이 방식으로 만드는 활동 10가지</h2><span class="sec-cnt">하나씩 천천히 채워 가는 중이에요</span></div>
+  <p class="sec-desc reveal">회색 카드는 준비 중이에요. 그래도 카드마다 <b>"지금 만들려면"</b> 한 줄을 달아 뒀어요 — 에/에서 프롬프트에서 그 부분만 바꾸면, 기다리지 않고 오늘 수업에 바로 쓸 수 있어요.</p>
+
+  <div class="vg">
+
+    <!-- ① 대표 변형 — 완성 -->
+    <a class="vc reveal vis" href="act-form-1-1.html">
+      <span class="status s-done">완성</span>
+      <div class="vt"><div class="m">에 vs 에서</div></div>
+      <div class="vi">
+        <h3>장소 조사 '에/에서'</h3>
+        <p>이 묶음의 대표 — 있는 곳 vs 행동하는 곳. 이/가·은/는·을/를 등 다른 조사 변별로 그대로 확장돼요.</p>
+        <div class="v-hint"><b>설계 의도 → 수업 활용 → 따라 만들기 → 직접 해보기 → 점검</b>까지 풀 상세</div>
+      </div>
+    </a>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">A: 같이 갈래요? B: ___</div></div>
+      <div class="vi">
+        <h3>대화 턴 빈칸</h3>
+        <p>대화의 한 턴을 빈칸으로 — 문장이 아니라 대화 맥락 속에서 알맞은 표현을 고르게 해요.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> 완성 프롬프트의 지문을 A–B 대화로 바꾸고, 정답이 유일해지게 앞 턴을 구체적으로.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">-아/어서 vs -(으)니까</div></div>
+      <div class="vi">
+        <h3>연결어미 변별</h3>
+        <p>의미가 비슷한 연결어미를 맥락으로 구별하는 중급용 활동.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> 프롬프트의 목표 문법만 '-아/어서 vs -(으)니까'로 교체.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">보기 ▾ (드롭다운)</div></div>
+      <div class="vi">
+        <h3>드롭다운 빈칸</h3>
+        <p>버튼 대신 드롭다운으로 고르는 형태 — 빈칸이 많은 긴 지문에 적합해요.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> "보기 버튼 대신 드롭다운 선택으로 만들어줘" 한 줄 추가.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">___고 ___어요</div></div>
+      <div class="vi">
+        <h3>연속 빈칸 2~3개</h3>
+        <p>한 문장에 빈칸 여러 개 — 형태들의 관계까지 한 번에 연습해요.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> "한 문장에 빈칸 2~3개"로 요청하고 문항 수는 줄이기.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">어제 …라서 오늘은 ___</div></div>
+      <div class="vi">
+        <h3>문맥 단서 빈칸</h3>
+        <p>앞뒤 문장의 단서로 답을 추론해요 — 문법이 아니라 읽기 단서가 핵심.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> 단문 대신 2~3문장 지문으로, 단서가 앞 문장에 들어가게 요청.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">📢 세일 ___ 안내</div></div>
+      <div class="vi">
+        <h3>광고·안내문 빈칸</h3>
+        <p>실제 자료(광고·공지·안내문) 형식의 지문으로 실생활 읽기와 결합해요.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> "지문을 마트 세일 안내문 형식으로 만들어줘"처럼 장르를 지정.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">만약 ~___ </div></div>
+      <div class="vi">
+        <h3>호응 표현 빈칸</h3>
+        <p>'만약 ~라면', '별로 ~지 않다' — 짝을 이루는 표현의 뒷부분을 채워요.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> 목표를 호응쌍 목록으로 주고 "앞부분을 보여주고 뒷부분을 빈칸으로".</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🖼 → ___</div></div>
+      <div class="vi">
+        <h3>그림 단서 빈칸 <span class="v-mod">이미지</span></h3>
+        <p>그림을 보고 빈칸을 채워요 — 이미지 자료와 결합하는 활동.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> 이미지 모듈 결합 — "문항마다 상황 그림을 넣어줘" + 이미지·음성 도구 가이드 참고.</div>
+      </div>
+    </div>
+
+    <div class="vc dim reveal vis">
+      <span class="status s-later">연재 예정</span>
+      <div class="vt"><div class="m">🎵 ___</div></div>
+      <div class="vi">
+        <h3>노래 가사 빈칸 <span class="v-mod">음성</span></h3>
+        <p>노래를 듣고 가사의 빈칸을 채워요 — 음성 자료와 결합하는 활동.</p>
+        <div class="v-hint"><b>지금 만들려면:</b> 음성 모듈 결합 · 가사 저작권 주의 (직접 만든 예문에 TTS를 입히는 방식 추천).</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec-head reveal"><h2>🎛 조정 손잡이</h2><span class="sec-cnt">위 10가지 어디에나 적용돼요</span></div>
+  <table class="knob-table reveal">
+    <tbody>
+      <tr><td>난이도 올리기</td><td>선택형 → 직접 입력형으로. 채점 방식이 달라 별도의 기본 활동이에요 — <span class="soon">빈칸 채우기 — 입력형 (준비 중)</span></td></tr>
+      <tr><td>난이도 내리기</td><td>보기를 2개로 줄이고, 보기에 오답 유형을 한 가지만 넣기.</td></tr>
+      <tr><td>인쇄용으로</td><td>같은 프롬프트 끝에 "A4 워크시트로 정리해줘"를 붙이면 종이 버전이 나와요.</td></tr>
+      <tr><td>문항 수·수준</td><td>프롬프트의 [조건]에서 문항 수와 수준(초급·중급·고급)만 바꾸면 돼요 — <a href="guide-prompt.html">프롬프트 작성 가이드</a></td></tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-note reveal">
+    찾는 활동이 없나요? 새 활동이 올라올 때마다 연재로 소식을 전해 드려요.<br>
+    <a href="activity.html">← 활동 설계로 돌아가기</a>
+  </div>
+
+</main>
+
+<footer><div class="container">© 2026 AI로 만드는 한국어 수업</div></footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
